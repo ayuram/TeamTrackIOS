@@ -64,6 +64,11 @@ extension Array where Element == Double{
         self.map{ abs($0 - self.mean()) }.mean()
     }
 }
+enum Aspect{
+    case auto
+    case tele
+    case endgame
+}
 class Team: ObservableObject, Identifiable{
     let number: String
     var name: String
@@ -124,6 +129,9 @@ class Team: ObservableObject, Identifiable{
     static func < (_ lhs: Team, _ rhs: Team) -> Bool{
         lhs.number < rhs.number
     }
+    static func > (_ lhs: Team, _ rhs: Team) -> Bool{
+        lhs.number > rhs.number
+    }
 }
 typealias side = (Team, Team)
 class Match: Identifiable, ObservableObject{
@@ -154,9 +162,29 @@ class Match: Identifiable, ObservableObject{
 class Data: ObservableObject{
     @Published var teams: [Team]
     @Published var matches: [Match]
+    @Published var user: Team?
     init(){
         teams = []
         matches = []
+        user = .none
+    }
+    func weakestAspect() -> Aspect? {
+        switch user{
+        case .none: return .none
+        default: return [(user!.avgAutoScore()/maxAutoScore(), Aspect.auto), (user!.avgTeleScore()/maxTeleScore(), Aspect.tele), (user!.avgEndScore()/maxEndScore(), Aspect.endgame)].min(by: { $0.0 < $1.0 } )!.1
+        }
+    }
+    func setUser(_ t: Team){
+        addTeam(t)
+        user = t
+    }
+    func idealAlliance() -> Team? {
+        switch weakestAspect(){
+        case .none: return .none
+        case .auto: return teams.max { $0.avgAutoScore() > $1.avgAutoScore() }
+        case .tele: return teams.max { $0.avgTeleScore() > $1.avgTeleScore() }
+        case .endgame: return teams.max { $0.avgEndScore() > $1.avgEndScore() }
+        }
     }
     func addTeam(_ team: Team){
         var bool: Bool = false

@@ -30,7 +30,7 @@ struct BarGraph: View {
                     Capsule().frame(width: width, height: height)
                         .foregroundColor(.black)
                     Capsule().frame(width: width, height: height * CGFloat((val)/max))
-                        .foregroundColor(.blue)
+                        .foregroundColor(color())
                 }
                 (flip ? Text("\(Int(max))") : Text("\(Int(val)) pts"))
                     .font(.caption)
@@ -46,12 +46,23 @@ struct BarGraph: View {
                     Capsule().frame(width: width, height: height)
                         .foregroundColor(.black)
                     Capsule().frame(width: width, height: height)
-                        .foregroundColor(.blue)
+                        .foregroundColor(.green)
                 }
                 Text("\(Int(max)) pts")
                     .font(.caption)
             }
         }.buttonStyle(PlainButtonStyle())
+    }
+    func color() -> Color{
+        if(val/max < Double(height/2)){
+            return .red
+        }
+        else if (val/max < Double(0.75 * height)){
+            return .yellow
+        }
+        else{
+            return .green
+        }
     }
 }
 

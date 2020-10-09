@@ -9,8 +9,8 @@
 import SwiftUI
 
 struct TeamView: View {
-    var team: Team
-    var data: Data
+    @ObservedObject var team: Team
+    @ObservedObject var data: Data
     @State private var animateChart = false
     var body: some View {
         NavigationView {
