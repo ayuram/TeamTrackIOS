@@ -15,14 +15,15 @@ struct BarGraph: View {
     var val: Double
     var max: Double
     var flip: Bool = false
+    @State var sheet = false
+    
     var body: some View {
         choice()
     }
     func choice() -> some View{
-        max >= 1 ? AnyView(normal()) : AnyView(abnormal())
+        (max >= 1 || !flip) ? AnyView(normal()) : AnyView(abnormal())
     }
     func normal() -> some View{
-        NavigationLink(destination: Text("Hello")){
             VStack{
                 Text(name)
                     .font(.caption)
@@ -32,10 +33,10 @@ struct BarGraph: View {
                     Capsule().frame(width: width, height: height * CGFloat((val)/max))
                         .foregroundColor(color())
                 }
-                (flip ? Text("\(Int(max))") : Text("\(Int(val)) pts"))
+                (flip ? Text("\(Int(max))") : Text("\(Int(val))"))
                     .font(.caption)
             }
-        }.buttonStyle(PlainButtonStyle())
+        
     }
     func abnormal() -> some View{
         NavigationLink(destination: Text("Hello")){
@@ -48,26 +49,27 @@ struct BarGraph: View {
                     Capsule().frame(width: width, height: height)
                         .foregroundColor(.green)
                 }
-                Text("\(Int(max)) pts")
+                Text("\(Int(max))")
                     .font(.caption)
             }
         }.buttonStyle(PlainButtonStyle())
     }
     func color() -> Color{
-        if(val/max < Double(height/2)){
+        if(val/max < 0.50){
             return .red
         }
-        else if (val/max < Double(0.75 * height)){
+        else if (val/max < 0.75){
             return .yellow
         }
         else{
             return .green
         }
     }
+    
 }
-
 struct BarGraph_Previews: PreviewProvider {
     static var previews: some View {
-        BarGraph(name: "OK", val: 1, max: 1.5)
+        BarGraph(name: "OK", val: 1, max: 13, flip: true)
     }
 }
+

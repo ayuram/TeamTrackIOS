@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		C90776562530CD69006ED382 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90776552530CD69006ED382 /* User.swift */; };
+		C907765B253115D2006ED382 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C907765A253115D2006ED382 /* ContentView.swift */; };
 		C9702ADD252EF14E008A7167 /* ScoutingAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9702ADC252EF14E008A7167 /* ScoutingAppApp.swift */; };
 		C9702AE1252EF152008A7167 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C9702AE0252EF152008A7167 /* Assets.xcassets */; };
 		C9702AE4252EF152008A7167 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C9702AE3252EF152008A7167 /* Preview Assets.xcassets */; };
@@ -23,7 +24,6 @@
 		C9702B2C252EF1AF008A7167 /* TeamList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9702B29252EF1AF008A7167 /* TeamList.swift */; };
 		C9702B2D252EF1AF008A7167 /* TeamNav.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9702B2A252EF1AF008A7167 /* TeamNav.swift */; };
 		C9702B2E252EF1AF008A7167 /* TeamView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9702B2B252EF1AF008A7167 /* TeamView.swift */; };
-		C9702B33252EF39C008A7167 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9702B32252EF39C008A7167 /* ContentView.swift */; };
 		C9F28BA0253002A90011F59F /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = C9F28B9F253002A90011F59F /* ComposableArchitecture */; };
 		C9F28BA2253002A90011F59F /* ComposableCoreMotion in Frameworks */ = {isa = PBXBuildFile; productRef = C9F28BA1253002A90011F59F /* ComposableCoreMotion */; };
 		C9F28BA4253002A90011F59F /* ComposableCoreLocation in Frameworks */ = {isa = PBXBuildFile; productRef = C9F28BA3253002A90011F59F /* ComposableCoreLocation */; };
@@ -48,6 +48,7 @@
 
 /* Begin PBXFileReference section */
 		C90776552530CD69006ED382 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		C907765A253115D2006ED382 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		C9702AD9252EF14E008A7167 /* ScoutingApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ScoutingApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9702ADC252EF14E008A7167 /* ScoutingAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoutingAppApp.swift; sourceTree = "<group>"; };
 		C9702AE0252EF152008A7167 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -69,7 +70,6 @@
 		C9702B29252EF1AF008A7167 /* TeamList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamList.swift; sourceTree = "<group>"; };
 		C9702B2A252EF1AF008A7167 /* TeamNav.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamNav.swift; sourceTree = "<group>"; };
 		C9702B2B252EF1AF008A7167 /* TeamView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamView.swift; sourceTree = "<group>"; };
-		C9702B32252EF39C008A7167 /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContentView.swift; path = ../../FTCscorer/FTCscorer/ContentView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,7 +124,7 @@
 			isa = PBXGroup;
 			children = (
 				C9702ADC252EF14E008A7167 /* ScoutingAppApp.swift */,
-				C9702B32252EF39C008A7167 /* ContentView.swift */,
+				C907765A253115D2006ED382 /* ContentView.swift */,
 				C9702AE0252EF152008A7167 /* Assets.xcassets */,
 				C9702AE5252EF152008A7167 /* Info.plist */,
 				C9702B1E252EF189008A7167 /* ThemedButton.swift */,
@@ -332,7 +332,7 @@
 				C9702B10252EF16A008A7167 /* MatchList.swift in Sources */,
 				C9702B0E252EF16A008A7167 /* MatchView.swift in Sources */,
 				C9702ADD252EF14E008A7167 /* ScoutingAppApp.swift in Sources */,
-				C9702B33252EF39C008A7167 /* ContentView.swift in Sources */,
+				C907765B253115D2006ED382 /* ContentView.swift in Sources */,
 				C9702B0F252EF16A008A7167 /* matchNav.swift in Sources */,
 				C9702B2E252EF1AF008A7167 /* TeamView.swift in Sources */,
 			);

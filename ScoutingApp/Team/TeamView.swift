@@ -12,6 +12,7 @@ struct TeamView: View {
     @ObservedObject var team: Team
     @ObservedObject var data: Data
     @State private var animateChart = false
+    @State var sheet = false
     var body: some View {
         NavigationView {
             ScrollView {
@@ -50,7 +51,7 @@ struct TeamView: View {
                         Spacer()
                         BarGraph(name: "Best Score", val: team.bestScore(), max: data.maxScore())
                         Spacer()
-                        BarGraph(name: "Variation", val: 1, max: team.MAD(), flip: true)
+                        BarGraph(name: "Consistency", val: 1, max: team.MAD(), flip: true)
                     }
                     //Divider()
                     Text("Autonomous")
@@ -62,7 +63,7 @@ struct TeamView: View {
                         Spacer()
                         BarGraph(name: "Best Score", val: team.bestAutoScore(), max: data.maxAutoScore())
                         Spacer()
-                        BarGraph(name: "Variation", val: 1, max: team.autoMAD(), flip: true)
+                        BarGraph(name: "Consistency", val: 1, max: team.autoMAD(), flip: true)
                     }
                     //Divider()
                     Text("Tele-Op")
@@ -74,7 +75,7 @@ struct TeamView: View {
                         Spacer()
                         BarGraph(name: "Best Score", val: team.bestTeleScore(), max: data.maxTeleScore())
                         Spacer()
-                        BarGraph(name: "Variation", val: 1, max: team.teleMAD(), flip: true)
+                        BarGraph(name: "Consistency", val: 1, max: team.teleMAD(), flip: true)
                     }
                     //Divider()
                     Text("Endgame")
@@ -86,7 +87,7 @@ struct TeamView: View {
                         Spacer()
                         BarGraph(name: "Best Score", val: team.bestEndScore(), max: data.maxEndScore())
                         Spacer()
-                        BarGraph(name: "Variation", val: 1, max: team.endMAD(), flip: true)
+                        BarGraph(name: "Consistency", val: 1, max: team.endMAD(), flip: true)
                     }
                 }
             }

@@ -46,6 +46,7 @@ struct TeamList: View {
                     })
                 TextField("Name", text: $name.1)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .disableAutocorrection(true)
             }
             Button("Save"){
                 data.addTeam(Team(name.0, name.1))

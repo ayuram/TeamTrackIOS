@@ -186,6 +186,9 @@ class Data: ObservableObject{
         case .endgame: return teams.max { $0.avgEndScore() > $1.avgEndScore() }
         }
     }
+    func bestTeam() -> [Team]?{
+        Array(teams.sorted { $0.avgScore() > $1.avgScore() }[0 ... 3])
+    }
     func addTeam(_ team: Team){
         var bool: Bool = false
         teams.map {
