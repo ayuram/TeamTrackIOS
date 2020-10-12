@@ -12,9 +12,6 @@ import Combine
 struct TeamList: View {
     @EnvironmentObject var data: Data
     @State var sheet = false
-//    init(){
-//        UITableView.appearance().backgroundColor = .white
-//    }
     var body: some View {
         NavigationView{
             
@@ -22,16 +19,15 @@ struct TeamList: View {
                 ForEach(data.teams){ team in
                     TeamNav(team, data)
                 }
-                
-            }
+            }.listStyle(GroupedListStyle())
             .navigationBarTitle("Teams")
             .navigationBarItems(trailing: Button("Add"){
                 self.sheet.toggle()
             }).sheet(isPresented: $sheet){
                 sht()
             }
-            
         }
+        
     }
     @State var name: (String, String) = ("", "")
     func sht() -> some View{

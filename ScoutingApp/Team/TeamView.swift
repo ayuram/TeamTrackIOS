@@ -14,7 +14,7 @@ struct TeamView: View {
     @State private var animateChart = false
     @State var sheet = false
     var body: some View {
-        NavigationView {
+        NavigationView{
             ScrollView {
                 VStack {
                     HStack{
@@ -27,11 +27,6 @@ struct TeamView: View {
                         LineGraph(team.scores.map{CGFloat($1.val())}.normalized)
                             .trim(to: animateChart ? 1 : 0)
                             .stroke(Color.green)
-//                            .onAppear(perform: {
-//                                withAnimation(.easeInOut(duration: 2)){
-//                                    animateChart = true
-//                                }
-//                            })
                             .onAppear(perform: {
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5){
                                     self.animateChart = true
@@ -89,10 +84,14 @@ struct TeamView: View {
                         Spacer()
                         BarGraph(name: "Consistency", val: 1, max: team.endMAD(), flip: true)
                     }
+                    Spacer()
                 }
+                .padding()
+                .navigationBarTitle(team.name)
+                
             }
-        }.navigationBarTitle(team.name)
-        .padding()
+            
+        }
     }
 }
 extension Array where Element == CGFloat{

@@ -55,7 +55,7 @@ struct BarGraph: View {
         }.buttonStyle(PlainButtonStyle())
     }
     func color() -> Color{
-        if(val/max < 0.50){
+        if(val/max < 0.25){
             return .red
         }
         else if (val/max < 0.75){

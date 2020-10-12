@@ -24,9 +24,14 @@ struct ContentView: View {
                 Text("Teams")
             }
             MatchList()
+            .tabItem {
+                Image(systemName: "sportscourt.fill")
+                Text("Matches")
+            }
+            User()
                 .tabItem {
-                    Image(systemName: "sportscourt.fill")
-                    Text("Matches")
+                    Image(systemName: "person.fill")
+                    Text("User")
                 }
         }.environmentObject(data)
     }

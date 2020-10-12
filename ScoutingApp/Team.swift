@@ -187,7 +187,8 @@ class Data: ObservableObject{
         }
     }
     func bestTeam() -> [Team]?{
-        Array(teams.sorted { $0.avgScore() > $1.avgScore() }[0 ... 3])
+        let arr = teams.sorted { $0.avgScore() > $1.avgScore() }[0 ... 3]
+        return Array(arr)
     }
     func addTeam(_ team: Team){
         var bool: Bool = false
