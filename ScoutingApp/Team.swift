@@ -38,7 +38,7 @@ struct EndgameScore {
     var wobbleGoalsinDrop: Int = 0
     var wobbleGoalsinStart: Int = 0
     var ringsOnWobble: Int = 0
-    func total() -> Int{
+    func total() -> Int {
         pwrShots * 15 + wobbleGoalsinDrop * 20 + wobbleGoalsinStart * 5 + ringsOnWobble * 5
     }
 }

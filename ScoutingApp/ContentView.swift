@@ -28,11 +28,6 @@ struct ContentView: View {
                 Image(systemName: "sportscourt.fill")
                 Text("Matches")
             }
-            User()
-                .tabItem {
-                    Image(systemName: "person.fill")
-                    Text("User")
-                }
         }.environmentObject(data)
     }
 }
