@@ -21,8 +21,17 @@ struct MatchView: View {
         case b1
     }
     var body: some View {
-        NavigationView{
+       
             VStack{
+                HStack{
+                    Text("Match Stats")
+                        .font(.largeTitle)
+                        .bold()
+                        .frame(alignment: .leading)
+                        
+                        .padding()
+                    Spacer()
+                }
                 Spacer()
                 HStack{
                     Spacer()
@@ -60,10 +69,10 @@ struct MatchView: View {
                     }.disabled(self.curr == .b1)
                 }.padding()
                 adjustments()
-                Spacer()
+                
             }
-            .navigationBarTitle("Match Stats")
-        }
+            
+        
     }
     func adjustments() -> some View{
         switch curr{
