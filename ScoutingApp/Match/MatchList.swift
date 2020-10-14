@@ -31,6 +31,7 @@ struct MatchList: View {
                 }).sheet(isPresented: $add) {
                     AddMatch
             }
+            
         }
     }
     @State var red0: String = ""

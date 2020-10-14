@@ -7,7 +7,6 @@
 //
 
 import Foundation
-
 extension Int{
     func double() -> Double{
         Double(self)
