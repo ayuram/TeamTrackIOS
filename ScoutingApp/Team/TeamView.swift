@@ -24,7 +24,7 @@ struct TeamView: View {
                             Text("\(team.scores.map { $1.val() }.min() ?? 0)").bold()
                             
                         }
-                        LineGraph(team.scores.map{CGFloat($1.val())}.normalized)
+                        LineGraph(team.orderedScores().map{CGFloat($0.val())}.normalized)
                             .trim(to: animateChart ? 1 : 0)
                             .stroke(Color.green)
                             .onAppear(perform: {

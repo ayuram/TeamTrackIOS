@@ -39,7 +39,7 @@ struct BarGraph: View {
         
     }
     func abnormal() -> some View{
-        NavigationLink(destination: Text("Hello")){
+        
             VStack{
                 Text(name)
                     .font(.caption)
@@ -52,7 +52,7 @@ struct BarGraph: View {
                 Text("\(Int(max))")
                     .font(.caption)
             }
-        }.buttonStyle(PlainButtonStyle())
+       
     }
     func color() -> Color{
         if(val/max < 0.25){

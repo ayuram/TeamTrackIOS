@@ -72,11 +72,14 @@ enum Aspect{
 class Team: ObservableObject, Identifiable{
     let number: String
     var name: String
-    //var ids: [UUID] = []
+    var ids: [UUID] = []
     @Published var scores: Dictionary<UUID, Score> = [:]
     init(_ n: String,_ s: String){
         number = n
         name = s
+    }
+    func orderedScores() -> [Score]{
+        ids.map { scores[$0] ?? Score() }
     }
     func avgScore() -> Double{
         switch scores.map({$1.val()}).count{
@@ -211,6 +214,10 @@ class Data: ObservableObject{
         }
         if(!bool){
             matches.append(match)
+            match.red.0.ids.append(match.id)
+            match.red.1.ids.append(match.id)
+            match.blue.0.ids.append(match.id)
+            match.blue.1.ids.append(match.id)
         }
         
     }
