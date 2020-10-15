@@ -7,6 +7,8 @@
 //
 
 import Foundation
+import Combine
+
 extension Int{
     func double() -> Double{
         Double(self)
@@ -168,6 +170,7 @@ class Data: ObservableObject{
     init(){
         teams = []
         matches = []
+            //.publisher
         user = .none
     }
     func weakestAspect() -> Aspect? {

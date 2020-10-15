@@ -21,6 +21,7 @@ struct MatchList: View {
                 ForEach(data.matches){ match in
                     matchNav(match)
                 }
+                .onDelete(perform: delete)
             }.navigationBarTitle("Matches")
                 .navigationBarItems(trailing: Button("Add"){
                     self.add.toggle()
@@ -33,6 +34,25 @@ struct MatchList: View {
             }
             
         }
+    }
+    func delete(at offsets: IndexSet){
+        var matches = offsets
+            .map{data.matches[$0]}
+        matches
+            .map{
+                $0.red.0.scores[$0.id] = nil
+                $0.red.1.scores[$0.id] = nil
+                $0.blue.0.scores[$0.id] = nil
+                $0.blue.1.scores[$0.id] = nil
+            }
+        matches
+            .map{ match in
+                match.red.0.ids.removeAll {$0 == match.id}
+                match.red.1.ids.removeAll {$0 == match.id}
+                match.blue.0.ids.removeAll {$0 == match.id}
+                match.blue.1.ids.removeAll {$0 == match.id}
+            }
+        data.matches.remove(atOffsets: offsets)
     }
     @State var red0: String = ""
     @State var red1: String = ""
