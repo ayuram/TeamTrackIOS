@@ -47,6 +47,8 @@ struct MatchList: View {
             }
         matches
             .map{ match in
+                var x:[Int] = []
+                x.removeAll{ $0 == 1 }
                 match.red.0.ids.removeAll {$0 == match.id}
                 match.red.1.ids.removeAll {$0 == match.id}
                 match.blue.0.ids.removeAll {$0 == match.id}

@@ -104,6 +104,6 @@ extension Array where Element == CGFloat{
 }
 struct TeamView_Previews: PreviewProvider {
     static var previews: some View {
-        TeamView(team: Team("11", "Ayush"), data: Data())
+        TeamView(team: Team("11", "A"), data: Data())
     }
 }
