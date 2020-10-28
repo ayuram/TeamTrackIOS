@@ -78,9 +78,8 @@ struct TeamView: View {
     }
     func lineChart() -> some View{
         switch team.orderedScores().count{
-        case 1: return AnyView(Text(""))
-        default: return AnyView(LineView(data: [1, 6, 7, 3, 2, 9], title: "Timeline", style: ChartStyle(backgroundColor: .clear, accentColor: .red, gradientColor: GradientColor(start: .blue, end: .red), textColor: .black, legendTextColor: .gray, dropShadowColor: .red)).frame(height: 330))
-//        default: return AnyView(LineView(data: team.orderedScores().map{Double($0.val())}, title: "Timeline", style: Styles.lineChartStyleOne).frame(height: 330))
+        case 0: return AnyView(Text(""))
+        default: return AnyView(LineView(data: team.orderedScores().map{Double($0.val())}, title: "Timeline", style: ChartStyle(backgroundColor: .clear, accentColor: .red, gradientColor: GradientColor(start: .blue, end: .red), textColor: .black, legendTextColor: .gray, dropShadowColor: .red)).frame(height: 330))
         }
     }
 }

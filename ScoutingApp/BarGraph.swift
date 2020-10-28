@@ -15,12 +15,22 @@ struct BarGraph: View {
     var val: Double
     var max: Double
     var flip: Bool = false
+   // var view: () -> AnyView? = defaultView
+    var clickable = true
     @State var sheet = false
     
     var body: some View {
-        NavigationLink(destination: Text("Hello World!")){
-            choice()
-        }.buttonStyle(PlainButtonStyle())
+       // print(type(of: view))
+        if(clickable){
+            return AnyView(NavigationLink(destination: BarFullView(points: [1, 8, 9, 2, 13], barGraph: self){[
+                AnyView(Text("Hello"))
+            ]}){
+                choice()
+            }.buttonStyle(PlainButtonStyle()))
+        }
+        else{
+            return AnyView(choice())
+        }
     }
     func choice() -> some View{
         (max >= 1 || !flip) ? AnyView(normal()) : AnyView(abnormal())
@@ -68,11 +78,11 @@ struct BarGraph: View {
             return .green
         }
     }
-    
 }
+
 struct BarGraph_Previews: PreviewProvider {
     static var previews: some View {
-        BarGraph(name: "OK", val: 1, max: 13, flip: true)
+        BarGraph(height: 600, name: "OK", val: 1, max: 2, flip: true)
     }
 }
 
