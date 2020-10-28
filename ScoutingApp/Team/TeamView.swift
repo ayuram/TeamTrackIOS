@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import SwiftUICharts
 
 struct TeamView: View {
     @ObservedObject var team: Team
@@ -14,28 +15,33 @@ struct TeamView: View {
     @State private var animateChart = false
     @State var sheet = false
     var body: some View {
-        NavigationView{
+        
             ScrollView {
                 VStack {
-                    HStack{
-                        VStack{
-                            Text("\(team.scores.map { $1.val() }.max() ?? 0)").bold()
-                                Spacer()
-                            Text("\(team.scores.map { $1.val() }.min() ?? 0)").bold()
-                            
-                        }
-                        LineGraph(team.orderedScores().map{CGFloat($0.val())}.normalized)
-                            .trim(to: animateChart ? 1 : 0)
-                            .stroke(Color.green)
-                            .onAppear(perform: {
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5){
-                                    self.animateChart = true
-                                }
-                            })
-                            .animation(.easeInOut(duration: 2))
-                            .border(Color.black)
-                        Spacer()
-                    }.frame(height: 360)
+                    
+//                        VStack{
+//                            Text("\(team.scores.map { $1.val() }.max() ?? 0)").bold()
+//                                Spacer()
+//                            Text("\(team.scores.map { $1.val() }.min() ?? 0)").bold()
+//                            
+//                        }
+//                        LineGraph(team.orderedScores().map{CGFloat($0.val())}.normalized)
+//                            .trim(to: animateChart ? 1 : 0)
+//                            .stroke(Color.green)
+//                            .onAppear(perform: {
+//                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5){
+//                                    self.animateChart = true
+//                                }
+//                            })
+//                            .animation(.easeInOut(duration: 2))
+//                            .border(Color.black)
+                        //lineChart()
+                    lineChart()
+                        
+                            //.shadow(radius: 2)
+                            //.animation(.easeInOut(duration: 1.5))
+                        //Spacer()
+                    
                     //Divider()
                     Text("General")
                         .bold()
@@ -91,6 +97,12 @@ struct TeamView: View {
                 
             }
             
+        
+    }
+    func lineChart() -> some View{
+        switch team.orderedScores().count{
+        case 0: return AnyView(Text(""))
+        default: return AnyView(LineView(data: team.orderedScores().map{Double($0.val())}, title: "Timeline", style: Styles.lineChartStyleOne).frame(height: 330))
         }
     }
 }
