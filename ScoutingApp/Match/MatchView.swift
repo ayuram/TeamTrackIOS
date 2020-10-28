@@ -419,6 +419,6 @@ struct Auto: View{
 struct MatchView_Previews: PreviewProvider {
     static var previews: some View {
         MatchView(Match(red: (Team("2", "alphas"), Team("3", "betas")),blue: (Team("0", "charlies"), Team("1", "deltas"))))
-            .preferredColorScheme(.dark)
+            
     }
 }

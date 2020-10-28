@@ -65,11 +65,6 @@ extension Array where Element == Double{
         self.map{ abs($0 - self.mean()) }.mean()
     }
 }
-enum Aspect{
-    case auto
-    case tele
-    case endgame
-}
 class Team: ObservableObject, Identifiable{
     let number: String
     var name: String
@@ -173,23 +168,9 @@ class Data: ObservableObject{
             //.publisher
         user = .none
     }
-    func weakestAspect() -> Aspect? {
-        switch user{
-        case .none: return .none
-        default: return [(user!.avgAutoScore()/maxAutoScore(), Aspect.auto), (user!.avgTeleScore()/maxTeleScore(), Aspect.tele), (user!.avgEndScore()/maxEndScore(), Aspect.endgame)].min(by: { $0.0 < $1.0 } )!.1
-        }
-    }
     func setUser(_ t: Team){
         addTeam(t)
         user = t
-    }
-    func idealAlliance() -> Team? {
-        switch weakestAspect(){
-        case .none: return .none
-        case .auto: return teams.max { $0.avgAutoScore() > $1.avgAutoScore() }
-        case .tele: return teams.max { $0.avgTeleScore() > $1.avgTeleScore() }
-        case .endgame: return teams.max { $0.avgEndScore() > $1.avgEndScore() }
-        }
     }
     func bestTeam() -> [Team]?{
         let arr = teams.sorted { $0.avgScore() > $1.avgScore() }[0 ... 3]

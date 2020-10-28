@@ -18,12 +18,15 @@ struct BarGraph: View {
     @State var sheet = false
     
     var body: some View {
-        choice()
+        NavigationLink(destination: Text("Hello World!")){
+            choice()
+        }.buttonStyle(PlainButtonStyle())
     }
     func choice() -> some View{
         (max >= 1 || !flip) ? AnyView(normal()) : AnyView(abnormal())
     }
     func normal() -> some View{
+        
             VStack{
                 Text(name)
                     .font(.caption)
