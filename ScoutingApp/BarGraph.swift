@@ -16,7 +16,7 @@ struct BarGraph: View {
     var max: Double
     var flip: Bool = false
    // var view: () -> AnyView? = defaultView
-    var clickable = true
+    var clickable = false
     @State var sheet = false
     
     var body: some View {
@@ -24,7 +24,7 @@ struct BarGraph: View {
         if(clickable){
             return AnyView(NavigationLink(destination: BarFullView(points: [1, 8, 9, 2, 13], barGraph: self){[
                 AnyView(Text("Hello"))
-            ]}){
+            ]}.transition(.scale)){
                 choice()
             }.buttonStyle(PlainButtonStyle()))
         }

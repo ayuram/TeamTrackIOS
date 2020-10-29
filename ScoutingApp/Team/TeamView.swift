@@ -15,57 +15,87 @@ struct TeamView: View {
     @State private var animateChart = false
     @State var sheet = false
     var body: some View {
-        
             ScrollView {
                 VStack {
                     lineChart()
-                    Text("General")
-                        .bold()
-                        .underline()
-                        .padding()
-                    HStack{
-                        
-                        BarGraph(name: "Average", val: team.avgScore(), max: data.maxScore())
-                        Spacer()
-                        BarGraph(name: "Best Score", val: team.bestScore(), max: data.maxScore())
-                        Spacer()
-                        BarGraph(name: "Consistency", val: 1, max: team.MAD(), flip: true)
+                        Text("General")
+                            .bold()
+                            .padding()
+                    NavigationLink(destination: BarFullView(points: team.orderedScores().map{ Double($0.val()) }, barGraph: BarGraph(name: "Best Score", val: team.bestAutoScore(), max: data.maxAutoScore())){[
+                        AnyView(Text("Hello"))
+                    ]}){
+                        CardView(){
+                            HStack{
+                                BarGraph(name: "Average", val: team.avgScore(), max: data.maxScore())
+                                Spacer()
+                                BarGraph(name: "Best Score", val: team.bestScore(), max: data.maxScore())
+                                Spacer()
+                                BarGraph(name: "Consistency", val: 1, max: team.MAD(), flip: true)
+                            }
+                            .padding()
+                            .frame(height: 100)
+                            .format()
+                        }.buttonStyle(PlainButtonStyle())
                     }
                     //Divider()
                     Text("Autonomous")
                         .bold()
-                        .underline()
                         .padding()
-                    HStack{
-                        BarGraph(name: "Average", val: team.avgAutoScore(), max: data.maxAutoScore())
-                        Spacer()
-                        BarGraph(name: "Best Score", val: team.bestAutoScore(), max: data.maxAutoScore())
-                        Spacer()
-                        BarGraph(name: "Consistency", val: 1, max: team.autoMAD(), flip: true)
+                    NavigationLink(destination: BarFullView(points: team.orderedScores().map{ Double($0.auto.total()) }, barGraph: BarGraph(name: "Best Score", val: team.bestAutoScore(), max: data.maxAutoScore())){[
+                        AnyView(Text("Hello"))
+                    ]}){
+                        CardView(){
+                            HStack{
+                                BarGraph(name: "Average", val: team.avgAutoScore(), max: data.maxAutoScore())
+                                Spacer()
+                                BarGraph(name: "Best Score", val: team.bestAutoScore(), max: data.maxAutoScore())
+                                Spacer()
+                                BarGraph(name: "Consistency", val: 1, max: team.autoMAD(), flip: true)
+                            }
+                            .padding()
+                            .frame(height: 100)
+                            .format()
+                        }.buttonStyle(PlainButtonStyle())
                     }
                     //Divider()
                     Text("Tele-Op")
                         .bold()
-                        .underline()
                         .padding()
-                    HStack{
-                        BarGraph(name: "Average", val: team.avgTeleScore(), max: data.maxTeleScore())
-                        Spacer()
-                        BarGraph(name: "Best Score", val: team.bestTeleScore(), max: data.maxTeleScore())
-                        Spacer()
-                        BarGraph(name: "Consistency", val: 1, max: team.teleMAD(), flip: true)
+                    NavigationLink(destination: BarFullView(points: team.orderedScores().map{ Double($0.tele.total()) }, barGraph: BarGraph(name: "Best Score", val: team.bestAutoScore(), max: data.maxAutoScore())){[
+                        AnyView(Text("Hello"))
+                    ]}){
+                        CardView(){
+                            HStack{
+                                BarGraph(name: "Average", val: team.avgTeleScore(), max: data.maxTeleScore())
+                                Spacer()
+                                BarGraph(name: "Best Score", val: team.bestTeleScore(), max: data.maxTeleScore())
+                                Spacer()
+                                BarGraph(name: "Consistency", val: 1, max: team.teleMAD(), flip: true)
+                            }
+                            .padding()
+                            .frame(height: 100)
+                            .format()
+                        }
                     }
                     //Divider()
                     Text("Endgame")
                         .bold()
-                        .underline()
                         .padding()
-                    HStack{
-                        BarGraph(name: "Average", val: team.avgEndScore(), max: data.maxEndScore())
-                        Spacer()
-                        BarGraph(name: "Best Score", val: team.bestEndScore(), max: data.maxEndScore())
-                        Spacer()
-                        BarGraph(name: "Consistency", val: 1, max: team.endMAD(), flip: true)
+                    NavigationLink(destination: BarFullView(points: team.orderedScores().map{ Double($0.endgame.total()) }, barGraph: BarGraph(name: "Best Score", val: team.bestAutoScore(), max: data.maxAutoScore())){[
+                        AnyView(Text("Hello"))
+                    ]}){
+                        CardView(){
+                            HStack{
+                                BarGraph(name: "Average", val: team.avgEndScore(), max: data.maxEndScore())
+                                Spacer()
+                                BarGraph(name: "Best Score", val: team.bestEndScore(), max: data.maxEndScore())
+                                Spacer()
+                                BarGraph(name: "Consistency", val: 1, max: team.endMAD(), flip: true)
+                            }
+                            .padding()
+                            .frame(height: 100)
+                            .format()
+                        }.buttonStyle(PlainButtonStyle())
                     }
                     Spacer()
                 }

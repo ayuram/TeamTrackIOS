@@ -34,7 +34,12 @@ struct BarFullView: View {
                         barGraph
                             .format()
                     }.frame(height: 240)
-                    LineChartView(data: points, title: "Timeline", rateValue: points.percentIncrease())
+                    if(points.count != 0){
+                        LineChartView(data: points, title: "Timeline", rateValue: points.percentIncrease())
+                    }
+                    else{
+                        EmptyView()
+                    }
                 }
                 ForEach(0 ..< cards.count){ n in
                     CardView(){
