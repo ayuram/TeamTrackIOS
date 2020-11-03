@@ -22,6 +22,9 @@ struct MatchList: View {
                     matchNav(match)
                 }
                 .onDelete(perform: delete)
+                .onMove(perform: { indices, newOffset in
+                    data.matches.move(fromOffsets: indices, toOffset: newOffset)
+                })
             }.navigationBarTitle("Matches")
                 .navigationBarItems(trailing: Button("Add"){
                     add.toggle()
@@ -33,7 +36,6 @@ struct MatchList: View {
                     AddMatch
             }
             .disabled(data.teams.count == 0)
-            
         }
     }
     func delete(at offsets: IndexSet){
@@ -54,7 +56,6 @@ struct MatchList: View {
     @State var blue1: String = ""
     @State var next = false
     var AddMatch: some View {
-        
             NavigationView{
                     VStack{
                         Picker(selection: $red0, label: Text("")){
@@ -74,10 +75,8 @@ struct MatchList: View {
                 })
                     .navigationBarTitle("Red Alliance")
             }
-        
     }
     var blue: some View{
-        
             VStack{
                 Picker(selection: $blue0, label: Text("")){
                     ForEach(data.teams){ team in
@@ -87,21 +86,19 @@ struct MatchList: View {
                 Picker(selection: $blue1, label: Text("")){
                     ForEach(data.teams){ team in
                         Text("\(team.number) \(team.name)").tag(team.number)
-                            
                     }
                 }
             }
         .navigationBarItems(trailing: Button("Add"){
-            var r0 = data.dictTeams()[red0] ?? Team("","")
-            var r1 = data.dictTeams()[red1] ?? Team("","")
-            var b0 = data.dictTeams()[blue0] ?? Team("","")
-            var b1 = data.dictTeams()[blue1] ?? Team("","")
+            let r0 = data.dictTeams()[red0] ?? Team("","")
+            let r1 = data.dictTeams()[red1] ?? Team("","")
+            let b0 = data.dictTeams()[blue0] ?? Team("","")
+            let b1 = data.dictTeams()[blue1] ?? Team("","")
             data.addMatch(Match(red: (r0,r1), blue: (b0, b1)))
-            self.add.toggle()
+            add.toggle()
         })
         .navigationBarTitle(Text("Blue Alliance"))
         .accentColor(.red)
-       
     }
 }
 

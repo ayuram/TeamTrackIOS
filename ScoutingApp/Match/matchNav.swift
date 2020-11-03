@@ -14,7 +14,7 @@ struct matchNav: View {
         match = m
     }
     var body: some View {
-        NavigationLink(destination: MatchView(match: match)){
+        NavigationLink(destination: MatchView(match)){
             HStack{
                 VStack{
                     Text("\(match.red.0.name) & \(match.red.1.name)")

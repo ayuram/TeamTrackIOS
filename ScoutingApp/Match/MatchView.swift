@@ -11,7 +11,17 @@ import SwiftUI
 struct MatchView: View {
     @ObservedObject var match: Match
     @State var curr: currentView = .r0
-    
+    @ObservedObject var scoreRed0: Score
+    @ObservedObject var scoreRed1: Score
+    @ObservedObject var scoreBlue0: Score
+    @ObservedObject var scoreBlue1: Score
+    init(_ m: Match){
+        match = m
+        scoreRed0 = (m.red.0.scores.find(m.id))
+        scoreRed1 = (m.red.1.scores.find(m.id))
+        scoreBlue0 = (m.blue.0.scores.find(m.id))
+        scoreBlue1 = (m.blue.1.scores.find(m.id))
+    }
     enum currentView{
         case r0
         case r1
@@ -23,7 +33,7 @@ struct MatchView: View {
                 Spacer()
                 HStack{
                     Spacer()
-                    Text("\((match.red.0.scores.find(match.id).val()) + (match.red.1.scores.find(match.id).val()))")
+                    Text("\(scoreRed0.val() + scoreRed1.val())")
                         .font(.largeTitle)
                         .frame(width: 100)
                     Spacer()
@@ -31,7 +41,7 @@ struct MatchView: View {
                         .font(.largeTitle)
                     Spacer()
                     
-                    Text("\((match.blue.0.scores.find(match.id).val()) + (match.blue.1.scores.find(match.id).val()))")
+                    Text("\(scoreBlue0.val() + scoreBlue1.val())")
                         .font(.largeTitle)
                         .frame(width: 100)
                     Spacer()
@@ -166,7 +176,7 @@ struct Auto: View{
 
 struct MatchView_Previews: PreviewProvider {
     static var previews: some View {
-        MatchView(match: Match(red: (Team("2", "alphas"), Team("3", "betas")),blue: (Team("0", "charlies"), Team("1", "deltas"))))
+        MatchView(Match(red: (Team("2", "alphas"), Team("3", "betas")),blue: (Team("0", "charlies"), Team("1", "deltas"))))
             
     }
 }
