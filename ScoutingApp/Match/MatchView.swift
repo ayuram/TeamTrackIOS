@@ -11,9 +11,7 @@ import SwiftUI
 struct MatchView: View {
     @ObservedObject var match: Match
     @State var curr: currentView = .r0
-    init(_ m: Match){
-        match = m
-    }
+    
     enum currentView{
         case r0
         case r1
@@ -21,21 +19,11 @@ struct MatchView: View {
         case b1
     }
     var body: some View {
-       
             VStack{
-                HStack{
-                    Text("Match Stats")
-                        .font(.largeTitle)
-                        .bold()
-                        .frame(alignment: .leading)
-                        
-                        .padding()
-                    Spacer()
-                }
                 Spacer()
                 HStack{
                     Spacer()
-                    Text("\((match.red.0.scores[match.id]?.val())! + (match.red.1.scores[match.id]?.val())!)")
+                    Text("\((match.red.0.scores.find(match.id).val()) + (match.red.1.scores.find(match.id).val()))")
                         .font(.largeTitle)
                         .frame(width: 100)
                     Spacer()
@@ -43,7 +31,7 @@ struct MatchView: View {
                         .font(.largeTitle)
                     Spacer()
                     
-                    Text("\((match.blue.0.scores[match.id]?.val())! + (match.blue.1.scores[match.id]?.val())!)")
+                    Text("\((match.blue.0.scores.find(match.id).val()) + (match.blue.1.scores.find(match.id).val()))")
                         .font(.largeTitle)
                         .frame(width: 100)
                     Spacer()
@@ -71,20 +59,20 @@ struct MatchView: View {
                 adjustments()
                 
             }
-            
-        
+            .navigationBarTitle("Match Stats")
     }
     func adjustments() -> some View{
         switch curr{
-            case .r0: return Adjustments(match.red.0, match)
-            case .r1: return Adjustments(match.red.1, match)
-            case .b0: return Adjustments(match.blue.0, match)
-            case .b1: return Adjustments(match.blue.1, match)
+        case .r0: return Adjustments(match.red.0, match, match.red.0.scores.find(match.id))
+            case .r1: return Adjustments(match.red.1, match, match.red.1.scores.find(match.id))
+            case .b0: return Adjustments(match.blue.0, match, match.blue.0.scores.find(match.id))
+        case .b1: return Adjustments(match.blue.1, match, match.blue.1.scores.find(match.id))
         }
     }
 }
 struct Adjustments: View{
-    let team: Team
+    @ObservedObject var team: Team
+    @ObservedObject var score: Score
     let match: Match
     @State var state = currentState.auto
     enum currentState{
@@ -92,13 +80,14 @@ struct Adjustments: View{
         case tele
         case endgame
     }
-    init(_ t: Team, _ m: Match){
+    init(_ t: Team, _ m: Match, _ s: Score){
         team = t
         match = m
+        score = s
     }
     var body: some View{
         VStack{
-            Text("\(team.name.capitalized) : \((team.scores[match.id]?.val())!)")
+            Text("\(team.name.capitalized) : \((score.val()))")
                 .font(.headline)
             Divider()
             HStack{
@@ -111,314 +100,73 @@ struct Adjustments: View{
                 .accentColor(.blue)
             }
             Divider()
-            ScrollView{
+            
                 view()
                     .frame(width: .infinity, height: 200, alignment: .top)
-            }
+            Spacer()
                 
         }
         
     }
     func view() -> some View{
         switch state{
-        case .auto: return AnyView(Auto(team: team, match: match))
+        case .auto: return AnyView(Auto(score: score))
             
-        case .tele: return AnyView(Tele(team: team, match: match))
+        case .tele: return AnyView(Tele(score: score))
             
-        case .endgame: return AnyView(End(team: team, match: match))
+        case .endgame: return AnyView(End(score: score))
             
         }
     }
 }
 struct End: View{
-    @ObservedObject var team: Team
-    let match: Match
-    let lim: Int = Int.max
+    @ObservedObject var score: Score
     var body: some View{
-    
-        VStack{
-            HStack{
-                Text("Power Shots")
-                    .frame(width: 100, height: 10, alignment: .leading)
-                    .padding()
-                Spacer()
-                Button(action: {
-                    self.team.scores[match.id]!.endgame.pwrShots = self.team.scores[match.id]!.endgame.pwrShots - 1 < 0 ? 0 : self.team.scores[match.id]!.endgame.pwrShots - 1
-                }){
-                    Image(systemName: "minus.circle.fill")
-                }
-                Text("\(self.team.scores[match.id]!.endgame.pwrShots)")
-                    .padding()
-                Button(action: {
-                    self.team.scores[match.id]!.endgame.pwrShots = self.team.scores[match.id]!.endgame.pwrShots + 1 > 3 ? 3 : self.team.scores[match.id]!.endgame.pwrShots + 1
-                }){
-                    Image(systemName:"plus.circle.fill")
-                }
-                Spacer()
-            }
-            HStack{
-                Text("Wobbles in Drop")
-                    .frame(width: 100, height: 10, alignment: .leading)
-                    .padding()
-                Spacer()
-                Button(action: {
-                    self.team.scores[match.id]!.endgame.wobbleGoalsinDrop = self.team.scores[match.id]!.endgame.wobbleGoalsinDrop - 1 < 0 ? 0 : self.team.scores[match.id]!.endgame.wobbleGoalsinDrop - 1
-                }){
-                    Image(systemName: "minus.circle.fill")
-                }
-                Text("\(self.team.scores[match.id]!.endgame.wobbleGoalsinDrop)")
-                    .padding()
-                Button(action: {
-                    self.team.scores[match.id]!.endgame.wobbleGoalsinDrop = self.team.scores[match.id]!.endgame.wobbleGoalsinDrop + 1 < 0 ? 0 : self.team.scores[match.id]!.endgame.wobbleGoalsinDrop + 1
-                }){
-                    Image(systemName: "plus.circle.fill")
-                }
-                Spacer()
-            }
-            HStack{
-                
-                Text("Woobles in Start")
-                    .frame(width: 100, height: 10, alignment: .leading)
-                    .padding()
-                Spacer()
-                Button(action: {
-                    self.team.scores[match.id]!.endgame.wobbleGoalsinStart = self.team.scores[match.id]!.endgame.wobbleGoalsinStart - 1 < 0 ? 0 : self.team.scores[match.id]!.endgame.wobbleGoalsinStart - 1
-                }){
-                    Image(systemName: "minus.circle.fill")
-                }
-                Text("\(self.team.scores[match.id]!.endgame.wobbleGoalsinStart)")
-                    .padding()
-                Button(action: {
-                    self.team.scores[match.id]!.endgame.wobbleGoalsinStart = self.team.scores[match.id]!.endgame.wobbleGoalsinStart + 1 < 0 ? 0 : self.team.scores[match.id]!.endgame.wobbleGoalsinStart + 1
-                }){
-                    Image(systemName: "plus.circle.fill")
-                }
-                Spacer()
-            }
-            HStack{
-                
-                Text("Rings on Wobble")
-                    .frame(width: 100, height: 10, alignment: .leading)
-                    .padding()
-                Spacer()
-                Button(action: {
-                    self.team.scores[match.id]!.endgame.ringsOnWobble = self.team.scores[match.id]!.endgame.ringsOnWobble - 1 < 0 ? 0 : self.team.scores[match.id]!.endgame.ringsOnWobble - 1
-                }){
-                    Image(systemName: "minus.circle.fill")
-                }
-                Text("\(self.team.scores[match.id]!.endgame.ringsOnWobble)")
-                    .padding()
-                Button(action: {
-                    self.team.scores[match.id]!.endgame.ringsOnWobble = self.team.scores[match.id]!.endgame.ringsOnWobble + 1 < 0 ? 0 : self.team.scores[match.id]!.endgame.ringsOnWobble + 1
-                }){
-                    Image(systemName: "plus.circle.fill")
-                }
-                Spacer()
-            }
+        ScrollView{
+            Stepper("\(score.endgame.pwrShots) Power Shots", value: $score.endgame.pwrShots, in: 0 ... 3)
+            Stepper("\(score.endgame.wobbleGoalsinDrop) Wobbles in Drop", value: $score.endgame.pwrShots, in: 0 ... 2)
+            Stepper("\(score.endgame.wobbleGoalsinStart) Wobbles in Start", value: $score.endgame.wobbleGoalsinStart, in: 0 ... 2)
+            Stepper("\(score.endgame.ringsOnWobble) Rings on Wobble", value: $score.endgame.ringsOnWobble, in: 0 ... Int.max)
             
         }
-    
+        .padding(.horizontal)
+        .frame(height: 250)
     }
 }
 struct Tele: View{
-    @ObservedObject var team: Team
-    let match: Match
-    let lim: Int = Int.max
+    @ObservedObject var score: Score
     var body: some View{
-  
-        VStack{
-            HStack{
-                Text("High Goals")
-                    .frame(width: 100, height: 10, alignment: .leading)
-                    .padding()
-                Spacer()
-                Button(action: {
-                    self.team.scores[match.id]!.tele.hiGoals = self.team.scores[match.id]!.tele.hiGoals - 1 < 0 ? 0 : self.team.scores[match.id]!.tele.hiGoals - 1
-                }){
-                    Image(systemName: "minus.circle.fill")
-                }
-                Text("\(self.team.scores[match.id]!.tele.hiGoals)")
-                    .padding()
-                Button(action: {
-                    self.team.scores[match.id]!.tele.hiGoals = self.team.scores[match.id]!.tele.hiGoals + 1 < 0 ? 0 : self.team.scores[match.id]!.tele.hiGoals + 1
-                }){
-                    Image(systemName: "plus.circle.fill")
-                }
-                Spacer()
-            }
-            HStack{
-                Text("Middle Goals")
-                    .frame(width: 100, height: 10, alignment: .leading)
-                    .padding()
-                Spacer()
-                Button(action: {
-                    self.team.scores[match.id]!.tele.midGoals = self.team.scores[match.id]!.tele.midGoals - 1 < 0 ? 0 : self.team.scores[match.id]!.tele.midGoals - 1
-                }){
-                    Image(systemName: "minus.circle.fill")
-                }
-                Text("\(self.team.scores[match.id]!.tele.midGoals)")
-                    .padding()
-                Button(action: {
-                    self.team.scores[match.id]!.tele.midGoals = self.team.scores[match.id]!.tele.midGoals + 1 < 0 ? 0 : self.team.scores[match.id]!.tele.midGoals + 1
-                }){
-                    Image(systemName: "plus.circle.fill")
-                }
-                Spacer()
-            }
-            HStack{
-                
-                Text("Low Goals")
-                    .frame(width: 100, height: 10, alignment: .leading)
-                    .padding()
-                Spacer()
-                Button(action: {
-                    self.team.scores[match.id]!.tele.lowGoals = self.team.scores[match.id]!.tele.lowGoals - 1 < 0 ? 0 : self.team.scores[match.id]!.tele.lowGoals - 1
-                }){
-                    Image(systemName: "minus.circle.fill")
-                }
-                Text("\(self.team.scores[match.id]!.tele.lowGoals)")
-                    .padding()
-                Button(action: {
-                    self.team.scores[match.id]!.tele.lowGoals = self.team.scores[match.id]!.tele.lowGoals + 1 < 0 ? 0 : self.team.scores[match.id]!.tele.lowGoals + 1
-                }){
-                    Image(systemName: "plus.circle.fill")
-                }
-                Spacer()
-            }
-            
+        ScrollView{
+            Stepper("\(score.tele.hiGoals) High Goals", value: $score.tele.hiGoals, in: 0 ... Int.max)
+            Stepper("\(score.tele.midGoals) Middle Goals", value: $score.tele.midGoals, in: 0 ... Int.max)
+            Stepper("\(score.tele.lowGoals) Low Goals", value: $score.tele.lowGoals, in: 0 ... Int.max)
         }
-    
+        .padding(.horizontal)
+        .frame(height: 250)
     }
 }
 struct Auto: View{
-    @ObservedObject var team: Team
-    let match: Match
-    let lim: Int = Int.max
+    @ObservedObject var score: Score
     var body: some View{
-        VStack{
-            HStack{
-                Text("High Goals")
-                    .frame(width: 100, height: 10, alignment: .leading)
-                    .padding()
-                Spacer()
-                Button(action: {
-                    self.team.scores[match.id]!.auto.hiGoals = self.team.scores[match.id]!.auto.hiGoals - 1 < 0 ? 0 : self.team.scores[match.id]!.auto.hiGoals - 1
-                }){
-                    Image(systemName: "minus.circle.fill")
-                }
-                Text("\(self.team.scores[match.id]!.auto.hiGoals)")
-                    .padding()
-                Button(action: {
-                    self.team.scores[match.id]!.auto.hiGoals = self.team.scores[match.id]!.auto.hiGoals + 1 < 0 ? 0 : self.team.scores[match.id]!.auto.hiGoals + 1
-                }){
-                    Image(systemName: "plus.circle.fill")
-                }
-                Spacer()
-            }
-            HStack{
-                Text("Middle Goals")
-                    .frame(width: 100, height: 10, alignment: .leading)
-                    .padding()
-                Spacer()
-                Button(action: {
-                    self.team.scores[match.id]!.auto.midGoals = self.team.scores[match.id]!.auto.midGoals - 1 < 0 ? 0 : self.team.scores[match.id]!.auto.midGoals - 1
-                }){
-                    Image(systemName: "minus.circle.fill")
-                }
-                Text("\(self.team.scores[match.id]!.auto.midGoals)")
-                    .padding()
-                Button(action: {
-                    self.team.scores[match.id]!.auto.midGoals = self.team.scores[match.id]!.auto.midGoals + 1 < 0 ? 0 : self.team.scores[match.id]!.auto.midGoals + 1
-                }){
-                    Image(systemName: "plus.circle.fill")
-                }
-                Spacer()
-            }
-            HStack{
-                
-                Text("Low Goals")
-                    .frame(width: 100, height: 10, alignment: .leading)
-                    .padding()
-                Spacer()
-                Button(action: {
-                    self.team.scores[match.id]!.auto.lowGoals = self.team.scores[match.id]!.auto.lowGoals - 1 < 0 ? 0 : self.team.scores[match.id]!.auto.lowGoals - 1
-                }){
-                    Image(systemName: "minus.circle.fill")
-                }
-                Text("\(self.team.scores[match.id]!.auto.lowGoals)")
-                    .padding()
-                Button(action: {
-                    self.team.scores[match.id]!.auto.lowGoals = self.team.scores[match.id]!.auto.lowGoals + 1 < 0 ? 0 : self.team.scores[match.id]!.auto.lowGoals + 1
-                }){
-                    Image(systemName: "plus.circle.fill")
-                }
-                Spacer()
-            }
-            HStack{
-                Text("Wobbles")
-                    .frame(width: 100, height: 10, alignment: .leading)
-                    .padding()
-                Spacer()
-                Button(action: {
-                    self.team.scores[match.id]!.auto.wobbleGoals = self.team.scores[match.id]!.auto.wobbleGoals - 1 < 0 ? 0 : self.team.scores[match.id]!.auto.wobbleGoals - 1
-                }){
-                    Image(systemName: "minus.circle.fill")
-                }
-                Text("\(self.team.scores[match.id]!.auto.wobbleGoals)")
-                    .padding()
-                Button(action: {
-                    self.team.scores[match.id]!.auto.wobbleGoals = self.team.scores[match.id]!.auto.wobbleGoals + 1 > 2 ? 2 : self.team.scores[match.id]!.auto.wobbleGoals + 1
-                }){
-                    Image(systemName: "plus.circle.fill")
-                }
-                Spacer()
-            }
-            HStack{
-                Text("Power Shots")
-                    .frame(width: 100, height: 10, alignment: .leading)
-                    .padding()
-                Spacer()
-                Button(action: {
-                    self.team.scores[match.id]!.auto.pwrShots = self.team.scores[match.id]!.auto.pwrShots - 1 < 0 ? 0 : self.team.scores[match.id]!.auto.pwrShots - 1
-                }){
-                    Image(systemName: "minus.circle.fill")
-                }
-                Text("\(self.team.scores[match.id]!.auto.pwrShots)")
-                    .padding()
-                Button(action: {
-                    self.team.scores[match.id]!.auto.pwrShots = self.team.scores[match.id]!.auto.pwrShots + 1 > 3 ? 3 : self.team.scores[match.id]!.auto.pwrShots + 1
-                }){
-                    Image(systemName: "plus.circle.fill")
-                }
-                Spacer()
-            }
-            HStack{
-                Text("Navigated")
-                    .frame(width: 100, height: 10, alignment: .leading)
-                    .padding()
-                Spacer()
-                Button(action: {
-                    self.team.scores[match.id]!.auto.navigated = self.team.scores[match.id]!.auto.navigated - 1 < 0 ? 0 : self.team.scores[match.id]!.auto.navigated - 1
-                }){
-                    Image(systemName: "minus.circle.fill")
-                }
-                Text("\(self.team.scores[match.id]!.auto.navigated)")
-                    .padding()
-                Button(action: {
-                    self.team.scores[match.id]!.auto.navigated = self.team.scores[match.id]!.auto.navigated + 1 > 2 ? 2 : self.team.scores[match.id]!.auto.navigated + 1
-                }){
-                    Image(systemName: "plus.circle.fill")
-                }
-                Spacer()
-            }
+        ScrollView{
+            Stepper("\(score.auto.hiGoals) High Goals", value: $score.auto.hiGoals, in: 0 ... Int.max)
+            
+            Stepper("\(score.auto.midGoals) Middle Goals", value: $score.auto.midGoals, in: 0 ... Int.max)
+            
+            Stepper("\(score.auto.lowGoals) Low Goals", value: $score.auto.lowGoals, in: 0 ... Int.max)
+            
+            Stepper("\(score.auto.wobbleGoals) Wobbles Placed", value: $score.auto.wobbleGoals, in: 0 ... 2)
+            Stepper("\(score.auto.pwrShots) Power Shots", value: $score.auto.pwrShots, in: 0 ... 3)
+            Stepper("\(score.auto.navigated) Navigated", value: $score.auto.navigated, in: 0 ... 2)
         }
-    
+        .padding(.horizontal)
+        .frame(height: 250)
     }
 }
 
 struct MatchView_Previews: PreviewProvider {
     static var previews: some View {
-        MatchView(Match(red: (Team("2", "alphas"), Team("3", "betas")),blue: (Team("0", "charlies"), Team("1", "deltas"))))
+        MatchView(match: Match(red: (Team("2", "alphas"), Team("3", "betas")),blue: (Team("0", "charlies"), Team("1", "deltas"))))
             
     }
 }

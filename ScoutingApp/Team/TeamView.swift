@@ -21,7 +21,7 @@ struct TeamView: View {
                         Text("General")
                             .bold()
                             .padding()
-                    NavigationLink(destination: BarFullView(points: team.orderedScores().map{ Double($0.val()) }, barGraph: BarGraph(name: "Best Score", val: team.bestAutoScore(), max: data.maxAutoScore())){[
+                    NavigationLink(destination: BarFullView(points: team.scores.map{ Double($0.val()) }, barGraph: BarGraph(name: "Best Score", val: team.bestAutoScore(), max: data.maxAutoScore())){[
                         AnyView(Text("Hello"))
                     ]}){
                         CardView(){
@@ -41,7 +41,7 @@ struct TeamView: View {
                     Text("Autonomous")
                         .bold()
                         .padding()
-                    NavigationLink(destination: BarFullView(points: team.orderedScores().map{ Double($0.auto.total()) }, barGraph: BarGraph(name: "Best Score", val: team.bestAutoScore(), max: data.maxAutoScore())){[
+                    NavigationLink(destination: BarFullView(points: team.scores.map{ Double($0.auto.total()) }, barGraph: BarGraph(name: "Best Score", val: team.bestAutoScore(), max: data.maxAutoScore())){[
                         AnyView(Text("Hello"))
                     ]}){
                         CardView(){
@@ -61,7 +61,7 @@ struct TeamView: View {
                     Text("Tele-Op")
                         .bold()
                         .padding()
-                    NavigationLink(destination: BarFullView(points: team.orderedScores().map{ Double($0.tele.total()) }, barGraph: BarGraph(name: "Best Score", val: team.bestAutoScore(), max: data.maxAutoScore())){[
+                    NavigationLink(destination: BarFullView(points: team.scores.map{ Double($0.tele.total()) }, barGraph: BarGraph(name: "Best Score", val: team.bestAutoScore(), max: data.maxAutoScore())){[
                         AnyView(Text("Hello"))
                     ]}){
                         CardView(){
@@ -81,7 +81,7 @@ struct TeamView: View {
                     Text("Endgame")
                         .bold()
                         .padding()
-                    NavigationLink(destination: BarFullView(points: team.orderedScores().map{ Double($0.endgame.total()) }, barGraph: BarGraph(name: "Best Score", val: team.bestAutoScore(), max: data.maxAutoScore())){[
+                    NavigationLink(destination: BarFullView(points: team.scores.map{ Double($0.endgame.total()) }, barGraph: BarGraph(name: "Best Score", val: team.bestAutoScore(), max: data.maxAutoScore())){[
                         AnyView(Text("Hello"))
                     ]}){
                         CardView(){
@@ -107,9 +107,9 @@ struct TeamView: View {
         
     }
     func lineChart() -> some View{
-        switch team.orderedScores().count{
+        switch team.scores.count{
         case 0: return AnyView(Text(""))
-        default: return AnyView(LineView(data: team.orderedScores().map{Double($0.val())}, title: "Timeline", style: ChartStyle(backgroundColor: .clear, accentColor: .red, gradientColor: GradientColor(start: .blue, end: .red), textColor: .black, legendTextColor: .gray, dropShadowColor: .red)).frame(height: 330))
+        default: return AnyView(LineView(data: team.scores.map{Double($0.val())}, title: "Timeline", style: ChartStyle(backgroundColor: .clear, accentColor: .red, gradientColor: GradientColor(start: .blue, end: .red), textColor: .black, legendTextColor: .gray, dropShadowColor: .red)).frame(height: 330))
         }
     }
 }

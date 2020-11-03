@@ -43,10 +43,20 @@ struct EndgameScore {
         pwrShots * 15 + wobbleGoalsinDrop * 20 + wobbleGoalsinStart * 5 + ringsOnWobble * 5
     }
 }
-struct Score {
-    var auto = AutoScore()
-    var tele = TeleScore()
-    var endgame = EndgameScore()
+class Score: Identifiable, ObservableObject {
+    var id: UUID
+    @Published var auto = AutoScore()
+    @Published var tele = TeleScore()
+    @Published var endgame = EndgameScore()
+    init(_ m: Match){
+        id = m.id
+    }
+    init(_ id: UUID){
+        self.id = id
+    }
+    init(){
+        id = UUID()
+    }
     func val() -> Int {
         auto.total() + tele.total() + endgame.total()
     }
@@ -65,65 +75,67 @@ extension Array where Element == Double{
         self.map{ abs($0 - self.mean()) }.mean()
     }
 }
+extension Array where Element == Score{
+    func find(_ id: UUID) -> Score{
+        self.reduce(Score()){ $1.id == id ? $1 : $0}
+    }
+}
 class Team: ObservableObject, Identifiable{
     let number: String
     var name: String
-    var ids: [UUID] = []
-    @Published var scores: Dictionary<UUID, Score> = [:]
+    @Published var scores: [Score] = []
     init(_ n: String,_ s: String){
         number = n
         name = s
     }
-    func orderedScores() -> [Score]{
-        ids.map { scores[$0] ?? Score() }
-    }
     func avgScore() -> Double{
-        switch scores.map({$1.val()}).count{
+        switch scores.map({$0.val()}).count{
             case 0: return 0
-        default: return scores.map{Double($1.val())}.mean()
+        default: return scores.map{Double($0.val())}.mean()
         }
     }
+    
     func avgAutoScore() -> Double {
-        switch scores.map({$1.val()}).count{
+        switch scores.map({$0.val()}).count{
         case 0: return 0
-        default: return scores.map{$1.auto.total().double()}.mean()
+        default: return scores.map{$0.auto.total().double()}.mean()
         }
     }
     func avgTeleScore() -> Double {
-        switch scores.map({$1.val()}).count{
+        switch scores.map({$0.val()}).count{
         case 0: return 0
-        default: return scores.map{$1.tele.total().double()}.mean()
+        default: return scores.map{$0.tele.total().double()}.mean()
         }
     }
     func avgEndScore() -> Double {
-        switch scores.map({$1.val()}).count{
+        switch scores.map({$0.val()}).count{
         case 0: return 0
-        default: return scores.map{$1.endgame.total().double()}.mean()
+        default: return scores.map{$0.endgame.total().double()}.mean()
         }
     }
     func bestScore() -> Double {
-       scores.compactMap{ Double($1.val()) }.max() ?? 0
+       scores.compactMap{ Double($0.val()) }.max() ?? 0
     }
     func bestAutoScore() -> Double {
-        scores.compactMap { $1.auto.total().double() }.max() ?? 0
+        scores.compactMap { $0.auto.total().double() }.max() ?? 0
     }
     func bestTeleScore() -> Double {
-        scores.compactMap { $1.tele.total().double() }.max() ?? 0
+        scores.compactMap { $0.tele.total().double() }.max() ?? 0
     }
     func bestEndScore() -> Double {
-        scores.compactMap { $1.endgame.total().double() }.max() ?? 0
+        scores.compactMap { $0.endgame.total().double() }.max() ?? 0
     }
     func MAD() -> Double{
-        scores.map {$1.val().double()}.MAD()
+        scores.map {$0.val().double()}.MAD()
     }
     func autoMAD() -> Double{
-        scores.map {$1.auto.total().double()}.MAD()
+        scores.map {$0.auto.total().double()}.MAD()
     }
     func teleMAD() -> Double{
-        scores.map {$1.tele.total().double()}.MAD()
+        scores.map {$0.tele.total().double()}.MAD()
     }
     func endMAD() -> Double{
-        scores.map {$1.endgame.total().double()}.MAD()
+        scores.map {$0.endgame.total().double()}.MAD()
     }
     static func < (_ lhs: Team, _ rhs: Team) -> Bool{
         lhs.number < rhs.number
@@ -139,21 +151,21 @@ class Match: Identifiable, ObservableObject{
     @Published var blue: side
     init(red: side, blue: side){
         id = UUID()
-        red.0.scores[id] = Score()
-        red.1.scores[id] = Score()
-        blue.0.scores[id] = Score()
-        blue.1.scores[id] = Score()
+        red.0.scores.append(Score(id))
+        red.1.scores.append(Score(id))
+        blue.0.scores.append(Score(id))
+        blue.1.scores.append(Score(id))
         self.red = red
         self.blue = blue
     }
     
     func score() -> String{
-        let r1 = red.0.scores[id]
-        let r2 = red.1.scores[id]
-        let b1 = blue.0.scores[id]
-        let b2 = blue.0.scores[id]
+        let r1 = red.0.scores.reduce(Score()){ $1.id == self.id ? $1 : $0 }
+        let r2 = red.1.scores.reduce(Score()){ $1.id == self.id ? $1 : $0 }
+        let b1 = blue.0.scores.reduce(Score()){ $1.id == self.id ? $1 : $0 }
+        let b2 = blue.0.scores.reduce(Score()){ $1.id == self.id ? $1 : $0 }
 
-        return "\((r1?.val())! + (r2?.val())!) - \((b1?.val())! + (b2?.val())!)"
+        return "\((r1.val()) + (r2.val())) - \((b1.val()) + (b2.val()))"
         
     }
 }
@@ -197,12 +209,7 @@ class Data: ObservableObject{
         }
         if(!bool){
             matches.append(match)
-            match.red.0.ids.append(match.id)
-            match.red.1.ids.append(match.id)
-            match.blue.0.ids.append(match.id)
-            match.blue.1.ids.append(match.id)
         }
-        
     }
     func sortTeams() -> Void{
         teams.sort(by: <)

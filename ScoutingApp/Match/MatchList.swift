@@ -36,23 +36,14 @@ struct MatchList: View {
         }
     }
     func delete(at offsets: IndexSet){
-        var matches = offsets
+        let matches = offsets
             .map{data.matches[$0]}
         matches
-            .map{
-                $0.red.0.scores[$0.id] = nil
-                $0.red.1.scores[$0.id] = nil
-                $0.blue.0.scores[$0.id] = nil
-                $0.blue.1.scores[$0.id] = nil
-            }
-        matches
             .map{ match in
-                var x:[Int] = []
-                x.removeAll{ $0 == 1 }
-                match.red.0.ids.removeAll {$0 == match.id}
-                match.red.1.ids.removeAll {$0 == match.id}
-                match.blue.0.ids.removeAll {$0 == match.id}
-                match.blue.1.ids.removeAll {$0 == match.id}
+                match.red.0.scores.removeAll {$0.id == match.id}
+                match.red.1.scores.removeAll {$0.id == match.id}
+                match.blue.0.scores.removeAll {$0.id == match.id}
+                match.blue.1.scores.removeAll {$0.id == match.id}
             }
         data.matches.remove(atOffsets: offsets)
     }
@@ -101,7 +92,7 @@ struct MatchList: View {
                     }
                 }
             }
-        }.navigationBarItems(trailing: Button("Save"){
+        }.navigationBarItems(trailing: Button("Add"){
             var r0 = data.dictTeams()[red0] ?? Team("","")
             var r1 = data.dictTeams()[red1] ?? Team("","")
             var b0 = data.dictTeams()[blue0] ?? Team("","")
