@@ -35,7 +35,7 @@ struct BarFullView: View {
                             .format()
                     }.frame(height: 240)
                     if(points.count != 0){
-                        LineChartView(data: points, title: "Timeline", rateValue: points.percentIncrease())
+                        //LineChartView(data: points, title: "Timeline", rateValue: points.percentIncrease())
                     }
                     else{
                         EmptyView()
