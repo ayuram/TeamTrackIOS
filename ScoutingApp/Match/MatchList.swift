@@ -24,7 +24,7 @@ struct MatchList: View {
                 .onDelete(perform: delete)
             }.navigationBarTitle("Matches")
                 .navigationBarItems(trailing: Button("Add"){
-                    self.add.toggle()
+                    add.toggle()
                     red0 = data.teams[0].number
                     red1 = data.teams[0].number
                     blue0 = data.teams[0].number
@@ -32,6 +32,7 @@ struct MatchList: View {
                 }).sheet(isPresented: $add) {
                     AddMatch
             }
+            .disabled(data.teams.count == 0)
             
         }
     }
@@ -64,10 +65,8 @@ struct MatchList: View {
                             Picker(selection: $red1, label: Text("")){
                                 ForEach(data.teams){ team in
                                     Text("\(team.number) \(team.name)").tag(team.number)
-                                        
                                 }
                             }
-                            
                     }
                 .navigationBarItems(trailing: NavigationLink(destination: blue){
                     Text("Next").accentColor(.red)
@@ -78,7 +77,7 @@ struct MatchList: View {
         
     }
     var blue: some View{
-        NavigationView{
+        
             VStack{
                 Picker(selection: $blue0, label: Text("")){
                     ForEach(data.teams){ team in
@@ -92,7 +91,7 @@ struct MatchList: View {
                     }
                 }
             }
-        }.navigationBarItems(trailing: Button("Add"){
+        .navigationBarItems(trailing: Button("Add"){
             var r0 = data.dictTeams()[red0] ?? Team("","")
             var r1 = data.dictTeams()[red1] ?? Team("","")
             var b0 = data.dictTeams()[blue0] ?? Team("","")
@@ -109,7 +108,7 @@ struct MatchList: View {
 
 struct MatchList_Previews: PreviewProvider {
     static var previews: some View {
-        MatchList().AddMatch
+        MatchList().environmentObject(Data())
     }
 }
 

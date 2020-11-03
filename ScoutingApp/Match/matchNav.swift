@@ -27,6 +27,7 @@ struct matchNav: View {
                         .font(.custom("", size: 14))
                 }
                 Spacer()
+                Text(match.score())
 //                Text("\((match.red.0.scores[match.id]?.val())! + (match.red.1.scores[match.id]?.val())!) - \((match.blue.0.scores[match.id]?.val())! + (match.blue.1.scores[match.id]?.val())!)")
 //                    .padding(.trailing, 5)
             }

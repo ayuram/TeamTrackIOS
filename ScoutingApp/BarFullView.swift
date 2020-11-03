@@ -34,11 +34,11 @@ struct BarFullView: View {
                         barGraph
                             .format()
                     }.frame(height: 240)
-                    if(points.count != 0){
+                    if(points.count > 1){
                         //LineChartView(data: points, title: "Timeline", rateValue: points.percentIncrease())
                     }
                     else{
-                        EmptyView()
+                        Text("")
                     }
                 }
                 ForEach(0 ..< cards.count){ n in
@@ -53,7 +53,7 @@ struct BarFullView: View {
 
 struct BarFullView_Previews: PreviewProvider {
     static var previews: some View {
-        BarFullView(points: [9, 9, 18, 29, 288, 300], barGraph: BarGraph(name: "Auto Scores", val: 2, max: 10)){[
+        BarFullView(points: [9], barGraph: BarGraph(name: "Auto Scores", val: 2, max: 10)){[
             AnyView(Text("Hello!")),
             AnyView(Text("Hello!")),
             AnyView(Text("Hello!"))
