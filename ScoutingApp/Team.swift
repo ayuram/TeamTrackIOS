@@ -79,6 +79,30 @@ extension Array where Element == Score{
     func find(_ id: UUID) -> Score{
         self.reduce(Score()){ $1.id == id ? $1 : $0}
     }
+    func avgAutoScore() -> Double {
+        switch self.map({$0.val()}).count{
+        case 0: return 0
+        default: return self.map{$0.auto.total().double()}.mean()
+        }
+    }
+    func avgTeleScore() -> Double {
+        switch self.map({$0.val()}).count{
+        case 0: return 0
+        default: return self.map{$0.tele.total().double()}.mean()
+        }
+    }
+    func avgEndScore() -> Double {
+        switch self.map({$0.val()}).count{
+        case 0: return 0
+        default: return self.map{$0.endgame.total().double()}.mean()
+        }
+    }
+    func avgScore() -> Double{
+        switch self.map({$0.val()}).count{
+            case 0: return 0
+        default: return self.map{Double($0.val())}.mean()
+        }
+    }
 }
 class Team: ObservableObject, Identifiable{
     let number: String
@@ -94,7 +118,6 @@ class Team: ObservableObject, Identifiable{
         default: return scores.map{Double($0.val())}.mean()
         }
     }
-    
     func avgAutoScore() -> Double {
         switch scores.map({$0.val()}).count{
         case 0: return 0

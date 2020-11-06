@@ -27,10 +27,13 @@ struct TeamView: View {
                         CardView(){
                             HStack{
                                 BarGraph(name: "Average", val: team.avgScore(), max: data.maxScore())
+                                    .animation(.easeInOut)
                                 Spacer()
                                 BarGraph(name: "Best Score", val: team.bestScore(), max: data.maxScore())
+                                    .animation(.easeInOut)
                                 Spacer()
                                 BarGraph(name: "Consistency", val: 1, max: team.MAD(), flip: true)
+                                    .animation(.easeInOut)
                             }
                             .padding()
                             .frame(height: 100)
@@ -47,10 +50,13 @@ struct TeamView: View {
                         CardView(){
                             HStack{
                                 BarGraph(name: "Average", val: team.avgAutoScore(), max: data.maxAutoScore())
+                                    .animation(.easeInOut)
                                 Spacer()
                                 BarGraph(name: "Best Score", val: team.bestAutoScore(), max: data.maxAutoScore())
+                                    .animation(.easeInOut)
                                 Spacer()
-                                BarGraph(name: "Consistency", val: 1, max: team.autoMAD(), flip: true)
+                                BarGraph(name: "Consistency", val: data.lowestMAD(), max: team.autoMAD(), flip: true)
+                                    .animation(.easeInOut)
                             }
                             .padding()
                             .frame(height: 100)
@@ -67,10 +73,13 @@ struct TeamView: View {
                         CardView(){
                             HStack{
                                 BarGraph(name: "Average", val: team.avgTeleScore(), max: data.maxTeleScore())
+                                    .animation(.easeInOut)
                                 Spacer()
                                 BarGraph(name: "Best Score", val: team.bestTeleScore(), max: data.maxTeleScore())
+                                    .animation(.easeInOut)
                                 Spacer()
                                 BarGraph(name: "Consistency", val: 1, max: team.teleMAD(), flip: true)
+                                    .animation(.easeInOut)
                             }
                             .padding()
                             .frame(height: 100)
@@ -87,10 +96,13 @@ struct TeamView: View {
                         CardView(){
                             HStack{
                                 BarGraph(name: "Average", val: team.avgEndScore(), max: data.maxEndScore())
+                                    .animation(.easeInOut)
                                 Spacer()
                                 BarGraph(name: "Best Score", val: team.bestEndScore(), max: data.maxEndScore())
+                                    .animation(.easeInOut)
                                 Spacer()
                                 BarGraph(name: "Consistency", val: 1, max: team.endMAD(), flip: true)
+                                    .animation(.easeInOut)
                             }
                             .padding()
                             .frame(height: 100)
