@@ -13,7 +13,7 @@ struct MatchList: View {
     @EnvironmentObject var data: Data
     @State var add = false
     init(){
-        UITableView.appearance().backgroundColor = .white
+        UITableView.appearance().backgroundColor = UIColor(Color("background"))
     }
     var body: some View {
         NavigationView{
@@ -26,7 +26,7 @@ struct MatchList: View {
                     data.matches.move(fromOffsets: indices, toOffset: newOffset)
                 })
             }.navigationBarTitle("Matches")
-                .navigationBarItems(trailing: Button("Add"){
+            .navigationBarItems(leading: EditButton(), trailing: Button("Add"){
                     add.toggle()
                     red0 = data.teams[0].number
                     red1 = data.teams[0].number
