@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		C907765B253115D2006ED382 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C907765A253115D2006ED382 /* ContentView.swift */; };
-		C90C911B2557382B006E6752 /* SwiftUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90C911A2557382B006E6752 /* SwiftUIView.swift */; };
 		C90C912725573C16006E6752 /* SwiftUICharts in Frameworks */ = {isa = PBXBuildFile; productRef = C90C912625573C16006E6752 /* SwiftUICharts */; };
 		C9451F1125495A6300767AFE /* BarFullView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9451F1025495A6300767AFE /* BarFullView.swift */; };
 		C94DF2AC255A21D70023C786 /* LineGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94DF2AB255A21D70023C786 /* LineGraph.swift */; };
@@ -51,7 +50,6 @@
 
 /* Begin PBXFileReference section */
 		C907765A253115D2006ED382 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		C90C911A2557382B006E6752 /* SwiftUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIView.swift; sourceTree = "<group>"; };
 		C9451F1025495A6300767AFE /* BarFullView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarFullView.swift; sourceTree = "<group>"; };
 		C94DF2AB255A21D70023C786 /* LineGraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineGraph.swift; sourceTree = "<group>"; };
 		C9702AD9252EF14E008A7167 /* ScoutingApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ScoutingApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -141,7 +139,6 @@
 				C9702B28252EF1AF008A7167 /* Team */,
 				C9702B0A252EF16A008A7167 /* Match */,
 				C9702AE2252EF152008A7167 /* Preview Content */,
-				C90C911A2557382B006E6752 /* SwiftUIView.swift */,
 				C94DF2AB255A21D70023C786 /* LineGraph.swift */,
 			);
 			path = ScoutingApp;
@@ -341,7 +338,6 @@
 				C9451F1125495A6300767AFE /* BarFullView.swift in Sources */,
 				C9702B15252EF174008A7167 /* BarGraph.swift in Sources */,
 				C9702B10252EF16A008A7167 /* MatchList.swift in Sources */,
-				C90C911B2557382B006E6752 /* SwiftUIView.swift in Sources */,
 				C9702B0E252EF16A008A7167 /* MatchView.swift in Sources */,
 				C9702ADD252EF14E008A7167 /* ScoutingAppApp.swift in Sources */,
 				C907765B253115D2006ED382 /* ContentView.swift in Sources */,

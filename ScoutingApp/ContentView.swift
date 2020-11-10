@@ -18,19 +18,19 @@ struct ContentView: View {
         data.addTeam(Team("12", "Alzing"))
     }
     var body: some View {
-//        TabView{
-//          TeamList()
-//            .tabItem {
-//                Image(systemName: "person.3.fill")
-//                Text("Teams")
-//            }
-//            MatchList()
-//            .tabItem {
-//                Image(systemName: "sportscourt.fill")
-//                Text("Matches")
-//            }
-//        }.environmentObject(data)
-        SwiftUIView()
+        TabView{
+          TeamList()
+            .tabItem {
+                Image(systemName: "person.3.fill")
+                Text("Teams")
+            }
+            MatchList()
+            .tabItem {
+                Image(systemName: "sportscourt.fill")
+                Text("Matches")
+            }
+        }.environmentObject(data)
+        
     }
 }
 

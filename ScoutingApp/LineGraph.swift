@@ -41,13 +41,32 @@ struct LineGraph: Shape {
         }
     }
 }
-struct Line: View{
-    var points : [CGFloat] = []
+struct LineChart: View{
+    var data : [CGFloat] = []
+    var color = Color.green
+    @State var animateChart = false
     var body: some View{
         ZStack{
-        Rectangle()
-            .frame(width: 150, height: 130, alignment: .center)
-        
+            HStack{
+                VStack{
+                    Text("\(data.max() ?? 0, specifier: "%.0f")")
+                    .bold()
+                        Spacer()
+                    Text("\(data.min() ?? 0, specifier: "%.0f")").bold()
+                    
+                }
+                LineGraph(data.normalized)
+                    .trim(to: animateChart ? 1 : 0)
+                    .stroke(color, lineWidth: 3)
+                    .onAppear(perform: {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5){
+                            self.animateChart = true
+                        }
+                    })
+                        .shadow(color: color, radius: 15, x: 0, y: 50)
+                    .animation(.easeInOut(duration: 2))
+                    .border(Color("text"))
+            }
         }
     }
     
@@ -55,7 +74,8 @@ struct Line: View{
 
 struct Window_Previews: PreviewProvider{
     static var previews: some View {
-        Text("Hello")
+        LineChart(data: [1, 3, 4, 2, 1, 7, 3])
+            .frame(height: 380)
     }
 }
 
