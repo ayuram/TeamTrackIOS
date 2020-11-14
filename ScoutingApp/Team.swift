@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Combine
 
 extension Int{
     func double() -> Double{
@@ -15,7 +14,7 @@ extension Int{
     }
 }
 
-struct AutoScore{
+struct AutoScore: Codable{
     var wobbleGoals: Int = 0
     var lowGoals: Int = 0
     var midGoals: Int = 0
@@ -26,7 +25,7 @@ struct AutoScore{
         wobbleGoals * 15 + lowGoals * 3 + midGoals * 6 + hiGoals * 12 + pwrShots * 15 + navigated * 5
     }
 }
-struct TeleScore{
+struct TeleScore: Codable{
     var lowGoals: Int = 0
     var midGoals: Int = 0
     var hiGoals: Int = 0
@@ -34,7 +33,7 @@ struct TeleScore{
         lowGoals * 2 + midGoals * 4 + hiGoals * 6
     }
 }
-struct EndgameScore {
+struct EndgameScore: Codable{
     var pwrShots: Int = 0
     var wobbleGoalsinDrop: Int = 0
     var wobbleGoalsinStart: Int = 0
@@ -43,7 +42,7 @@ struct EndgameScore {
         pwrShots * 15 + wobbleGoalsinDrop * 20 + wobbleGoalsinStart * 5 + ringsOnWobble * 5
     }
 }
-class Score: Identifiable, ObservableObject {
+class Score: Identifiable, ObservableObject{
     var id: UUID
     @Published var auto = AutoScore()
     @Published var tele = TeleScore()
@@ -106,6 +105,8 @@ extension Array where Element == Score{
 }
 class Team: ObservableObject, Identifiable{
     let number: String
+    let encoder = JSONEncoder()
+    let decoder = JSONDecoder()
     var name: String
     @Published var scores: [Score] = []
     init(_ n: String,_ s: String){
@@ -198,11 +199,13 @@ class Data: ObservableObject{
     @Published var matches: [Match]
     @Published var user: Team?
     init(){
+        
         teams = []
         matches = []
             //.publisher
         user = .none
     }
+    
     func setUser(_ t: Team){
         addTeam(t)
         user = t

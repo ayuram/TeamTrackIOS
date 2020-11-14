@@ -112,7 +112,7 @@ struct Adjustments: View{
             Divider()
             
                 view()
-                    .frame(width: .infinity, height: 200, alignment: .top)
+                    .frame(height: 200, alignment: .top)
             Spacer()
                 
         }

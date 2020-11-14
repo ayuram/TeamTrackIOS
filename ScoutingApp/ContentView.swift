@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-
+import SwiftUICharts
 struct ContentView: View {
     var data: Data = Data()
     init(){
@@ -30,6 +30,7 @@ struct ContentView: View {
                 Text("Matches")
             }
         }.environmentObject(data)
+        //LineView(data: [1, 5, 4, 3, 6])
         
     }
 }
