@@ -63,7 +63,7 @@ struct LineChart: View{
                             self.animateChart = true
                         }
                     })
-                        .shadow(color: color, radius: 15, x: 0, y: 50)
+                        .shadow(color: color, radius: 15, x: 10, y: 20)
                     .animation(.easeInOut(duration: 2))
                     .border(Color("text"))
             }

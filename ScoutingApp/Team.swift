@@ -268,22 +268,22 @@ class Data: ObservableObject{
     func lowestMAD() -> Double {
         teams
             .map { $0.MAD() }
-            .min() ?? 0
+            .min() ?? 1
     }
     func lowestTeleMAD() -> Double {
         teams
             .map { $0.teleMAD() }
-            .min() ?? 0
+            .min() ?? 1
     }
     func lowestAutoMAD() -> Double {
         teams
             .map { $0.autoMAD() }
-            .min() ?? 0
+            .min() ?? 1
     }
     func lowestEndMAD() -> Double {
         teams
             .map { $0.endMAD() }
-            .min() ?? 0
+            .min() ?? 1
     }
 }
 

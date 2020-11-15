@@ -26,13 +26,13 @@ struct MatchList: View {
                     data.matches.move(fromOffsets: indices, toOffset: newOffset)
                 })
             }.navigationBarTitle("Matches")
-            .navigationBarItems(leading: EditButton(), trailing: Button("Add"){
+            .navigationBarItems(leading: EditButton().padding(), trailing: Button("Add"){
                     add.toggle()
                     red0 = data.teams[0].number
                     red1 = data.teams[0].number
                     blue0 = data.teams[0].number
                     blue1 = data.teams[0].number
-                }).sheet(isPresented: $add) {
+            }.padding()).sheet(isPresented: $add) {
                     AddMatch
             }
             .disabled(data.teams.count == 0)
@@ -71,7 +71,7 @@ struct MatchList: View {
                     }
                 .navigationBarItems(trailing: NavigationLink(destination: blue){
                     Text("Next").accentColor(.red)
-                        
+                        .padding()
                 })
                     .navigationBarTitle("Red Alliance")
             }
@@ -96,7 +96,7 @@ struct MatchList: View {
             let b1 = data.dictTeams()[blue1] ?? Team("","")
             data.addMatch(Match(red: (r0,r1), blue: (b0, b1)))
             add.toggle()
-        })
+        }.padding())
         .navigationBarTitle(Text("Blue Alliance"))
         .accentColor(.red)
     }

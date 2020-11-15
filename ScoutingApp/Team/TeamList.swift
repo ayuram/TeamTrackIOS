@@ -52,8 +52,13 @@ struct TeamList: View {
             }
             Button("Save"){
                 data.addTeam(Team(name.0, name.1))
+                data.addTeam(Team(name.0, name.1))
+                name.0 = ""
+                name.1 = ""
                 self.sheet = false
-            }.disabled(name.0.trimmingCharacters(in: .whitespacesAndNewlines) == "" || name.1.trimmingCharacters(in: .whitespacesAndNewlines) == "")
+            }
+            .padding()
+            .disabled(name.0.trimmingCharacters(in: .whitespacesAndNewlines) == "" || name.1.trimmingCharacters(in: .whitespacesAndNewlines) == "")
         }
     }
     func check(val: (String, String)) -> Bool {

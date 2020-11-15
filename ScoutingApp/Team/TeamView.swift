@@ -30,7 +30,7 @@ struct TeamView: View {
                                 BarGraph(name: "Best Score", val: team.bestScore(), max: data.maxScore())
                                     .animation(.easeInOut)
                                 Spacer()
-                                BarGraph(name: "Consistency", val: 1, max: team.MAD(), flip: true)
+                                BarGraph(name: "Consistency", val: data.lowestMAD(), max: team.MAD(), flip: true)
                                     .animation(.easeInOut)
                             }
                             .padding()
@@ -51,7 +51,7 @@ struct TeamView: View {
                                 BarGraph(name: "Best Score", val: team.bestAutoScore(), max: data.maxAutoScore())
                                     .animation(.easeInOut)
                                 Spacer()
-                                BarGraph(name: "Consistency", val: data.lowestMAD(), max: team.autoMAD(), flip: true)
+                                BarGraph(name: "Consistency", val: data.lowestAutoMAD(), max: team.autoMAD(), flip: true)
                                     .animation(.easeInOut)
                             }
                             .padding()
@@ -72,7 +72,7 @@ struct TeamView: View {
                                 BarGraph(name: "Best Score", val: team.bestTeleScore(), max: data.maxTeleScore())
                                     .animation(.easeInOut)
                                 Spacer()
-                                BarGraph(name: "Consistency", val: 1, max: team.teleMAD(), flip: true)
+                                BarGraph(name: "Consistency", val: data.lowestTeleMAD(), max: team.teleMAD(), flip: true)
                                     .animation(.easeInOut)
                             }
                             .padding()
@@ -93,7 +93,7 @@ struct TeamView: View {
                                 BarGraph(name: "Best Score", val: team.bestEndScore(), max: data.maxEndScore())
                                     .animation(.easeInOut)
                                 Spacer()
-                                BarGraph(name: "Consistency", val: 1, max: team.endMAD(), flip: true)
+                                BarGraph(name: "Consistency", val: data.lowestEndMAD(), max: team.endMAD(), flip: true)
                                     .animation(.easeInOut)
                             }
                             .padding()
