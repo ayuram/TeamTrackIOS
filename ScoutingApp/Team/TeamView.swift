@@ -21,9 +21,7 @@ struct TeamView: View {
                         Text("General")
                             .bold()
                             .padding()
-                    NavigationLink(destination: BarFullView(points: team.scores.map{ Double($0.val()) }, barGraph: BarGraph(name: "Best Score", val: team.bestAutoScore(), max: data.maxAutoScore())){[
-                        AnyView(Text("Hello"))
-                    ]}){
+                   
                         CardView(){
                             HStack{
                                 BarGraph(name: "Average", val: team.avgScore(), max: data.maxScore())
@@ -39,14 +37,12 @@ struct TeamView: View {
                             .frame(height: 100)
                             .format()
                         }.buttonStyle(PlainButtonStyle())
-                    }
+                    
                     //Divider()
                     Text("Autonomous")
                         .bold()
                         .padding()
-                    NavigationLink(destination: BarFullView(points: team.scores.map{ Double($0.auto.total()) }, barGraph: BarGraph(name: "Best Score", val: team.bestAutoScore(), max: data.maxAutoScore())){[
-                        AnyView(Text("Hello"))
-                    ]}){
+                    
                         CardView(){
                             HStack{
                                 BarGraph(name: "Average", val: team.avgAutoScore(), max: data.maxAutoScore())
@@ -62,14 +58,12 @@ struct TeamView: View {
                             .frame(height: 100)
                             .format()
                         }.buttonStyle(PlainButtonStyle())
-                    }
+                    
                     //Divider()
                     Text("Tele-Op")
                         .bold()
                         .padding()
-                    NavigationLink(destination: BarFullView(points: team.scores.map{ Double($0.tele.total()) }, barGraph: BarGraph(name: "Best Score", val: team.bestAutoScore(), max: data.maxAutoScore())){[
-                        AnyView(Text("Hello"))
-                    ]}){
+                    
                         CardView(){
                             HStack{
                                 BarGraph(name: "Average", val: team.avgTeleScore(), max: data.maxTeleScore())
@@ -85,14 +79,12 @@ struct TeamView: View {
                             .frame(height: 100)
                             .format()
                         }
-                    }
+                    
                     //Divider()
                     Text("Endgame")
                         .bold()
                         .padding()
-                    NavigationLink(destination: BarFullView(points: team.scores.map{ Double($0.endgame.total()) }, barGraph: BarGraph(name: "Best Score", val: team.bestAutoScore(), max: data.maxAutoScore())){[
-                        AnyView(Text("Hello"))
-                    ]}){
+                    
                         CardView(){
                             HStack{
                                 BarGraph(name: "Average", val: team.avgEndScore(), max: data.maxEndScore())
@@ -108,7 +100,7 @@ struct TeamView: View {
                             .frame(height: 100)
                             .format()
                         }.buttonStyle(PlainButtonStyle())
-                    }
+                    
                     Spacer()
                 }
                 .padding()

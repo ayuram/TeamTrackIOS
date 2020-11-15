@@ -168,6 +168,8 @@ struct Auto: View{
             Stepper("\(score.auto.wobbleGoals) Wobbles Placed", value: $score.auto.wobbleGoals, in: 0 ... 2)
             Stepper("\(score.auto.pwrShots) Power Shots", value: $score.auto.pwrShots, in: 0 ... 3)
             Stepper("\(score.auto.navigated) Navigated", value: $score.auto.navigated, in: 0 ... 2)
+            Text("")
+                .frame(height: 50)
         }
         .padding(.horizontal)
         .frame(height: 250)

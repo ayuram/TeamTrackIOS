@@ -14,12 +14,12 @@ extension View{
 }
 struct CardView: View {
     var view: () -> AnyView
-    var color: Color = .white
+    var color: Color = Color("background")
     var body: some View {
         ZStack{
             RoundedRectangle(cornerRadius: 20)
                 .fill(color)
-                .shadow(radius: 8)
+                .shadow(color: Color("text"), radius: 8)
             view()
         }.frame(height: 240)
     }
