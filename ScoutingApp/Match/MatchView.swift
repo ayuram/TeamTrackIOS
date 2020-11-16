@@ -61,10 +61,12 @@ struct MatchView: View {
                         
                         self.curr = .b0
                     }.disabled(self.curr == .b0)
+                    .accentColor(.blue)
                     Button("\(match.blue.1.name.capitalized)"){
                         
                         self.curr = .b1
                     }.disabled(self.curr == .b1)
+                    .accentColor(.blue)
                 }.padding()
                 adjustments()
                 
@@ -133,10 +135,26 @@ struct End: View{
     @ObservedObject var score: Score
     var body: some View{
         ScrollView{
-            Stepper("\(score.endgame.pwrShots) Power Shots", value: $score.endgame.pwrShots, in: 0 ... 3)
-            Stepper("\(score.endgame.wobbleGoalsinDrop) Wobbles in Drop", value: $score.endgame.wobbleGoalsinDrop, in: 0 ... 2)
-            Stepper("\(score.endgame.wobbleGoalsinStart) Wobbles in Start", value: $score.endgame.wobbleGoalsinStart, in: 0 ... 2)
-            Stepper("\(score.endgame.ringsOnWobble) Rings on Wobble", value: $score.endgame.ringsOnWobble, in: 0 ... Int.max)
+            Stepper("\(score.endgame.pwrShots) Power Shots", value: $score.endgame.pwrShots, in: 0 ... 3, onEditingChanged: {_ in
+                DispatchQueue.main.async {
+                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                }
+            })
+            Stepper("\(score.endgame.wobbleGoalsinDrop) Wobbles in Drop", value: $score.endgame.wobbleGoalsinDrop, in: 0 ... 2, onEditingChanged: {_ in
+                DispatchQueue.main.async {
+                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                }
+            })
+            Stepper("\(score.endgame.wobbleGoalsinStart) Wobbles in Start", value: $score.endgame.wobbleGoalsinStart, in: 0 ... 2, onEditingChanged: {_ in
+                DispatchQueue.main.async {
+                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                }
+            })
+            Stepper("\(score.endgame.ringsOnWobble) Rings on Wobble", value: $score.endgame.ringsOnWobble, in: 0 ... Int.max, onEditingChanged: {_ in
+                DispatchQueue.main.async {
+                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                }
+            })
             
         }
         .padding(.horizontal)
@@ -147,9 +165,21 @@ struct Tele: View{
     @ObservedObject var score: Score
     var body: some View{
         ScrollView{
-            Stepper("\(score.tele.hiGoals) High Goals", value: $score.tele.hiGoals, in: 0 ... Int.max)
-            Stepper("\(score.tele.midGoals) Middle Goals", value: $score.tele.midGoals, in: 0 ... Int.max)
-            Stepper("\(score.tele.lowGoals) Low Goals", value: $score.tele.lowGoals, in: 0 ... Int.max)
+            Stepper("\(score.tele.hiGoals) High Goals", value: $score.tele.hiGoals, in: 0 ... Int.max, onEditingChanged: {_ in
+                DispatchQueue.main.async {
+                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                }
+            })
+            Stepper("\(score.tele.midGoals) Middle Goals", value: $score.tele.midGoals, in: 0 ... Int.max, onEditingChanged: {_ in
+                DispatchQueue.main.async {
+                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                }
+            })
+            Stepper("\(score.tele.lowGoals) Low Goals", value: $score.tele.lowGoals, in: 0 ... Int.max, onEditingChanged: {_ in
+                DispatchQueue.main.async {
+                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                }
+            })
         }
         .padding(.horizontal)
         .frame(height: 250)
@@ -159,15 +189,38 @@ struct Auto: View{
     @ObservedObject var score: Score
     var body: some View{
         ScrollView{
-            Stepper("\(score.auto.hiGoals) High Goals", value: $score.auto.hiGoals, in: 0 ... Int.max)
+            Stepper("\(score.auto.hiGoals) High Goals", value: $score.auto.hiGoals, in: 0 ... Int.max, onEditingChanged: {_ in
+                DispatchQueue.main.async {
+                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                }
+            })
             
-            Stepper("\(score.auto.midGoals) Middle Goals", value: $score.auto.midGoals, in: 0 ... Int.max)
+            Stepper("\(score.auto.midGoals) Middle Goals", value: $score.auto.midGoals, in: 0 ... Int.max, onEditingChanged: {_ in
+                DispatchQueue.main.async {
+                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                }
+            })
             
-            Stepper("\(score.auto.lowGoals) Low Goals", value: $score.auto.lowGoals, in: 0 ... Int.max)
-            
-            Stepper("\(score.auto.wobbleGoals) Wobbles Placed", value: $score.auto.wobbleGoals, in: 0 ... 2)
-            Stepper("\(score.auto.pwrShots) Power Shots", value: $score.auto.pwrShots, in: 0 ... 3)
-            Stepper("\(score.auto.navigated) Navigated", value: $score.auto.navigated, in: 0 ... 2)
+            Stepper("\(score.auto.lowGoals) Low Goals", value: $score.auto.lowGoals, in: 0 ... Int.max, onEditingChanged: {_ in
+                DispatchQueue.main.async {
+                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                }
+            })
+            Stepper("\(score.auto.wobbleGoals) Wobbles Placed", value: $score.auto.wobbleGoals, in: 0 ... 2, onEditingChanged: {_ in
+                DispatchQueue.main.async {
+                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                }
+            })
+            Stepper("\(score.auto.pwrShots) Power Shots", value: $score.auto.pwrShots, in: 0 ... 3, onEditingChanged: {_ in
+                DispatchQueue.main.async {
+                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                }
+            })
+            Stepper("\(score.auto.navigated) Navigated", value: $score.auto.navigated, in: 0 ... 2, onEditingChanged: {_ in
+                DispatchQueue.main.async {
+                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                }
+            })
             Text("")
                 .frame(height: 50)
         }

@@ -25,7 +25,7 @@ struct TeamList: View {
             }
             .listStyle(GroupedListStyle())
             .navigationBarTitle("Teams")
-            .navigationBarItems(leading: EditButton(), trailing: Button("Add"){
+            .navigationBarItems(leading: EditButton().disabled(data.teams.count == 0), trailing: Button("Add"){
                 self.sheet.toggle()
             }).sheet(isPresented: $sheet){
                 sht()
@@ -37,28 +37,34 @@ struct TeamList: View {
     }
     @State var name: (String, String) = ("", "")
     func sht() -> some View{
-        VStack{
-            HStack {
-                TextField("Team Number", text: $name.0)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .keyboardType(.numberPad)
-                    .onReceive(Just(name.0), perform: { newValue in
-                        let filtered = newValue.filter {"0123456789".contains($0)}
-                        self.name.0 = filtered != newValue ? filtered : self.name.0
-                    })
-                TextField("Name", text: $name.1)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .disableAutocorrection(true)
+        NavigationView{
+            VStack{
+                HStack {
+                    TextField("Team Number", text: $name.0)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .keyboardType(.numberPad)
+                        .onReceive(Just(name.0), perform: { newValue in
+                            let filtered = newValue.filter {"0123456789".contains($0)}
+                            self.name.0 = filtered != newValue ? filtered : self.name.0
+                        })
+                    TextField("Name", text: $name.1)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .disableAutocorrection(true)
+                }
             }
-            Button("Save"){
+            .navigationBarTitle("Add Team")
+            .navigationBarItems(leading: Button("Cancel"){
+                name.0 = ""
+                name.1 = ""
+                self.sheet = false
+            },trailing: Button("Save"){
                 data.addTeam(Team(name.0, name.1))
                 data.addTeam(Team(name.0, name.1))
                 name.0 = ""
                 name.1 = ""
                 self.sheet = false
             }
-            .padding()
-            .disabled(name.0.trimmingCharacters(in: .whitespacesAndNewlines) == "" || name.1.trimmingCharacters(in: .whitespacesAndNewlines) == "")
+            .disabled(name.0.trimmingCharacters(in: .whitespacesAndNewlines) == "" || name.1.trimmingCharacters(in: .whitespacesAndNewlines) == ""))
         }
     }
     func check(val: (String, String)) -> Bool {

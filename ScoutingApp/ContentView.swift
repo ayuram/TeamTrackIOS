@@ -30,8 +30,6 @@ struct ContentView: View {
                 Text("Matches")
             }
         }.environmentObject(data)
-        //LineView(data: [1, 5, 4, 3, 6])
-        
     }
 }
 

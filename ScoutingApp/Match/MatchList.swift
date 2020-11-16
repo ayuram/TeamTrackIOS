@@ -26,13 +26,13 @@ struct MatchList: View {
                     data.matches.move(fromOffsets: indices, toOffset: newOffset)
                 })
             }.navigationBarTitle("Matches")
-            .navigationBarItems(leading: EditButton().padding(), trailing: Button("Add"){
+            .navigationBarItems(leading: EditButton().disabled(data.matches.count == 0), trailing: Button("Add"){
                     add.toggle()
                     red0 = data.teams[0].number
                     red1 = data.teams[0].number
                     blue0 = data.teams[0].number
                     blue1 = data.teams[0].number
-            }.padding()).sheet(isPresented: $add) {
+            }).sheet(isPresented: $add) {
                     AddMatch
             }
             .disabled(data.teams.count == 0)
@@ -69,9 +69,10 @@ struct MatchList: View {
                                 }
                             }
                     }
-                .navigationBarItems(trailing: NavigationLink(destination: blue){
+                    .navigationBarItems(leading: Button("Cancel"){
+                        add.toggle()
+                    }, trailing: NavigationLink(destination: blue){
                     Text("Next").accentColor(.red)
-                        .padding()
                 })
                     .navigationBarTitle("Red Alliance")
             }
@@ -89,16 +90,15 @@ struct MatchList: View {
                     }
                 }
             }
-        .navigationBarItems(trailing: Button("Add"){
+        .navigationBarItems(trailing: Button("Save"){
             let r0 = data.dictTeams()[red0] ?? Team("","")
             let r1 = data.dictTeams()[red1] ?? Team("","")
             let b0 = data.dictTeams()[blue0] ?? Team("","")
             let b1 = data.dictTeams()[blue1] ?? Team("","")
             data.addMatch(Match(red: (r0,r1), blue: (b0, b1)))
             add.toggle()
-        }.padding())
+        }.accentColor(.blue))
         .navigationBarTitle(Text("Blue Alliance"))
-        .accentColor(.red)
     }
 }
 

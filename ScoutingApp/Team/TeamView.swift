@@ -8,7 +8,14 @@
 
 import SwiftUI
 import SwiftUICharts
-
+extension View{
+    func navLink(_ v: AnyView) -> some View{
+        NavigationLink(destination: v.padding()){
+            self
+                .buttonStyle(PlainButtonStyle())
+        }
+    }
+}
 struct TeamView: View {
     @ObservedObject var team: Team
     @ObservedObject var data: Data
@@ -21,7 +28,7 @@ struct TeamView: View {
                         Text("General")
                             .bold()
                             .padding()
-                   
+                    GeometryReader{ geometry in
                         CardView(){
                             HStack{
                                 BarGraph(name: "Average", val: team.avgScore(), max: data.maxScore())
@@ -36,13 +43,17 @@ struct TeamView: View {
                             .padding()
                             .frame(height: 100)
                             .format()
-                        }.buttonStyle(PlainButtonStyle())
-                    
+                        }
+                        
+                        .rotation3DEffect(Angle(degrees: Double(geometry.frame(in: .global).minY) / -25), axis: (x: 10, y: 5.0, z: 5.0))
+                    }
+                    .frame(height: 250)
+                    .navLink(AnyView(LineChart(data: team.scores.map {CGFloat($0.val())})))
                     //Divider()
                     Text("Autonomous")
                         .bold()
                         .padding()
-                    
+                    GeometryReader{ geometry in
                         CardView(){
                             HStack{
                                 BarGraph(name: "Average", val: team.avgAutoScore(), max: data.maxAutoScore())
@@ -58,12 +69,15 @@ struct TeamView: View {
                             .frame(height: 100)
                             .format()
                         }.buttonStyle(PlainButtonStyle())
-                    
+                        .rotation3DEffect(Angle(degrees: Double(geometry.frame(in: .global).minY) / -25), axis: (x: -10, y: -5.0, z: -5.0))
+                    }
+                    .frame(height: 250)
+                    .navLink(AnyView(LineChart(data: team.scores.map {CGFloat($0.auto.total())})))
                     //Divider()
                     Text("Tele-Op")
                         .bold()
                         .padding()
-                    
+                    GeometryReader{ geometry in
                         CardView(){
                             HStack{
                                 BarGraph(name: "Average", val: team.avgTeleScore(), max: data.maxTeleScore())
@@ -79,12 +93,15 @@ struct TeamView: View {
                             .frame(height: 100)
                             .format()
                         }
-                    
+                        .rotation3DEffect(Angle(degrees: Double(geometry.frame(in: .global).minY) / -25), axis: (x: 10, y: 5.0, z: 5.0))
+                    }
+                    .frame(height: 250)
+                    .navLink(AnyView(LineChart(data: team.scores.map {CGFloat($0.tele.total())})))
                     //Divider()
                     Text("Endgame")
                         .bold()
                         .padding()
-                    
+                    GeometryReader{ geometry in
                         CardView(){
                             HStack{
                                 BarGraph(name: "Average", val: team.avgEndScore(), max: data.maxEndScore())
@@ -100,8 +117,12 @@ struct TeamView: View {
                             .frame(height: 100)
                             .format()
                         }.buttonStyle(PlainButtonStyle())
-                    
+                        .rotation3DEffect(Angle(degrees: Double(geometry.frame(in: .global).minY) / -25), axis: (x: -10, y: -5.0, z: -5.0))
+                    }
+                    .frame(height: 250)
+                    .navLink(AnyView(LineChart(data: team.scores.map {CGFloat($0.endgame.total())})))
                     Spacer()
+                        .frame(height: 400)
                 }
                 .padding()
                 .navigationBarTitle(team.name)
@@ -113,7 +134,6 @@ struct TeamView: View {
     func lineChart() -> some View{
         switch team.scores.count{
         case 0: return AnyView(Text(""))
-//        default: return AnyView(LineView(data: [1, 4, 5, 6, 7, 3, 9] /*team.scores.map{Double($0.val())}*/, title: "Timeline", style: ChartStyle(backgroundColor: .clear, accentColor: .red, gradientColor: GradientColor(start: .blue, end: .red), textColor: .black, legendTextColor: .gray, dropShadowColor: .red)).frame(height: 330))
         default: return AnyView(LineChart(data: team.scores.map{CGFloat($0.val())}).frame(height: 360))
         }
     }
