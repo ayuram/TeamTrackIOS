@@ -33,7 +33,10 @@ struct BarGraph: View {
         }
     }
     func choice() -> some View{
-        (max >= 1 || !flip) ? AnyView(normal()) : AnyView(abnormal())
+        if(max == 0){
+            return AnyView(undefined())
+        }
+        return (!flip) ? AnyView(normal()) : AnyView(abnormal())
     }
     func normal() -> some View{
         
@@ -51,6 +54,20 @@ struct BarGraph: View {
             }
         
     }
+    func undefined() -> some View{
+        VStack{
+            Text(name)
+                .font(.caption)
+            ZStack(alignment: .bottom){
+                Capsule().frame(width: width, height: height)
+                    .foregroundColor(Color("text"))
+                //Capsule().frame(width: width, height: height)
+                  //  .foregroundColor(color())
+            }
+            Text("0")
+                .font(.caption)
+        }
+    }
     func abnormal() -> some View{
         
             VStack{
@@ -59,8 +76,8 @@ struct BarGraph: View {
                 ZStack(alignment: .bottom){
                     Capsule().frame(width: width, height: height)
                         .foregroundColor(Color("text"))
-                    Capsule().frame(width: width, height: height)
-                        .foregroundColor(.green)
+                    Capsule().frame(width: width, height: height * CGFloat(val/max))
+                        .foregroundColor(diffColor())
                 }
                 Text("\(Int(max))")
                     .font(.caption)
@@ -78,11 +95,22 @@ struct BarGraph: View {
             return .green
         }
     }
+    func diffColor() -> Color{
+        if(max/val < 0.25){
+            return .red
+        }
+        else if (max/val < 0.75){
+            return .yellow
+        }
+        else{
+            return .green
+        }
+    }
 }
 
 struct BarGraph_Previews: PreviewProvider {
     static var previews: some View {
-        BarGraph(height: 600, name: "OK", val: 1, max: 2, flip: true)
+        BarGraph(name: "OK", val: 1, max: 8, flip: true)
     }
 }
 
