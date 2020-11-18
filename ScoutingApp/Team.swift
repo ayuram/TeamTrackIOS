@@ -7,7 +7,7 @@
 //
 
 import Foundation
-
+import CoreData
 extension Int{
     func double() -> Double{
         Double(self)
@@ -105,8 +105,6 @@ extension Array where Element == Score{
 }
 class Team: ObservableObject, Identifiable{
     let number: String
-    let encoder = JSONEncoder()
-    let decoder = JSONDecoder()
     var name: String
     @Published var scores: [Score] = []
     init(_ n: String,_ s: String){

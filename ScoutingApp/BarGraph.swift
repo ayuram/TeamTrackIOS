@@ -15,12 +15,12 @@ struct BarGraph: View {
     var val: Double
     var max: Double
     var flip: Bool = false
-   // var view: () -> AnyView? = defaultView
+    // var view: () -> AnyView? = defaultView
     var clickable = false
     @State var sheet = false
     
     var body: some View {
-       // print(type(of: view))
+        // print(type(of: view))
         if(clickable){
             return AnyView(NavigationLink(destination: BarFullView(points: [1, 8, 9, 2, 13], barGraph: self){[
                 AnyView(Text("Hello"))
@@ -40,18 +40,18 @@ struct BarGraph: View {
     }
     func normal() -> some View{
         
-            VStack{
-                Text(name)
-                    .font(.caption)
-                ZStack(alignment: .bottom){
-                    Capsule().frame(width: width, height: height)
-                        .foregroundColor(Color("text"))
-                    Capsule().frame(width: width, height: height * CGFloat((val)/max))
-                        .foregroundColor(color())
-                }
-                (flip ? Text("\(Int(max))") : Text("\(Int(val))"))
-                    .font(.caption)
+        VStack{
+            Text(name)
+                .font(.caption)
+            ZStack(alignment: .bottom){
+                Capsule().frame(width: width, height: height)
+                    .foregroundColor(Color("text"))
+                Capsule().frame(width: width, height: height * CGFloat((val)/max))
+                    .foregroundColor(color())
             }
+            (flip ? Text("\(Int(max))") : Text("\(Int(val))"))
+                .font(.caption)
+        }
         
     }
     func undefined() -> some View{
@@ -62,44 +62,31 @@ struct BarGraph: View {
                 Capsule().frame(width: width, height: height)
                     .foregroundColor(Color("text"))
                 //Capsule().frame(width: width, height: height)
-                  //  .foregroundColor(color())
+                //  .foregroundColor(color())
             }
             Text("0")
                 .font(.caption)
         }
     }
     func abnormal() -> some View{
-        
-            VStack{
-                Text(name)
-                    .font(.caption)
-                ZStack(alignment: .bottom){
-                    Capsule().frame(width: width, height: height)
-                        .foregroundColor(Color("text"))
-                    Capsule().frame(width: width, height: height * CGFloat(val/max))
-                        .foregroundColor(diffColor())
-                }
-                Text("\(Int(max))")
-                    .font(.caption)
+        VStack{
+            Text(name)
+                .font(.caption)
+            ZStack(alignment: .bottom){
+                Capsule().frame(width: width, height: height)
+                    .foregroundColor(Color("text"))
+                Capsule().frame(width: width, height: height * CGFloat(val/max))
+                    .foregroundColor(color())
             }
-       
+            Text("\(Int(max))")
+                .font(.caption)
+        }
     }
     func color() -> Color{
         if(val/max < 0.25){
             return .red
         }
         else if (val/max < 0.75){
-            return .yellow
-        }
-        else{
-            return .green
-        }
-    }
-    func diffColor() -> Color{
-        if(max/val < 0.25){
-            return .red
-        }
-        else if (max/val < 0.75){
             return .yellow
         }
         else{

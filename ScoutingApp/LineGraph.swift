@@ -59,12 +59,12 @@ struct LineChart: View{
                     .trim(to: animateChart ? 1 : 0)
                     .stroke(color, lineWidth: 3)
                     .onAppear(perform: {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5){
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2){
                             self.animateChart = true
                         }
                     })
                         .shadow(color: color, radius: 15, x: 10, y: 20)
-                    .animation(.easeInOut(duration: 2))
+                    .animation(.easeInOut(duration: 1.5))
                     .border(Color("text"))
             }
         }
