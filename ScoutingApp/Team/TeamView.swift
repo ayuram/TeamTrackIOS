@@ -7,7 +7,7 @@
 //
 
 import SwiftUI
-import SwiftUICharts
+
 extension View{
     func navLink(_ v: AnyView) -> some View{
         NavigationLink(destination: v.padding()){

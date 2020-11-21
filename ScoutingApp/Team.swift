@@ -42,11 +42,29 @@ struct EndgameScore: Codable{
         pwrShots * 15 + wobbleGoalsinDrop * 20 + wobbleGoalsinStart * 5 + ringsOnWobble * 5
     }
 }
-class Score: Identifiable, ObservableObject{
+class Score: Identifiable, ObservableObject, Codable{
     var id: UUID
     @Published var auto = AutoScore()
     @Published var tele = TeleScore()
     @Published var endgame = EndgameScore()
+    enum CodingKeys: CodingKey {
+        case auto
+        case tele
+        case endgame
+    }
+    required init(from decoder: Decoder) throws{
+        id = UUID()
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        auto = try container.decode(AutoScore.self, forKey: .auto)
+        tele = try container.decode(TeleScore.self, forKey: .tele)
+        endgame = try container.decode(EndgameScore.self, forKey: .endgame)
+    }
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(auto, forKey: .auto)
+        try container.encode(tele, forKey: .tele)
+        try container.encode(endgame, forKey: .endgame)
+    }
     init(_ m: Match){
         id = m.id
     }
