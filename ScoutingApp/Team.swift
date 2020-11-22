@@ -7,13 +7,11 @@
 //
 
 import Foundation
-import CoreData
 extension Int{
     func double() -> Double{
         Double(self)
     }
 }
-
 struct AutoScore: Codable{
     var wobbleGoals: Int = 0
     var lowGoals: Int = 0
@@ -21,7 +19,7 @@ struct AutoScore: Codable{
     var hiGoals: Int = 0
     var pwrShots: Int = 0
     var navigated: Int = 0
-    func total() -> Int{
+    func total() -> Int {
         wobbleGoals * 15 + lowGoals * 3 + midGoals * 6 + hiGoals * 12 + pwrShots * 15 + navigated * 5
     }
 }
@@ -121,7 +119,7 @@ extension Array where Element == Score{
         }
     }
 }
-class Team: ObservableObject, Identifiable{
+class Team: ObservableObject, Identifiable, Codable{
     let number: String
     var name: String
     @Published var scores: [Score] = []
@@ -129,6 +127,24 @@ class Team: ObservableObject, Identifiable{
         number = n
         name = s
     }
+    required init(from decoder: Decoder) throws{
+        self.number = ""
+        self.name = ""
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        scores = try container.decode([Score].self, forKey: .scores)
+    }
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(scores, forKey: .scores)
+        try container.encode(name, forKey: .name)
+        try container.encode(number, forKey: .number)
+    }
+    enum CodingKeys: CodingKey{
+        case scores
+        case number
+        case name
+    }
+    
     func avgScore() -> Double{
         switch scores.map({$0.val()}).count{
             case 0: return 0
@@ -187,8 +203,8 @@ class Team: ObservableObject, Identifiable{
 typealias side = (Team, Team)
 class Match: Identifiable, ObservableObject{
     var id: UUID
-    @Published var red: side
-    @Published var blue: side
+    @Published var red: side = (Team("", ""), Team("", ""))
+    @Published var blue: side = (Team("", ""), Team("", ""))
     init(red: side, blue: side){
         id = UUID()
         red.0.scores.append(Score(id))
@@ -198,7 +214,25 @@ class Match: Identifiable, ObservableObject{
         self.red = red
         self.blue = blue
     }
-    
+    required init(from decoder: Decoder) throws{
+        id = UUID()
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        red.0 = try container.decode(Team.self, forKey: .red0)
+        red.1 = try container.decode(Team.self, forKey: .red1)
+        blue.0 = try container.decode(Team.self, forKey: .blue0)
+        blue.1 = try container.decode(Team.self, forKey: .blue1)
+    }
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(red.0, forKey: .red0)
+        try container.encode(blue.0, forKey: .blue0)
+        try container.encode(blue.1, forKey: .blue1)
+        try container.encode(red.1, forKey: .red1)
+    }
+    enum CodingKeys: CodingKey{
+        case red0, red1
+        case blue0, blue1
+    }
     func score() -> String{
         let r1 = red.0.scores.reduce(Score()){ $1.id == self.id ? $1 : $0 }
         let r2 = red.1.scores.reduce(Score()){ $1.id == self.id ? $1 : $0 }
@@ -215,13 +249,10 @@ class Data: ObservableObject{
     @Published var matches: [Match]
     @Published var user: Team?
     init(){
-        
         teams = []
         matches = []
-            //.publisher
         user = .none
     }
-    
     func setUser(_ t: Team){
         addTeam(t)
         user = t
@@ -302,4 +333,3 @@ class Data: ObservableObject{
             .min() ?? 1
     }
 }
-
