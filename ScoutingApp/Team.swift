@@ -8,11 +8,11 @@
 
 import Foundation
 extension Int{
-    func double() -> Double{
+    func double() -> Double {
         Double(self)
     }
 }
-struct AutoScore: Codable{
+struct AutoScore: Codable {
     var wobbleGoals: Int = 0
     var lowGoals: Int = 0
     var midGoals: Int = 0
@@ -23,7 +23,7 @@ struct AutoScore: Codable{
         wobbleGoals * 15 + lowGoals * 3 + midGoals * 6 + hiGoals * 12 + pwrShots * 15 + navigated * 5
     }
 }
-struct TeleScore: Codable{
+struct TeleScore: Codable {
     var lowGoals: Int = 0
     var midGoals: Int = 0
     var hiGoals: Int = 0
@@ -31,7 +31,7 @@ struct TeleScore: Codable{
         lowGoals * 2 + midGoals * 4 + hiGoals * 6
     }
 }
-struct EndgameScore: Codable{
+struct EndgameScore: Codable {
     var pwrShots: Int = 0
     var wobbleGoalsinDrop: Int = 0
     var wobbleGoalsinStart: Int = 0
@@ -90,7 +90,7 @@ extension Array where Element == Double{
         self.map{ abs($0 - self.mean()) }.mean()
     }
 }
-extension Array where Element == Score{
+extension Array where Element == Score {
     func find(_ id: UUID) -> Score{
         self.reduce(Score()){ $1.id == id ? $1 : $0}
     }
@@ -119,7 +119,7 @@ extension Array where Element == Score{
         }
     }
 }
-class Team: ObservableObject, Identifiable, Codable{
+class Team: ObservableObject, Identifiable, Codable {
     let number: String
     var name: String
     @Published var scores: [Score] = []
@@ -244,18 +244,16 @@ class Match: Identifiable, ObservableObject{
     }
 }
 
-class Data: ObservableObject{
+class Data: ObservableObject {
     @Published var teams: [Team]
     @Published var matches: [Match]
-    @Published var user: Team?
     init(){
         teams = []
         matches = []
-        user = .none
     }
-    func setUser(_ t: Team){
-        addTeam(t)
-        user = t
+    init(teams: [Team], matches: [Match]){
+        self.teams = teams
+        self.matches = matches
     }
     func bestTeam() -> [Team]?{
         let arr = teams.sorted { $0.avgScore() > $1.avgScore() }[0 ... 3]
@@ -270,6 +268,7 @@ class Data: ObservableObject{
         }
         if(!bool){
             teams.append(team)
+            UserDefaults.standard.set(self.teams, forKey: "Teams")
         }
         sortTeams()
     }
@@ -282,6 +281,7 @@ class Data: ObservableObject{
         }
         if(!bool){
             matches.append(match)
+            UserDefaults.standard.set(self.matches, forKey: "Matches")
         }
     }
     func sortTeams() -> Void{
