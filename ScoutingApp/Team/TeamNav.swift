@@ -10,8 +10,8 @@ import SwiftUI
 
 struct TeamNav: View {
     var team: Team
-    var data: Data
-    init(_ t: Team, _ d: Data){
+    var data: Event
+    init(_ t: Team, _ d: Event){
         team = t
         data = d
     }
@@ -30,6 +30,6 @@ struct TeamNav: View {
 
 struct TeamNav_Previews: PreviewProvider {
     static var previews: some View {
-        TeamNav(Team("6165", "Cuttlefish"), Data())
+        TeamNav(Team("6165", "Cuttlefish"), Event())
     }
 }

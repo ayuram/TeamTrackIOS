@@ -10,7 +10,7 @@ import SwiftUI
 import Combine
 
 struct MatchList: View {
-    @EnvironmentObject var data: Data
+    @EnvironmentObject var data: Event
     @State var add = false
     init(){
         UITableView.appearance().backgroundColor = UIColor(Color("background"))
@@ -105,7 +105,7 @@ struct MatchList: View {
 
 struct MatchList_Previews: PreviewProvider {
     static var previews: some View {
-        MatchList().environmentObject(Data())
+        MatchList().environmentObject(Event())
     }
 }
 

@@ -122,7 +122,7 @@ extension Array where Element == Score {
 class Team: ObservableObject, Identifiable, Codable {
     let number: String
     var name: String
-    @Published var scores: [Score] = []
+    @Published var scores: [Score] = [Score]()
     init(_ n: String,_ s: String){
         number = n
         name = s
@@ -201,7 +201,7 @@ class Team: ObservableObject, Identifiable, Codable {
     }
 }
 typealias side = (Team, Team)
-class Match: Identifiable, ObservableObject{
+class Match: Identifiable, ObservableObject, Codable{
     var id: UUID
     @Published var red: side = (Team("", ""), Team("", ""))
     @Published var blue: side = (Team("", ""), Team("", ""))
@@ -244,7 +244,7 @@ class Match: Identifiable, ObservableObject{
     }
 }
 
-class Data: ObservableObject {
+class Event: ObservableObject {
     @Published var teams: [Team]
     @Published var matches: [Match]
     init(){
@@ -268,7 +268,13 @@ class Data: ObservableObject {
         }
         if(!bool){
             teams.append(team)
-            UserDefaults.standard.set(self.teams, forKey: "Teams")
+            //UserDefaults.standard.set(self.teams, forKey: "Teams")
+            let encoder = JSONEncoder()
+            if let encoded = try? encoder.encode(team) {
+                let defaults = UserDefaults.standard
+                defaults.set(encoded, forKey: "Teams")
+                print(encoded)
+            }
         }
         sortTeams()
     }
@@ -281,7 +287,12 @@ class Data: ObservableObject {
         }
         if(!bool){
             matches.append(match)
-            UserDefaults.standard.set(self.matches, forKey: "Matches")
+            //UserDefaults.standard.set(self.matches, forKey: "Matches")
+            let encoder = JSONEncoder()
+            if let encoded = try? encoder.encode(matches) {
+                let defaults = UserDefaults.standard
+                defaults.set(encoded, forKey: "Matches")
+            }
         }
     }
     func sortTeams() -> Void{

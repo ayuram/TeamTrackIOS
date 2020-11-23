@@ -10,7 +10,7 @@ import SwiftUI
 import Combine
 
 struct TeamList: View {
-    @EnvironmentObject var data: Data
+    @EnvironmentObject var data: Event
     @State var sheet = false
     var body: some View {
         NavigationView{
@@ -77,6 +77,6 @@ struct TeamList: View {
 struct TeamList_Previews: PreviewProvider {
     static var previews: some View {
         TeamList()
-            .environmentObject(Data())
+            .environmentObject(Event())
     }
 }
