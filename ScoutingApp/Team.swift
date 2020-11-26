@@ -40,8 +40,8 @@ struct EndgameScore: Codable {
         pwrShots * 15 + wobbleGoalsinDrop * 20 + wobbleGoalsinStart * 5 + ringsOnWobble * 5
     }
 }
-class Score: Identifiable, ObservableObject, Codable{
-    var id: UUID = UUID()
+class Score: ObservableObject, Codable{
+    var id: UUID
     @Published var auto = AutoScore()
     @Published var tele = TeleScore()
     @Published var endgame = EndgameScore()
@@ -54,6 +54,7 @@ class Score: Identifiable, ObservableObject, Codable{
     required init(from decoder: Decoder) throws{
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(UUID.self, forKey: .id)
+        print("scores \(id)")
         auto = try container.decode(AutoScore.self, forKey: .auto)
         tele = try container.decode(TeleScore.self, forKey: .tele)
         endgame = try container.decode(EndgameScore.self, forKey: .endgame)
@@ -64,6 +65,7 @@ class Score: Identifiable, ObservableObject, Codable{
         try container.encode(auto, forKey: .auto)
         try container.encode(tele, forKey: .tele)
         try container.encode(endgame, forKey: .endgame)
+        print("i was here")
     }
     init(_ m: Match){
         id = m.id
@@ -75,7 +77,8 @@ class Score: Identifiable, ObservableObject, Codable{
         id = UUID()
     }
     func val() -> Int {
-        auto.total() + tele.total() + endgame.total()
+        print(id)
+        return auto.total() + tele.total() + endgame.total()
     }
     static func < (_ lhs: Score, _ rhs: Score) -> Bool{
         lhs.val() < rhs.val()
@@ -120,6 +123,17 @@ extension Array where Element == Score {
         default: return self.map{Double($0.val())}.mean()
         }
     }
+    mutating func addScore(_ s: Score){
+        var bool: Bool = false
+        self.map {
+            if($0.id == s.id){
+                bool = true
+            }
+        }
+        if(!bool){
+            self.append(s)
+        }
+    }
 }
 extension Array where Element == Team{
     func findByNumber(_ number: String) -> Team{
@@ -129,22 +143,23 @@ extension Array where Element == Team{
 class Team: ObservableObject, Identifiable, Codable {
     var number: String
     var name: String
-    @Published var scores: [Score] = [Score]()
+    @Published var scores: [Score]
     init(_ n: String,_ s: String){
         number = n
         name = s
+        scores = []
     }
     init(){
         number = ""
         name = ""
+        scores = []
     }
     required init(from decoder: Decoder) throws{
-        self.number = ""
-        self.name = ""
         let container = try decoder.container(keyedBy: CodingKeys.self)
         scores = try container.decode([Score].self, forKey: .scores)
         name = try container.decode(String.self, forKey: .name)
         number = try container.decode(String.self, forKey: .number)
+        print(scores)
     }
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
@@ -219,16 +234,18 @@ class Match: Identifiable, ObservableObject, Codable{
     @Published var blue: side = (Team("", ""), Team("", ""))
     init(red: side, blue: side){
         id = UUID()
-        red.0.scores.append(Score(id))
-        red.1.scores.append(Score(id))
-        blue.0.scores.append(Score(id))
-        blue.1.scores.append(Score(id))
         self.red = red
         self.blue = blue
+        self.red.0.scores.addScore(Score(id))
+        self.red.1.scores.addScore(Score(id))
+        self.blue.0.scores.addScore(Score(id))
+        self.blue.1.scores.addScore(Score(id))
+        
     }
     required init(from decoder: Decoder) throws{
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(UUID.self, forKey: .id)
+        print("matches \(id)")
         red.0 = try container.decode(Team.self, forKey: .red0)
         red.1 = try container.decode(Team.self, forKey: .red1)
         blue.0 = try container.decode(Team.self, forKey: .blue0)
@@ -269,15 +286,13 @@ class Event: ObservableObject, Codable {
                 teams = decoded
             }
         }
-        if let data = UserDefaults.standard.data(forKey: "Matches"){
-            if let decoded = try? JSONDecoder().decode([Match].self, from: data){
+        if let d = UserDefaults.standard.data(forKey: "Matches"){
+            if let decoded = try? JSONDecoder().decode([Match].self, from: d){
                 for match in decoded{
                     match.red.0 = teams.findByNumber(match.red.0.number)
                     match.red.1 = teams.findByNumber(match.red.1.number)
                     match.blue.0 = teams.findByNumber(match.blue.0.number)
                     match.blue.1 = teams.findByNumber(match.blue.1.number)
-                    print(match.red.0.number)
-                    print("loop")
                 }
                 matches = decoded
             }
@@ -326,6 +341,7 @@ class Event: ObservableObject, Codable {
             let defaults = UserDefaults.standard
             defaults.set(encoded, forKey: "Teams")
         }
+        print("it happened")
     }
     func addMatch(_ match: Match){
         var bool: Bool = false

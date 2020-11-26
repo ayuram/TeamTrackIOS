@@ -19,7 +19,7 @@ struct MatchList: View {
         NavigationView{
             List{
                 ForEach(data.matches){ match in
-                    matchNav(match)
+                    matchNav(match, data)
                 }
                 .onDelete(perform: delete)
                 .onMove(perform: { indices, newOffset in
@@ -49,6 +49,7 @@ struct MatchList: View {
                 match.blue.1.scores.removeAll {$0.id == match.id}
             }
         data.matches.remove(atOffsets: offsets)
+        data.saveMatches()
     }
     @State var red0: String = ""
     @State var red1: String = ""
