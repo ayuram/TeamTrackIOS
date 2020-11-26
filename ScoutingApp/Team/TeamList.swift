@@ -10,7 +10,7 @@ import SwiftUI
 import Combine
 
 struct TeamList: View {
-    @EnvironmentObject var data: Data
+    @EnvironmentObject var data: Event
     @State var sheet = false
     var body: some View {
         NavigationView{
@@ -20,6 +20,7 @@ struct TeamList: View {
                 }
                 .onDelete(perform: { indexSet in
                     data.teams.remove(atOffsets: indexSet)
+                    data.saveTeams()
                 })
                 .onMove(perform: move)
             }
@@ -34,6 +35,7 @@ struct TeamList: View {
     }
     func move(from source: IndexSet, to destination: Int){
         data.teams.move(fromOffsets: source, toOffset: destination)
+        data.saveTeams()
     }
     @State var name: (String, String) = ("", "")
     func sht() -> some View{
@@ -77,6 +79,6 @@ struct TeamList: View {
 struct TeamList_Previews: PreviewProvider {
     static var previews: some View {
         TeamList()
-            .environmentObject(Data())
+            .environmentObject(Event())
     }
 }

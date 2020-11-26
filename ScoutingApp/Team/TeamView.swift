@@ -7,7 +7,7 @@
 //
 
 import SwiftUI
-import SwiftUICharts
+
 extension View{
     func navLink(_ v: AnyView) -> some View{
         NavigationLink(destination: v.padding()){
@@ -19,12 +19,12 @@ extension View{
 struct MyButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .scaleEffect(configuration.isPressed ? 0.9 : 1)
+            .scaleEffect(configuration.isPressed ? 0.95 : 1)
     }
 }
 struct TeamView: View {
     @ObservedObject var team: Team
-    @ObservedObject var data: Data
+    @ObservedObject var data: Event
     @State private var animateChart = false
     @State var sheet = false
     let maxWidth = UIScreen.main.bounds.width
@@ -191,7 +191,7 @@ struct TeamView: View {
             }
             .frame(width: maxWidth)
         }.navigationBarTitle(team.name)
-        .navigationBarItems(leading: Button(action: {
+        .navigationBarItems(trailing: Button(action: {
             if isFullScreen(){
                 genBool = false
                 autoBool = false
@@ -235,6 +235,6 @@ extension Array where Element == CGFloat{
 }
 struct TeamView_Previews: PreviewProvider {
     static var previews: some View {
-        TeamView(team: Team("11", "A"), data: Data())
+        TeamView(team: Team("11", "A"), data: Event())
     }
 }

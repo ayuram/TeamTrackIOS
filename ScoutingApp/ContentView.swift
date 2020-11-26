@@ -6,16 +6,10 @@
 //
 
 import SwiftUI
-import SwiftUICharts
 struct ContentView: View {
-    var data: Data = Data()
+    @EnvironmentObject var event: Event
     init(){
         UITableView.appearance().backgroundColor = UIColor(Color("background"))
-        data.addTeam(Team("7390", "Jellyfish"))
-        data.addTeam(Team("1", "Alphas"))
-        data.addTeam(Team("6165", "Cuttlefish"))
-        data.addTeam(Team("2", "Bettas"))
-        data.addTeam(Team("12", "Alzing"))
     }
     var body: some View {
         TabView{
@@ -29,7 +23,7 @@ struct ContentView: View {
                 Image(systemName: "sportscourt.fill")
                 Text("Matches")
             }
-        }.environmentObject(data)
+        }.environmentObject(event)
     }
 }
 
@@ -37,5 +31,6 @@ struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
             .preferredColorScheme(.dark)
+            .environmentObject(Event())
     }
 }

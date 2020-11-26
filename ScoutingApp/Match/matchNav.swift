@@ -14,15 +14,17 @@ struct matchNav: View {
     @ObservedObject var red1: Score
     @ObservedObject var blue0: Score
     @ObservedObject var blue1: Score
-    init(_ m: Match){
+    let event: Event
+    init(_ m: Match, _ e: Event){
         match = m
+        event = e
         red0 = m.red.0.scores.find(m.id)
         red1 = m.red.1.scores.find(m.id)
         blue0 = m.blue.0.scores.find(m.id)
         blue1 = m.blue.1.scores.find(m.id)
     }
     var body: some View {
-        NavigationLink(destination: MatchView(match)){
+        NavigationLink(destination: MatchView(match, event)){
             HStack{
                 VStack{
                     Text("\(match.red.0.name) & \(match.red.1.name)")
@@ -45,6 +47,6 @@ struct matchNav: View {
 
 struct matchNav_Previews: PreviewProvider {
     static var previews: some View {
-        matchNav(Match(red: (Team("2", "alphas"), Team("3", "betas")),blue: (Team("0", "charlies"), Team("1", "deltas"))))
+        matchNav(Match(red: (Team("2", "alphas"), Team("3", "betas")),blue: (Team("0", "charlies"), Team("1", "deltas"))), Event())
     }
 }
