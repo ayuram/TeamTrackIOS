@@ -50,6 +50,7 @@ struct MatchList: View {
             }
         data.matches.remove(atOffsets: offsets)
         data.saveMatches()
+        data.saveTeams()
     }
     @State var red0: String = ""
     @State var red1: String = ""
