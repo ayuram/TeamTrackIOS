@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SwiftUICharts
 extension Array where Element == Double{
     func percentIncrease() -> Int{
         switch self.count{
