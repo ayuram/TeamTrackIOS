@@ -26,7 +26,7 @@ struct TeamList: View {
             }
             .listStyle(GroupedListStyle())
             .navigationBarTitle("Teams")
-            .navigationBarItems(leading: EditButton().disabled(data.teams.count == 0), trailing: Button("Add"){
+            .navigationBarItems(trailing: Button("Add"){
                 self.sheet.toggle()
             }).sheet(isPresented: $sheet){
                 sht()

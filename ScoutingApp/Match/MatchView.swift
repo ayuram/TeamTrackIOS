@@ -16,6 +16,7 @@ struct MatchView: View {
     @ObservedObject var scoreBlue0: Score
     @ObservedObject var scoreBlue1: Score
     let event: Event
+    @State var color: Color = Color.red
     init(_ m: Match, _ e: Event){
         match = m
         event = e
@@ -31,6 +32,9 @@ struct MatchView: View {
         case b1
     }
     var body: some View {
+        ZStack{
+            LinearGradient(gradient: Gradient(colors: [color, Color("background"), Color("background"), Color("background"), Color("background")]), startPoint: .topTrailing, endPoint: .bottomLeading)
+                .ignoresSafeArea(.container, edges: .all)
             VStack{
                 Spacer()
                 HStack{
@@ -51,28 +55,42 @@ struct MatchView: View {
                 HStack{
                     Button("\(match.red.0.name.capitalized)"){
                         self.curr = .r0
+                        color = .red
                     }.disabled(self.curr == .r0)
                     .accentColor(.red)
+                    .frame(width: 100)
+                    .multilineTextAlignment(/*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                    
                     Button("\(match.red.1.name.capitalized)"){
-                        
+                        color = .red
                         self.curr = .r1
                     }.disabled(self.curr == .r1)
                     .accentColor(.red)
+                    .frame(width: 100)
+                    .multilineTextAlignment(/*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                    
                     Spacer()
                     Button("\(match.blue.0.name.capitalized)"){
-                        
+                        color = .blue
                         self.curr = .b0
                     }.disabled(self.curr == .b0)
                     .accentColor(.blue)
+                    .frame(width: 100)
+                    .multilineTextAlignment(.center)
+                    
                     Button("\(match.blue.1.name.capitalized)"){
-                        
+                        color = .blue
                         self.curr = .b1
                     }.disabled(self.curr == .b1)
                     .accentColor(.blue)
+                    .frame(width: 100)
+                    .multilineTextAlignment(/*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                    
                 }.padding()
                 adjustments()
                 
             }
+        }
             .navigationBarTitle("Match Stats")
     }
     func adjustments() -> some View{
@@ -118,7 +136,7 @@ struct Adjustments: View{
             Divider()
             
                 view()
-                    .frame(height: 200, alignment: .top)
+                    .frame(width: UIScreen.main.bounds.width, height: 200, alignment: .top)
             Spacer()
                 
         }
@@ -224,22 +242,20 @@ struct Auto: View{
                     UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                 }
             })
-            Stepper("\(score.auto.navigated) Navigated", value: $score.auto.navigated, in: 0 ... 1, onEditingChanged: {_ in
-                DispatchQueue.main.async { event.saveTeams()
-                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-                }
-            })
+            Toggle(isOn: $score.auto.navigated) {
+                Text("Navigated")
+            }
             Text("")
                 .frame(height: 50)
         }
         .padding(.horizontal)
-        .frame(height: 250)
+        .frame(width: UIScreen.main.bounds.width, height: 250)
     }
 }
 
 struct MatchView_Previews: PreviewProvider {
     static var previews: some View {
-        MatchView(Match(red: (Team("2", "alphas"), Team("3", "betas")),blue: (Team("0", "charlies"), Team("1", "deltas"))), Event())
+        MatchView(Match(red: (Team("2", "ELementary Schooling People"), Team("3", "betas")),blue: (Team("0", "charlies"), Team("1", "deltas"))), Event())
             
     }
 }

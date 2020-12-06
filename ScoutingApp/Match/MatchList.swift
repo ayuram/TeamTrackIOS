@@ -26,7 +26,7 @@ struct MatchList: View {
                     data.matches.move(fromOffsets: indices, toOffset: newOffset)
                 })
             }.navigationBarTitle("Matches")
-            .navigationBarItems(leading: EditButton().disabled(data.matches.count == 0), trailing: Button("Add"){
+            .navigationBarItems(trailing: Button("Add"){
                     add.toggle()
                     red0 = data.teams[0].number
                     red1 = data.teams[0].number

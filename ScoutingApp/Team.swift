@@ -18,9 +18,9 @@ struct AutoScore: Codable {
     var midGoals: Int = 0
     var hiGoals: Int = 0
     var pwrShots: Int = 0
-    var navigated: Int = 0
+    var navigated: Bool = false
     func total() -> Int {
-        wobbleGoals * 15 + lowGoals * 3 + midGoals * 6 + hiGoals * 12 + pwrShots * 15 + navigated * 5
+        wobbleGoals * 15 + lowGoals * 3 + midGoals * 6 + hiGoals * 12 + pwrShots * 15 + (navigated ? 5 : 0)
     }
 }
 struct TeleScore: Codable {
@@ -274,11 +274,12 @@ class Match: Identifiable, ObservableObject, Codable{
         
     }
 }
-
 class Event: ObservableObject, Codable {
     @Published var teams: [Team]
     @Published var matches: [Match]
+    let name: String
     init(){
+        name = "FIRST Event"
         teams = []
         matches = []
         if let data = UserDefaults.standard.data(forKey: "Teams"){
@@ -303,19 +304,23 @@ class Event: ObservableObject, Codable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         teams = try container.decode([Team].self, forKey: .teams)
         matches = try container.decode([Match].self, forKey: .matches)
+        name = try container.decode(String.self, forKey: .name)
     }
-    enum CodingKeys: CodingKey{
+    enum CodingKeys: String, CodingKey{
         case teams
         case matches
+        case name
     }
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(teams, forKey: .teams)
-        try container.encode(teams, forKey: .matches)
+        try container.encode(matches, forKey: .matches)
+        try container.encode(name, forKey: .name)
     }
     init(teams: [Team], matches: [Match]){
         self.teams = teams
         self.matches = matches
+        name = "FIRST Event"
     }
     func bestTeam() -> [Team]?{
         let arr = teams.sorted { $0.avgScore() > $1.avgScore() }[0 ... 3]
@@ -410,5 +415,60 @@ class Event: ObservableObject, Codable {
         teams
             .map { $0.endMAD() }
             .min() ?? 1
+    }
+}
+class VirtualEvent: ObservableObject, Codable{
+    @Published var team: Team
+    @Published var matches: [VirtualMatch]
+    let name: String
+    init(){
+        name = "FIRST Event"
+        team = Team("", "")
+        matches = []
+        if let data = UserDefaults.standard.data(forKey: "Teams"){
+            if let decoded = try? JSONDecoder().decode(Team.self, from: data){
+                team = decoded
+            }
+        }
+        if let d = UserDefaults.standard.data(forKey: "Matches"){
+            if let decoded = try? JSONDecoder().decode([VirtualMatch].self, from: d){
+                for match in decoded{
+                    match.team = team
+                }
+                matches = decoded
+            }
+        }
+        
+    }
+    required init(from decoder: Decoder) throws{
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        team = try container.decode(Team.self, forKey: .team)
+        matches = try container.decode([VirtualMatch].self, forKey: .matches)
+        name = try container.decode(String.self, forKey: .name)
+    }
+    enum CodingKeys: String, CodingKey{
+        case team
+        case matches
+        case name
+    }
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(team, forKey: .team)
+        try container.encode(matches, forKey: .matches)
+        try container.encode(name, forKey: .name)
+    }
+}
+class VirtualMatch: ObservableObject, Codable{
+    var team: Team
+    let id: UUID
+}
+class DataModel{
+    @Published var localEvents: [Event]
+    @Published var virtualEvents: [Event]
+    @Published var liveEvents: [Event]
+    init(local: [Event], virtual: [Event], live: [Event]){
+        localEvents = local
+        virtualEvents = virtual
+        liveEvents = live
     }
 }

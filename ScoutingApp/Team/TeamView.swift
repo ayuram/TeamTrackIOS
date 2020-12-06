@@ -19,7 +19,7 @@ extension View{
 struct MyButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .scaleEffect(configuration.isPressed ? 0.95 : 1)
+            .scaleEffect(configuration.isPressed ? 0.97 : 1)
     }
 }
 struct TeamView: View {
@@ -186,8 +186,6 @@ struct TeamView: View {
                 })
                 .animation(defaultAnimation)
                 .buttonStyle(MyButtonStyle())
-                Spacer()
-                    .frame(height: 400)
             }
             .frame(width: maxWidth)
         }.navigationBarTitle(team.name)
