@@ -12,7 +12,7 @@ extension Int{
         Double(self)
     }
 }
-struct AutoScore: Codable {
+struct AutoScore: Codable, Equatable {
     var wobbleGoals: Int = 0
     var lowGoals: Int = 0
     var midGoals: Int = 0
@@ -23,7 +23,7 @@ struct AutoScore: Codable {
         wobbleGoals * 15 + lowGoals * 3 + midGoals * 6 + hiGoals * 12 + pwrShots * 15 + (navigated ? 5 : 0)
     }
 }
-struct TeleScore: Codable {
+struct TeleScore: Codable, Equatable {
     var lowGoals: Int = 0
     var midGoals: Int = 0
     var hiGoals: Int = 0
@@ -31,7 +31,7 @@ struct TeleScore: Codable {
         lowGoals * 2 + midGoals * 4 + hiGoals * 6
     }
 }
-struct EndgameScore: Codable {
+struct EndgameScore: Codable, Equatable {
     var pwrShots: Int = 0
     var wobbleGoalsinDrop: Int = 0
     var wobbleGoalsinStart: Int = 0
@@ -274,7 +274,7 @@ class Match: Identifiable, ObservableObject, Codable{
         
     }
 }
-class Event: ObservableObject, Codable {
+class Event: ObservableObject, Codable, Identifiable {
     @Published var teams: [Team]
     @Published var matches: [Match]
     let name: String
@@ -470,5 +470,10 @@ class DataModel{
         localEvents = local
         virtualEvents = virtual
         liveEvents = live
+    }
+    init(){
+        localEvents = []
+        virtualEvents = []
+        liveEvents = []
     }
 }

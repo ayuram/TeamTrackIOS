@@ -5,7 +5,7 @@
 //  Created by Ayush Raman on 8/24/20.
 //  Copyright © 2020 MSET Cuttlefish. All rights reserved.
 //
-
+import CoreHaptics
 import SwiftUI
 
 struct MatchView: View {
@@ -16,7 +16,7 @@ struct MatchView: View {
     @ObservedObject var scoreBlue0: Score
     @ObservedObject var scoreBlue1: Score
     let event: Event
-    @State var color: Color = Color.red
+    @State var gradient: LinearGradient = LinearGradient(gradient: Gradient(colors: [Color.red, Color("background"), Color("background"), Color("background"), Color("background")]), startPoint: .topTrailing, endPoint: .bottomLeading)
     init(_ m: Match, _ e: Event){
         match = m
         event = e
@@ -33,8 +33,10 @@ struct MatchView: View {
     }
     var body: some View {
         ZStack{
-            LinearGradient(gradient: Gradient(colors: [color, Color("background"), Color("background"), Color("background"), Color("background")]), startPoint: .topTrailing, endPoint: .bottomLeading)
+            gradient
+                .animation(.default)
                 .ignoresSafeArea(.container, edges: .all)
+                
             VStack{
                 Spacer()
                 HStack{
@@ -52,38 +54,38 @@ struct MatchView: View {
                         .frame(width: 100)
                     Spacer()
                 }
-                HStack{
+                HStack(spacing: 20){
                     Button("\(match.red.0.name.capitalized)"){
                         self.curr = .r0
-                        color = .red
+                        changeColor(color: .red)
                     }.disabled(self.curr == .r0)
                     .accentColor(.red)
-                    .frame(width: 100)
+                    
                     .multilineTextAlignment(/*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                     
                     Button("\(match.red.1.name.capitalized)"){
-                        color = .red
                         self.curr = .r1
+                        changeColor(color: .red)
                     }.disabled(self.curr == .r1)
                     .accentColor(.red)
-                    .frame(width: 100)
+                    
                     .multilineTextAlignment(/*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                     
                     Spacer()
                     Button("\(match.blue.0.name.capitalized)"){
-                        color = .blue
+                        changeColor(color: .blue)
                         self.curr = .b0
                     }.disabled(self.curr == .b0)
                     .accentColor(.blue)
-                    .frame(width: 100)
+                   
                     .multilineTextAlignment(.center)
                     
                     Button("\(match.blue.1.name.capitalized)"){
-                        color = .blue
+                        changeColor(color: .blue)
                         self.curr = .b1
                     }.disabled(self.curr == .b1)
                     .accentColor(.blue)
-                    .frame(width: 100)
+                    
                     .multilineTextAlignment(/*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                     
                 }.padding()
@@ -92,6 +94,12 @@ struct MatchView: View {
             }
         }
             .navigationBarTitle("Match Stats")
+        .onChange(of: match.score(), perform: { _ in
+        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+    })
+    }
+    func changeColor(color: Color){
+        gradient = LinearGradient(gradient: Gradient(colors: [color, Color("background"), Color("background"), Color("background"), Color("background")]), startPoint: .topTrailing, endPoint: .bottomLeading)
     }
     func adjustments() -> some View{
         switch curr{
@@ -130,13 +138,12 @@ struct Adjustments: View{
                     Text("Tele-Op").tag(currentState.tele)
                     Text("Endgame").tag(currentState.endgame)
                 }.pickerStyle(SegmentedPickerStyle())
-                .padding(.horizontal, 10)
+                .padding(.horizontal, 5)
                 .accentColor(.blue)
             }
             Divider()
-            
                 view()
-                    .frame(width: UIScreen.main.bounds.width, height: 200, alignment: .top)
+                    .frame(width: UIScreen.main.bounds.width, alignment: .top)
             Spacer()
                 
         }
@@ -155,107 +162,85 @@ struct Adjustments: View{
 }
 struct End: View{
     @ObservedObject var score: Score
+    @State var engine: CHHapticEngine?
     var event: Event
     var body: some View{
-        ScrollView{
-            Stepper("\(score.endgame.pwrShots) Power Shots", value: $score.endgame.pwrShots, in: 0 ... 3, onEditingChanged: {_ in
-                DispatchQueue.main.async { event.saveTeams()
-                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-                }
-            })
-            Stepper("\(score.endgame.wobbleGoalsinDrop) Wobbles in Drop", value: $score.endgame.wobbleGoalsinDrop, in: 0 ... 2, onEditingChanged: {_ in
-                DispatchQueue.main.async { event.saveTeams()
-                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-                }
-            })
-            Stepper("\(score.endgame.wobbleGoalsinStart) Wobbles in Start", value: $score.endgame.wobbleGoalsinStart, in: 0 ... 2, onEditingChanged: {_ in
-                DispatchQueue.main.async { event.saveTeams()
-                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-                }
-            })
-            Stepper("\(score.endgame.ringsOnWobble) Rings on Wobble", value: $score.endgame.ringsOnWobble, in: 0 ... Int.max, onEditingChanged: {_ in
-                DispatchQueue.main.async { event.saveTeams()
-                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-                    
-                }
-            })
+        List{
+            Stepper("\(score.endgame.pwrShots) Power Shots", value: $score.endgame.pwrShots, in: 0 ... 3)
+            Stepper("\(score.endgame.wobbleGoalsinDrop) Wobbles in Drop", value: $score.endgame.wobbleGoalsinDrop, in: 0 ... 2)
+            Stepper("\(score.endgame.wobbleGoalsinStart) Wobbles in Start", value: $score.endgame.wobbleGoalsinStart, in: 0 ... 2)
+            Stepper("\(score.endgame.ringsOnWobble) Rings on Wobble", value: $score.endgame.ringsOnWobble, in: 0 ... Int.max)
             
         }
-        .padding(.horizontal)
-        .frame(height: 250)
+        .onChange(of: score.endgame, perform: { _ in
+        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+    })
+    }
+    func complexSuccess() {
+        guard
+            CHHapticEngine.capabilitiesForHardware()
+                .supportsHaptics else {return}
+        var events = [CHHapticEvent]()
+        let intensity = CHHapticEventParameter(parameterID: .hapticIntensity, value: 1)
+        let sharpness = CHHapticEventParameter(parameterID: .hapticSharpness, value: 1)
+        let event = CHHapticEvent(eventType: .hapticTransient, parameters: [intensity, sharpness], relativeTime: 0)
+        events.append(event)
+        do {
+            let pattern = try CHHapticPattern(events: events, parameters: [])
+            let player = try engine?.makePlayer(with: pattern)
+            try player?.start(atTime: 0)
+        } catch{
+            print("Failed to play Pattern: \(error.localizedDescription).")
+        }
+    }
+    func prepareHaptics() {
+        guard CHHapticEngine.capabilitiesForHardware()
+                .supportsHaptics else { return }
+        do {
+            self.engine = try CHHapticEngine()
+            try engine?.start()
+        } catch {
+            print("There was an error creating the engine: \(error.localizedDescription)")
+        }
     }
 }
 struct Tele: View{
     @ObservedObject var score: Score
     let event: Event
     var body: some View{
-        ScrollView{
-            Stepper("\(score.tele.hiGoals) High Goals", value: $score.tele.hiGoals, in: 0 ... Int.max, onEditingChanged: {_ in
-                DispatchQueue.main.async { event.saveTeams()
-                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-                }
-            })
-            Stepper("\(score.tele.midGoals) Middle Goals", value: $score.tele.midGoals, in: 0 ... Int.max, onEditingChanged: {_ in
-                DispatchQueue.main.async { event.saveTeams()
-                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-                }
-            })
-            Stepper("\(score.tele.lowGoals) Low Goals", value: $score.tele.lowGoals, in: 0 ... Int.max, onEditingChanged: {_ in
-                DispatchQueue.main.async { event.saveTeams()
-                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-                }
-            })
+        List{
+            Stepper("\(score.tele.hiGoals) High Goals", value: $score.tele.hiGoals, in: 0 ... Int.max)
+            Stepper("\(score.tele.midGoals) Middle Goals", value: $score.tele.midGoals, in: 0 ... Int.max)
+            Stepper("\(score.tele.lowGoals) Low Goals", value: $score.tele.lowGoals, in: 0 ... Int.max)
         }
-        .padding(.horizontal)
-        .frame(height: 250)
+        .onChange(of: score.tele, perform: { _ in
+        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+    })
     }
 }
 struct Auto: View{
     @ObservedObject var score: Score
     let event: Event
     var body: some View{
-        ScrollView{
-            Stepper("\(score.auto.hiGoals) High Goals", value: $score.auto.hiGoals, in: 0 ... Int.max, onEditingChanged: {_ in
-                DispatchQueue.main.async { event.saveTeams()
-                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-                }
-            })
+        List{
+            Stepper("\(score.auto.hiGoals) High Goals", value: $score.auto.hiGoals, in: 0 ... Int.max)
+            Stepper("\(score.auto.midGoals) Middle Goals", value: $score.auto.midGoals, in: 0 ... Int.max)
             
-            Stepper("\(score.auto.midGoals) Middle Goals", value: $score.auto.midGoals, in: 0 ... Int.max, onEditingChanged: {_ in
-                DispatchQueue.main.async { event.saveTeams()
-                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-                }
-            })
-            
-            Stepper("\(score.auto.lowGoals) Low Goals", value: $score.auto.lowGoals, in: 0 ... Int.max, onEditingChanged: {_ in
-                DispatchQueue.main.async { event.saveTeams()
-                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-                }
-            })
-            Stepper("\(score.auto.wobbleGoals) Wobbles Placed", value: $score.auto.wobbleGoals, in: 0 ... 2, onEditingChanged: {_ in
-                DispatchQueue.main.async { event.saveTeams()
-                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-                }
-            })
-            Stepper("\(score.auto.pwrShots) Power Shots", value: $score.auto.pwrShots, in: 0 ... 3, onEditingChanged: {_ in
-                DispatchQueue.main.async { event.saveTeams()
-                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-                }
-            })
+            Stepper("\(score.auto.lowGoals) Low Goals", value: $score.auto.lowGoals, in: 0 ... Int.max)
+            Stepper("\(score.auto.wobbleGoals) Wobbles Placed", value: $score.auto.wobbleGoals, in: 0 ... 2)
+            Stepper("\(score.auto.pwrShots) Power Shots", value: $score.auto.pwrShots, in: 0 ... 3)
             Toggle(isOn: $score.auto.navigated) {
                 Text("Navigated")
             }
-            Text("")
-                .frame(height: 50)
         }
-        .padding(.horizontal)
-        .frame(width: UIScreen.main.bounds.width, height: 250)
+        .onChange(of: score.auto, perform: { _ in
+        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+    })
     }
 }
-
 struct MatchView_Previews: PreviewProvider {
     static var previews: some View {
-        MatchView(Match(red: (Team("2", "ELementary Schooling People"), Team("3", "betas")),blue: (Team("0", "charlies"), Team("1", "deltas"))), Event())
+        MatchView(Match(red: (Team("2", "ELementary Schooling People"), Team("3", "LOTS OF PEOPLE IN A ROOM")),blue: (Team("0", "charlies"), Team("1", "deltas"))), Event())
             
     }
 }

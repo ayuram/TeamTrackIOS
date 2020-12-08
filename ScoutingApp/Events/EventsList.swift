@@ -9,14 +9,27 @@ import SwiftUI
 
 struct EventsList: View {
     let data: DataModel
+    @State var bool = false
+    init(){
+        data = DataModel()
+        data.localEvents.append(Event())
+    }
     var body: some View {
         NavigationView{
             VStack{
                 List{
-                    Text("Hello World")
+                    Section(header: Text("Local Scrimmages")){
+                        ForEach(data.localEvents){ event in
+                            EventNav(event: event)
+                        }
+                    }
+                    Section(header: Text("Virtual Tournaments")){
+                        
+                    }
                 }
             }
             .navigationBarTitle("Events")
+            
         }
     }
 }

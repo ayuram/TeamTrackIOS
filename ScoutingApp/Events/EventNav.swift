@@ -22,6 +22,7 @@ struct EventNav: View {
     }
 }
 struct VirtualEventNav: View{
+    let event: VirtualEvent
     var body: some View{
         HStack {
             Image(systemName: "externaldrive.fill.badge.plus")

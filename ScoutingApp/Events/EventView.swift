@@ -21,7 +21,8 @@ struct EventView: View {
                 Image(systemName: "sportscourt.fill")
                 Text("Matches")
             }
-        }.environmentObject(event)    }
+        }.environmentObject(event)
+    }
 }
 
 struct EventView_Previews: PreviewProvider {
