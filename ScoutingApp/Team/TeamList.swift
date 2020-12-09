@@ -13,7 +13,7 @@ struct TeamList: View {
     @EnvironmentObject var data: Event
     @State var sheet = false
     var body: some View {
-       
+        VStack{
             List{
                 ForEach(data.teams){ team in
                     TeamNav(team, data)
@@ -25,12 +25,14 @@ struct TeamList: View {
                 .onMove(perform: move)
             }
             .listStyle(GroupedListStyle())
+        }
             .navigationBarTitle("Teams")
             .navigationBarItems(trailing: Button("Add"){
                 self.sheet.toggle()
             }).sheet(isPresented: $sheet){
                 sht()
             }
+        .frame(width: UIScreen.main.bounds.width)
         
     }
     func move(from source: IndexSet, to destination: Int){

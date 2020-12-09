@@ -27,6 +27,7 @@
 		C9702B2C252EF1AF008A7167 /* TeamList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9702B29252EF1AF008A7167 /* TeamList.swift */; };
 		C9702B2D252EF1AF008A7167 /* TeamNav.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9702B2A252EF1AF008A7167 /* TeamNav.swift */; };
 		C9702B2E252EF1AF008A7167 /* TeamView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9702B2B252EF1AF008A7167 /* TeamView.swift */; };
+		C9AE17922580C34900769713 /* SwiftUICharts in Frameworks */ = {isa = PBXBuildFile; productRef = C9AE17912580C34900769713 /* SwiftUICharts */; };
 		C9D9E99B254A00D600E42210 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D9E99A254A00D600E42210 /* CardView.swift */; };
 		C9EACF3A256253DC004B586E /* CustomStepper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9EACF39256253DC004B586E /* CustomStepper.swift */; };
 		C9F28BA0253002A90011F59F /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = C9F28B9F253002A90011F59F /* ComposableArchitecture */; };
@@ -88,6 +89,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C9F28BA4253002A90011F59F /* ComposableCoreLocation in Frameworks */,
+				C9AE17922580C34900769713 /* SwiftUICharts in Frameworks */,
 				C9F28BA2253002A90011F59F /* ComposableCoreMotion in Frameworks */,
 				C9F28BA0253002A90011F59F /* ComposableArchitecture in Frameworks */,
 			);
@@ -228,6 +230,7 @@
 				C9F28B9F253002A90011F59F /* ComposableArchitecture */,
 				C9F28BA1253002A90011F59F /* ComposableCoreMotion */,
 				C9F28BA3253002A90011F59F /* ComposableCoreLocation */,
+				C9AE17912580C34900769713 /* SwiftUICharts */,
 			);
 			productName = ScoutingApp;
 			productReference = C9702AD9252EF14E008A7167 /* ScoutingApp.app */;
@@ -302,6 +305,7 @@
 			mainGroup = C9702AD0252EF14E008A7167;
 			packageReferences = (
 				C9F28B9E253002A90011F59F /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
+				C9AE17902580C34900769713 /* XCRemoteSwiftPackageReference "ChartView" */,
 			);
 			productRefGroup = C9702ADA252EF14E008A7167 /* Products */;
 			projectDirPath = "";
@@ -682,6 +686,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		C9AE17902580C34900769713 /* XCRemoteSwiftPackageReference "ChartView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/AppPear/ChartView";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.5.4;
+			};
+		};
 		C9F28B9E253002A90011F59F /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture.git";
@@ -693,6 +705,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		C9AE17912580C34900769713 /* SwiftUICharts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C9AE17902580C34900769713 /* XCRemoteSwiftPackageReference "ChartView" */;
+			productName = SwiftUICharts;
+		};
 		C9F28B9F253002A90011F59F /* ComposableArchitecture */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C9F28B9E253002A90011F59F /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;

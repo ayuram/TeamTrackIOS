@@ -7,16 +7,6 @@
 
 import SwiftUI
 
-//
-//  LineGraph.swift
-//  ProCrast
-//
-//  Created by Ayush Raman on 8/9/20.
-//  Copyright © 2020 Answer Key. All rights reserved.
-//
-
-import SwiftUI
-
 struct LineGraph: Shape {
     
     var dataPoints: [CGFloat] = []

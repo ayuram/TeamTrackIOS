@@ -36,7 +36,7 @@ struct MatchList: View {
             .sheet(isPresented: $add) {
                 AddMatch
             }
-            
+            .frame(width: UIScreen.main.bounds.width)
         
     }
     func delete(at offsets: IndexSet){

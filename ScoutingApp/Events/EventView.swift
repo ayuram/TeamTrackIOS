@@ -8,23 +8,6 @@
 import SwiftUI
 
 struct EventView: View {
-    let event: Event
-    var body: some View {
-        TabView{
-          TeamList()
-            .tabItem {
-                Image(systemName: "person.3.fill")
-                Text("Teams")
-            }
-            MatchList()
-            .tabItem {
-                Image(systemName: "sportscourt.fill")
-                Text("Matches")
-            }
-        }.environmentObject(event)
-    }
-}
-struct testView: View {
     enum Tabs{
         case teams, matches
     }
@@ -35,64 +18,62 @@ struct testView: View {
     var body: some View {
         ZStack{
             VStack{
-            viewSelect()
-                .environmentObject(event)
-                Color.green
-                    .edgesIgnoringSafeArea(.all)
+                viewSelect()
+                    .environmentObject(event)
+                RoundedRectangle(cornerRadius: 25.0)
+                    .fill(Color.green)
                     .frame(height: 80)
                     .shadow(radius: 5)
             }
             VStack{
                 Spacer()
                 ZStack{
-//                    Capsule()
-//                        .fill(Color.green.opacity(0.8))
-//                        .frame(width: 300, height: 80)
-//                        .shadow(radius: check(.teams) ? 5 : 0)
-                    Color.green
-                        .edgesIgnoringSafeArea(.all)
-                        .frame(height: 80)
-                        .shadow(radius: 5)
-                HStack{
-                    Spacer()
-                    Button(action: {
-                        selectedTab = .teams
-                        bool = true
-                    }, label: {
-                        VStack{
-                            Image(systemName: "person.3.fill")
-                            Text("Teams")
-                                .font(.caption)
-                        }
-                        .frame(width: check(.teams) ? 70 : 60, height: check(.teams) ? 70 : 60)
-                        .background(Color.white)
-                        .clipShape(Circle())
-                        .shadow(radius: check(.teams) ? 5 : 0)
-                        .offset(x: check(.teams) ? 25 : 0, y: check(.teams) ? -25 : 0)
-                        .animation(defaultAnimation)
-                    })
-                    Spacer()
-                    Spacer()
-                    Button(action: {
-                        selectedTab = .matches
-                        bool = true
-                    }, label: {
-                        VStack{
-                            Image(systemName: "sportscourt.fill")
-                            Text("Matches")
-                                .font(.caption)
-                        }
-                        .frame(width: check(.matches) ? 70 : 60, height: check(.matches) ? 70 : 60)
-                        .background(Color.white)
-                        .clipShape(Circle())
-                        .shadow(radius: check(.matches) ? 5 : 0)
-                        .offset(x: check(.matches) ? -25 : 0, y: check(.matches) ? -25 : 0)
-                        .animation(defaultAnimation)
-                    })
-                    Spacer()
-                }
-                
-                
+                    HStack{
+                        Spacer()
+                        Button(action: {
+                            selectedTab = .teams
+                            bool = true
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.6){
+                                bool = false
+                            }
+                        }, label: {
+                            VStack{
+                                Image(systemName: "person.3.fill")
+                                Text("Teams")
+                                    .font(.caption)
+                            }
+                            .frame(width: check(.teams) ? 70 : 60, height: check(.teams) ? 70 : 60)
+                            .background(Color.white)
+                            .clipShape(Circle())
+                            .shadow(color: absCheck(.teams) ? .accentColor : .clear, radius: absCheck(.teams) ? 5 : 0)
+                            .shadow(color: absCheck(.teams) ? .accentColor : .clear, radius: absCheck(.teams) ? 5 : 0)
+                            .offset(y: check(.teams) ? -25 : -10)
+                            .animation(defaultAnimation)
+                        })
+                        Spacer()
+                        Spacer()
+                        Button(action: {
+                            selectedTab = .matches
+                            bool = true
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.6){
+                                bool = false
+                            }
+                        }, label: {
+                            VStack{
+                                Image(systemName: "sportscourt.fill")
+                                Text("Matches")
+                                    .font(.caption)
+                            }
+                            .frame(width: check(.matches) ? 70 : 60, height: check(.matches) ? 70 : 60)
+                            .background(Color.white)
+                            .clipShape(Circle())
+                            .shadow(color: absCheck(.matches) ? .accentColor : .clear, radius: absCheck(.matches) ? 5 : 0)
+                            .shadow(color: absCheck(.matches) ? .accentColor : .clear, radius: absCheck(.matches) ? 5 : 0)
+                            .offset(y: check(.matches) ? -25 : -10)
+                            .animation(defaultAnimation)
+                        })
+                        Spacer()
+                    }
                 }
             }
         }
@@ -106,15 +87,13 @@ struct testView: View {
     func check(_ tab: Tabs) -> Bool{
         tab == selectedTab && bool
     }
+    func absCheck(_ tab: Tabs) -> Bool{
+        tab == selectedTab
+    }
 }
 
 struct EventView_Previews: PreviewProvider {
     static var previews: some View {
         EventView(event: Event())
-    }
-}
-struct newPrev: PreviewProvider {
-    static var previews: some View {
-        testView(event: Event())
     }
 }

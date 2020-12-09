@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import SwiftUICharts
 
 extension View{
     func navLink(_ v: AnyView) -> some View{
@@ -31,6 +32,7 @@ struct TeamView: View {
     let cardWidth = UIScreen.main.bounds.width - 50
     let defaultAnimation = Animation.interactiveSpring(response: 0.3, dampingFraction: 0.6, blendDuration: 1)
     let newHeight: CGFloat = 500
+    let chartStyle = ChartStyle(backgroundColor: .clear, accentColor: Color("AccentColor"), gradientColor: GradientColor(start: .green, end: .blue), textColor: Color("text"), legendTextColor: Color.gray, dropShadowColor: .green)
     @State var genBool = false
     @State var autoBool = false
     @State var teleBool = false
@@ -217,9 +219,11 @@ struct TeamView: View {
         genBool || autoBool || endBool || teleBool
     }
     func lineChart() -> some View{
-        switch team.scores.count{
-        case 0: return AnyView(Text(""))
-        default: return AnyView(LineChart(data: team.scores.map{CGFloat($0.val())}).frame(height: 360).padding())
+        if(team.scores.count < 2){
+            return AnyView(Text(""))
+        }
+        else{
+            return AnyView(LineView(data: team.scores.map{Double($0.val())}, legend: "Timeline", style: chartStyle).frame(height: 360).padding())
         }
     }
 }
