@@ -10,9 +10,11 @@ import SwiftUI
 struct EventsList: View {
     let data: DataModel
     @State var bool = false
+    @State var acSh = false
     @State var confirmation = false
     @State var newEventName = ""
     @State var eventType = EventType.local
+    @State var titleString = ""
     init(){
         data = DataModel()
         data.localEvents.append(Event())
@@ -20,13 +22,17 @@ struct EventsList: View {
     }
     var body: some View {
         if confirmation && newEventName != "" {
-            data.localEvents.append(Event(newEventName))
+            if(eventType == .local){
+                data.localEvents.append(Event(newEventName))
+            } else if eventType == .virtual {
+                data.virtualEvents.append(VirtualEvent(newEventName))
+            }
             newEventName = ""
             confirmation = false
         }
         return NavigationView{
             ZStack{
-                AlertControlView(textString: $newEventName, showAlert: $bool, confirmation: $confirmation, title: "New Event", message: "Enter a Name")
+                AlertControlView(textString: $newEventName, showAlert: $bool, confirmation: $confirmation, title: titleString, message: "Enter Name")
                 VStack{
                     List{
                         Section(header: Text("Local Scrimmages")){
@@ -35,7 +41,9 @@ struct EventsList: View {
                             }
                         }
                         Section(header: Text("Virtual Tournaments")){
-                            
+                            ForEach(data.virtualEvents){ event in
+                                VirtualEventNav(event: event)
+                            }
                         }
                     }
                     
@@ -44,13 +52,13 @@ struct EventsList: View {
             
             .navigationBarTitle("Events")
             .navigationBarItems(trailing: Button("Add"){
-                bool = true
+                acSh = true
             })
             
-            .actionSheet(isPresented: $bool, content: {
+            .actionSheet(isPresented: $acSh, content: {
                 ActionSheet(title: Text("Add New Event"), message: Text("Select Event Type"), buttons: [
-                    .default(Text("Local Scrimmage")) {eventType = .local},
-                    .default(Text("Virtual Tournament")) {eventType = .virtual},
+                    .default(Text("Local Scrimmage")) {eventType = .local; titleString = "New Local Event"; bool = true},
+                    .default(Text("Virtual Tournament")) {eventType = .virtual; titleString = "New Virtual Event"; bool = true},
                     .cancel()
                 ])
             })

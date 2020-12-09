@@ -421,43 +421,34 @@ class Event: ObservableObject, Codable, Identifiable{
             .min() ?? 1
     }
 }
-class VirtualEvent: ObservableObject, Codable{
-    @Published var team: Team
+class VirtualEvent: ObservableObject, Codable, Identifiable{
+    @Published var teams: [Team]
     @Published var matches: [VirtualMatch]
     let name: String
     init(){
         name = "FIRST Event"
-        team = Team("", "")
+        teams = []
         matches = []
-        if let data = UserDefaults.standard.data(forKey: "Teams"){
-            if let decoded = try? JSONDecoder().decode(Team.self, from: data){
-                team = decoded
-            }
-        }
-        if let d = UserDefaults.standard.data(forKey: "Matches"){
-            if let decoded = try? JSONDecoder().decode([VirtualMatch].self, from: d){
-                for match in decoded{
-                    match.team = team
-                }
-                matches = decoded
-            }
-        }
-        
+    }
+    init(_ name: String){
+        self.name = name
+        teams = []
+        matches = []
     }
     required init(from decoder: Decoder) throws{
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        team = try container.decode(Team.self, forKey: .team)
+        teams = try container.decode([Team].self, forKey: .teams)
         matches = try container.decode([VirtualMatch].self, forKey: .matches)
         name = try container.decode(String.self, forKey: .name)
     }
     enum CodingKeys: String, CodingKey{
-        case team
+        case teams
         case matches
         case name
     }
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(team, forKey: .team)
+        try container.encode(teams, forKey: .teams)
         try container.encode(matches, forKey: .matches)
         try container.encode(name, forKey: .name)
     }
