@@ -27,9 +27,9 @@ struct VirtualEventNav: View{
         HStack {
             Image(systemName: "externaldrive.fill.badge.plus")
                 .foregroundColor(Color("AccentColor"))
-            Text("Some STUFF")
+            Text(event.name)
             Spacer()
-            Image(systemName: "person.3.fill")
+            Image(systemName: "rectangle.stack.person.crop.fill")
         }.frame(width: 300, height: 30, alignment: .leading)
     }
 }

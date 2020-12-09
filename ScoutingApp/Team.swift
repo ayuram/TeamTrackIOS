@@ -457,7 +457,7 @@ class VirtualMatch: ObservableObject, Codable{
     var team: Team
     let id: UUID
 }
-class DataModel{
+class DataModel: ObservableObject{
     @Published var localEvents: [Event]
     @Published var virtualEvents: [VirtualEvent]
     @Published var liveEvents: [Event]

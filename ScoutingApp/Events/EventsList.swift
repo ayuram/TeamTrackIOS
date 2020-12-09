@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct EventsList: View {
-    let data: DataModel
+    @ObservedObject var data: DataModel
     @State var bool = false
     @State var acSh = false
     @State var confirmation = false
@@ -21,18 +21,9 @@ struct EventsList: View {
         UITableView.appearance().backgroundColor = UIColor(Color("background"))
     }
     var body: some View {
-        if confirmation && newEventName != "" {
-            if(eventType == .local){
-                data.localEvents.append(Event(newEventName))
-            } else if eventType == .virtual {
-                data.virtualEvents.append(VirtualEvent(newEventName))
-            }
-            newEventName = ""
-            confirmation = false
-        }
-        return NavigationView{
+       NavigationView{
             ZStack{
-                AlertControlView(textString: $newEventName, showAlert: $bool, confirmation: $confirmation, title: titleString, message: "Enter Name")
+//                AlertControlView(textString: $newEventName, showAlert: $bool, confirmation: $confirmation, title: titleString, message: "Enter Name")
                 VStack{
                     List{
                         Section(header: Text("Local Scrimmages")){
@@ -49,18 +40,39 @@ struct EventsList: View {
                     
                 }
             }
-            
             .navigationBarTitle("Events")
-            .navigationBarItems(trailing: Button("Add"){
+            .navigationBarItems(leading: EditButton(), trailing: Button("Add"){
                 acSh = true
             })
-            
             .actionSheet(isPresented: $acSh, content: {
                 ActionSheet(title: Text("Add New Event"), message: Text("Select Event Type"), buttons: [
                     .default(Text("Local Scrimmage")) {eventType = .local; titleString = "New Local Event"; bool = true},
                     .default(Text("Virtual Tournament")) {eventType = .virtual; titleString = "New Virtual Event"; bool = true},
                     .cancel()
                 ])
+            })
+            .sheet(isPresented: $bool, content: {
+                sheet()
+            })
+        }
+    }
+    func sheet() -> some View{
+        NavigationView{
+            VStack{
+                TextField("Event Name", text: $newEventName)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+            }
+            .navigationBarItems(leading: Button("Cancel"){
+                bool = false
+                newEventName = ""
+            }, trailing: Button("Save"){
+                if(eventType == .local){
+                    data.localEvents.append(Event(newEventName))
+                } else if eventType == .virtual {
+                    data.virtualEvents.append(VirtualEvent(newEventName))
+                }
+                newEventName = ""
+                bool = false
             })
         }
     }
@@ -91,6 +103,7 @@ struct AlertControlView: UIViewControllerRepresentable {
                 }
                 alert.dismiss(animated: true){
                     self.showAlert = false
+                    self.textString = ""
                 }
             })
             alert.addAction(UIAlertAction(title: NSLocalizedString("Done", comment: ""), style: .default){ _ in
@@ -100,7 +113,7 @@ struct AlertControlView: UIViewControllerRepresentable {
                 alert.dismiss(animated: true){
                     self.showAlert = false
                     self.confirmation = true
-                    
+                    self.textString = ""
                 }
             })
             DispatchQueue.main.async {
