@@ -54,7 +54,7 @@ class Score: ObservableObject, Codable{
     required init(from decoder: Decoder) throws{
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(UUID.self, forKey: .id)
-        print("scores \(id)")
+        //print("scores \(id)")
         auto = try container.decode(AutoScore.self, forKey: .auto)
         tele = try container.decode(TeleScore.self, forKey: .tele)
         endgame = try container.decode(EndgameScore.self, forKey: .endgame)
@@ -77,7 +77,7 @@ class Score: ObservableObject, Codable{
         id = UUID()
     }
     func val() -> Int {
-        print(id)
+        //print(id)
         return auto.total() + tele.total() + endgame.total()
     }
     static func < (_ lhs: Score, _ rhs: Score) -> Bool{
@@ -159,7 +159,7 @@ class Team: ObservableObject, Identifiable, Codable {
         scores = try container.decode([Score].self, forKey: .scores)
         name = try container.decode(String.self, forKey: .name)
         number = try container.decode(String.self, forKey: .number)
-        print(scores)
+        //print(scores)
     }
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
@@ -245,7 +245,7 @@ class Match: Identifiable, ObservableObject, Codable{
     required init(from decoder: Decoder) throws{
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(UUID.self, forKey: .id)
-        print("matches \(id)")
+        //print("matches \(id)")
         red.0 = try container.decode(Team.self, forKey: .red0)
         red.1 = try container.decode(Team.self, forKey: .red1)
         blue.0 = try container.decode(Team.self, forKey: .blue0)
@@ -274,7 +274,7 @@ class Match: Identifiable, ObservableObject, Codable{
         
     }
 }
-class Event: ObservableObject, Codable, Identifiable {
+class Event: ObservableObject, Codable{
     @Published var teams: [Team]
     @Published var matches: [Match]
     let name: String

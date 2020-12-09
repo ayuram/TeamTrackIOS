@@ -27,13 +27,13 @@ struct MatchList: View {
                 })
             }.navigationBarTitle("Matches")
             .navigationBarItems(trailing: Button("Add"){
-                    add.toggle()
-                    red0 = data.teams[0].number
-                    red1 = data.teams[0].number
-                    blue0 = data.teams[0].number
-                    blue1 = data.teams[0].number
+                add.toggle()
+                red0 = data.teams[0].number
+                red1 = data.teams[0].number
+                blue0 = data.teams[0].number
+                blue1 = data.teams[0].number
             }).sheet(isPresented: $add) {
-                    AddMatch
+                AddMatch
             }
             .disabled(data.teams.count == 0)
         }
@@ -58,40 +58,40 @@ struct MatchList: View {
     @State var blue1: String = ""
     @State var next = false
     var AddMatch: some View {
-            NavigationView{
-                    VStack{
-                        Picker(selection: $red0, label: Text("")){
-                                ForEach(data.teams){ team in
-                                    Text("\(team.number) \(team.name)").tag(team.number)
-                                }
-                        }
-                            Picker(selection: $red1, label: Text("")){
-                                ForEach(data.teams){ team in
-                                    Text("\(team.number) \(team.name)").tag(team.number)
-                                }
-                            }
+        NavigationView{
+            VStack{
+                Picker(selection: $red0, label: Text("")){
+                    ForEach(data.teams){ team in
+                        Text("\(team.number) \(team.name)").tag(team.number)
                     }
-                    .navigationBarItems(leading: Button("Cancel"){
-                        add.toggle()
-                    }, trailing: NavigationLink(destination: blue){
-                    Text("Next").accentColor(.red)
-                })
-                    .navigationBarTitle("Red Alliance")
+                }
+                Picker(selection: $red1, label: Text("")){
+                    ForEach(data.teams){ team in
+                        Text("\(team.number) \(team.name)").tag(team.number)
+                    }
+                }
             }
+            .navigationBarItems(leading: Button("Cancel"){
+                add.toggle()
+            }, trailing: NavigationLink(destination: blue){
+                Text("Next").accentColor(.red)
+            })
+            .navigationBarTitle("Red Alliance")
+        }
     }
     var blue: some View{
-            VStack{
-                Picker(selection: $blue0, label: Text("")){
-                    ForEach(data.teams){ team in
-                        Text("\(team.number) \(team.name)").tag(team.number)
-                    }
-                }
-                Picker(selection: $blue1, label: Text("")){
-                    ForEach(data.teams){ team in
-                        Text("\(team.number) \(team.name)").tag(team.number)
-                    }
+        VStack{
+            Picker(selection: $blue0, label: Text("")){
+                ForEach(data.teams){ team in
+                    Text("\(team.number) \(team.name)").tag(team.number)
                 }
             }
+            Picker(selection: $blue1, label: Text("")){
+                ForEach(data.teams){ team in
+                    Text("\(team.number) \(team.name)").tag(team.number)
+                }
+            }
+        }
         .navigationBarItems(trailing: Button("Save"){
             let r0 = data.dictTeams()[red0] ?? Team("","")
             let r1 = data.dictTeams()[red1] ?? Team("","")

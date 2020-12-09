@@ -15,22 +15,23 @@ struct EventsList: View {
         data.localEvents.append(Event())
     }
     var body: some View {
-        NavigationView{
-            VStack{
-                List{
-                    Section(header: Text("Local Scrimmages")){
-                        ForEach(data.localEvents){ event in
-                            EventNav(event: event)
-                        }
-                    }
-                    Section(header: Text("Virtual Tournaments")){
-                        
-                    }
-                }
-            }
-            .navigationBarTitle("Events")
-            
-        }
+//        NavigationView{
+//            VStack{
+//                List{
+//                    Section(header: Text("Local Scrimmages")){
+//                        ForEach(data.localEvents){ event in
+//                            EventNav(event: event)
+//                        }
+//                    }
+//                    Section(header: Text("Virtual Tournaments")){
+//
+//                    }
+//                }
+//            }
+//            .navigationBarTitle("Events")
+//
+//        }
+        Text("Wow")
     }
 }
 

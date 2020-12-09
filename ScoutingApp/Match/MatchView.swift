@@ -139,11 +139,13 @@ struct Adjustments: View{
                     Text("Endgame").tag(currentState.endgame)
                 }.pickerStyle(SegmentedPickerStyle())
                 .padding(.horizontal, 5)
-                .accentColor(.blue)
             }
             Divider()
                 view()
                     .frame(width: UIScreen.main.bounds.width, alignment: .top)
+                    .onChange(of: match.score(), perform: { value in
+                        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                    })
             Spacer()
                 
         }
@@ -174,6 +176,7 @@ struct End: View{
         }
         .onChange(of: score.endgame, perform: { _ in
         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+            event.saveTeams()
     })
     }
     func complexSuccess() {
@@ -215,6 +218,7 @@ struct Tele: View{
         }
         .onChange(of: score.tele, perform: { _ in
         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+            event.saveTeams()
     })
     }
 }
@@ -235,6 +239,7 @@ struct Auto: View{
         }
         .onChange(of: score.auto, perform: { _ in
         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+            event.saveTeams()
     })
     }
 }
