@@ -145,6 +145,7 @@ struct Adjustments: View{
                     .frame(width: UIScreen.main.bounds.width, alignment: .top)
                     .onChange(of: match.score(), perform: { value in
                         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                        data.saveTeams()
                     })
             Spacer()
                 
@@ -174,10 +175,7 @@ struct End: View{
             Stepper("\(score.endgame.ringsOnWobble) Rings on Wobble", value: $score.endgame.ringsOnWobble, in: 0 ... Int.max)
             
         }
-        .onChange(of: score.endgame, perform: { _ in
-        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-            event.saveTeams()
-    })
+        
     }
     func complexSuccess() {
         guard
@@ -216,10 +214,7 @@ struct Tele: View{
             Stepper("\(score.tele.midGoals) Middle Goals", value: $score.tele.midGoals, in: 0 ... Int.max)
             Stepper("\(score.tele.lowGoals) Low Goals", value: $score.tele.lowGoals, in: 0 ... Int.max)
         }
-        .onChange(of: score.tele, perform: { _ in
-        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-            event.saveTeams()
-    })
+        
     }
 }
 struct Auto: View{
@@ -237,10 +232,7 @@ struct Auto: View{
                 Text("Navigated")
             }
         }
-        .onChange(of: score.auto, perform: { _ in
-        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-            event.saveTeams()
-    })
+        
     }
 }
 struct MatchView_Previews: PreviewProvider {

@@ -13,25 +13,43 @@ struct EventsList: View {
     init(){
         data = DataModel()
         data.localEvents.append(Event())
+        UITableView.appearance().backgroundColor = UIColor(Color("background"))
     }
     var body: some View {
-//        NavigationView{
+        NavigationView{
+            VStack{
+                List{
+                    Section(header: Text("Local Scrimmages")){
+                        ForEach(data.localEvents){ event in
+                            EventNav(event: event)
+                        }
+                    }
+                    Section(header: Text("Virtual Tournaments")){
+
+                    }
+                }
+            }
+            .navigationBarTitle("Events")
+            .navigationBarItems(trailing: Button("Add"){
+                
+            })
+
+        }
+//        ZStack{
+//            Color.blue
+//                .ignoresSafeArea(.container, edges: .all)
+//            Text("Wow")
 //            VStack{
-//                List{
-//                    Section(header: Text("Local Scrimmages")){
-//                        ForEach(data.localEvents){ event in
-//                            EventNav(event: event)
-//                        }
-//                    }
-//                    Section(header: Text("Virtual Tournaments")){
-//
-//                    }
+//                Spacer()
+//                HStack{
+//                Text("Teams")
+//                    .cardView()
+//                    .frame(width: 100, height: 100)
+//                Text("Matches")
+//                    .cardView()
 //                }
 //            }
-//            .navigationBarTitle("Events")
-//
 //        }
-        Text("Wow")
     }
 }
 

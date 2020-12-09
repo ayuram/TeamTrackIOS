@@ -13,7 +13,7 @@ struct TeamList: View {
     @EnvironmentObject var data: Event
     @State var sheet = false
     var body: some View {
-        NavigationView{
+       
             List{
                 ForEach(data.teams){ team in
                     TeamNav(team, data)
@@ -31,7 +31,7 @@ struct TeamList: View {
             }).sheet(isPresented: $sheet){
                 sht()
             }
-        }
+        
     }
     func move(from source: IndexSet, to destination: Int){
         data.teams.move(fromOffsets: source, toOffset: destination)

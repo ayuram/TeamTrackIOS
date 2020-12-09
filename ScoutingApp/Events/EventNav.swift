@@ -18,7 +18,7 @@ struct EventNav: View {
             Spacer()
             Image(systemName: "person.3.fill")
         }.frame(width: 300, height: 30, alignment: .leading)
-        .navLink(AnyView(EventView(event: event)))
+        .navLink(AnyView(testView(event: event)))
     }
 }
 struct VirtualEventNav: View{

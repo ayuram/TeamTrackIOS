@@ -16,7 +16,7 @@ struct MatchList: View {
         UITableView.appearance().backgroundColor = UIColor(Color("background"))
     }
     var body: some View {
-        NavigationView{
+        
             List{
                 ForEach(data.matches){ match in
                     matchNav(match, data)
@@ -32,11 +32,12 @@ struct MatchList: View {
                 red1 = data.teams[0].number
                 blue0 = data.teams[0].number
                 blue1 = data.teams[0].number
-            }).sheet(isPresented: $add) {
+            }.disabled(data.teams.count == 0))
+            .sheet(isPresented: $add) {
                 AddMatch
             }
-            .disabled(data.teams.count == 0)
-        }
+            
+        
     }
     func delete(at offsets: IndexSet){
         let matches = offsets

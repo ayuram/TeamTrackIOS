@@ -274,7 +274,7 @@ class Match: Identifiable, ObservableObject, Codable{
         
     }
 }
-class Event: ObservableObject, Codable{
+class Event: ObservableObject, Codable, Identifiable{
     @Published var teams: [Team]
     @Published var matches: [Match]
     let name: String
