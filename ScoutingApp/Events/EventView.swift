@@ -18,7 +18,7 @@ struct EventView: View {
     var body: some View {
         ZStack{
             VStack{
-                viewSelect()
+                tabSelect()
                     .environmentObject(event)
                 RoundedRectangle(cornerRadius: 25.0)
                     .fill(Color.green)
@@ -79,6 +79,11 @@ struct EventView: View {
         }
     }
     func viewSelect() -> some View{
+        switch event{
+        
+        }
+    }
+    func tabSelect() -> some View{
         switch selectedTab{
         case .teams: return TeamList().format()
         case .matches: return MatchList().format()

@@ -119,7 +119,7 @@ extension Array where Element == Score {
     }
     func avgScore() -> Double{
         switch self.map({$0.val()}).count{
-            case 0: return 0
+        case 0: return 0
         default: return self.map{Double($0.val())}.mean()
         }
     }
@@ -144,15 +144,19 @@ class Team: ObservableObject, Identifiable, Codable {
     var number: String
     var name: String
     @Published var scores: [Score]
+    var type: EventType = .local
+    var gpscore: Double = 10
     init(_ n: String,_ s: String){
         number = n
         name = s
         scores = []
+        type = .local
     }
     init(){
         number = ""
         name = ""
         scores = []
+        type = .local
     }
     required init(from decoder: Decoder) throws{
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -171,10 +175,11 @@ class Team: ObservableObject, Identifiable, Codable {
         case number
         case name
         case scores
+        case type
     }
     func avgScore() -> Double{
         switch scores.map({$0.val()}).count{
-            case 0: return 0
+        case 0: return 0
         default: return scores.map{Double($0.val())}.mean()
         }
     }
@@ -197,7 +202,7 @@ class Team: ObservableObject, Identifiable, Codable {
         }
     }
     func bestScore() -> Double {
-       scores.compactMap{ Double($0.val()) }.max() ?? 0
+        scores.compactMap{ Double($0.val()) }.max() ?? 0
     }
     func bestAutoScore() -> Double {
         scores.compactMap { $0.auto.total().double() }.max() ?? 0
@@ -232,6 +237,7 @@ class Match: Identifiable, ObservableObject, Codable{
     var id: UUID = UUID()
     @Published var red: Side = (Team("", ""), Team("", ""))
     @Published var blue: Side = (Team("", ""), Team("", ""))
+    var type = EventType.local
     init(red: Side, blue: Side){
         id = UUID()
         self.red = red
@@ -240,7 +246,19 @@ class Match: Identifiable, ObservableObject, Codable{
         self.red.1.scores.addScore(Score(id))
         self.blue.0.scores.addScore(Score(id))
         self.blue.1.scores.addScore(Score(id))
-        
+    }
+    init(red: Side, blue: Side, type: EventType){
+        self.type = type
+        id = UUID()
+        self.red = red
+        self.blue = blue
+        self.red.0.scores.addScore(Score(id))
+        self.red.1.scores.addScore(Score(id))
+        self.blue.0.scores.addScore(Score(id))
+        self.blue.1.scores.addScore(Score(id))
+    }
+    init(_ t: Team){
+        type = .virtual
     }
     required init(from decoder: Decoder) throws{
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -269,7 +287,7 @@ class Match: Identifiable, ObservableObject, Codable{
         let r2 = red.1.scores.reduce(Score()){ $1.id == self.id ? $1 : $0 }
         let b1 = blue.0.scores.reduce(Score()){ $1.id == self.id ? $1 : $0 }
         let b2 = blue.0.scores.reduce(Score()){ $1.id == self.id ? $1 : $0 }
-
+        
         return "\((r1.val()) + (r2.val())) - \((b1.val()) + (b2.val()))"
         
     }
@@ -278,15 +296,18 @@ class Event: ObservableObject, Codable, Identifiable{
     @Published var teams: [Team]
     @Published var matches: [Match]
     let name: String
-    init(_ name: String) {
+    var type: EventType
+    init(_ name: String, type: EventType) {
         self.name = name
         teams = []
         matches = []
+        self.type = type
     }
     init(){
         name = "FIRST Event"
         teams = []
         matches = []
+        type = .local
         if let data = UserDefaults.standard.data(forKey: "Teams"){
             if let decoded = try? JSONDecoder().decode([Team].self, from: data){
                 teams = decoded
@@ -306,6 +327,7 @@ class Event: ObservableObject, Codable, Identifiable{
         
     }
     required init(from decoder: Decoder) throws{
+        type = .local
         let container = try decoder.container(keyedBy: CodingKeys.self)
         teams = try container.decode([Team].self, forKey: .teams)
         matches = try container.decode([Match].self, forKey: .matches)
@@ -322,10 +344,19 @@ class Event: ObservableObject, Codable, Identifiable{
         try container.encode(matches, forKey: .matches)
         try container.encode(name, forKey: .name)
     }
-    init(teams: [Team], matches: [Match]){
-        self.teams = teams
-        self.matches = matches
-        name = "FIRST Event"
+    func switchType(to type: EventType){
+        self.type = type
+        for team in teams {
+            team.type = type
+        }
+        
+        
+        for match in matches {
+            match.type = type
+        }
+        
+        
+        
     }
     func bestTeam() -> [Team]?{
         let arr = teams.sorted { $0.avgScore() > $1.avgScore() }[0 ... 3]
@@ -340,8 +371,7 @@ class Event: ObservableObject, Codable, Identifiable{
         }
         if(!bool){
             teams.append(team)
-            //UserDefaults.standard.set(self.teams, forKey: "Teams")
-           saveTeams()
+            saveTeams()
         }
         sortTeams()
     }
@@ -361,7 +391,6 @@ class Event: ObservableObject, Codable, Identifiable{
         }
         if(!bool){
             matches.append(match)
-            //UserDefaults.standard.set(self.matches, forKey: "Matches")
             saveMatches()
         }
     }
@@ -491,6 +520,25 @@ class DataModel: ObservableObject{
                 }
             }
         }
+        setTypes()
+        
+    }
+    private func setTypes() {
+        for event in localEvents {
+            for team in event.teams {
+                team.type = .local
+            }
+        }
+        for event in virtualEvents {
+            for team in event.teams {
+                team.type = .virtual
+            }
+        }
+        for event in liveEvents {
+            for team in event.teams {
+                team.type = .live
+            }
+        }
     }
     init(){
         localEvents = []
@@ -511,5 +559,7 @@ class DataModel: ObservableObject{
     }
 }
 enum EventType {
-    case local, virtual, live
+    case local
+    case virtual
+    case live
 }

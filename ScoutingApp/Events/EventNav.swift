@@ -17,7 +17,7 @@ struct EventNav: View {
                 .bold()
             Spacer()
             Image(systemName: "person.3.fill")
-        }.frame(width: 300, height: 30, alignment: .leading)
+        }.frame(height: 30, alignment: .leading)
         .navLink(AnyView(EventView(event: event)))
     }
 }
@@ -30,7 +30,7 @@ struct VirtualEventNav: View{
             Text(event.name)
             Spacer()
             Image(systemName: "rectangle.stack.person.crop.fill")
-        }.frame(width: 300, height: 30, alignment: .leading)
+        }.frame(height: 30, alignment: .leading)
     }
 }
 struct TournamentNav: View{
