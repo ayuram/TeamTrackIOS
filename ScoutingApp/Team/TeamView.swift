@@ -20,7 +20,7 @@ extension View{
 struct MyButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .scaleEffect(configuration.isPressed ? 0.97 : 1)
+            .scaleEffect(configuration.isPressed ? 0.96 : 1)
     }
 }
 struct TeamView: View {
@@ -42,6 +42,9 @@ struct TeamView: View {
             VStack {
                 //LineView(data: [1, 5, 3, 2, 1])
                 lineChart()
+                NavigationLink(destination: MatchList().environmentObject(data)){
+                    Text("Matches")
+                }
                 Text("General")
                     .bold()
                     .padding()

@@ -67,9 +67,9 @@ struct EventsList: View {
                 newEventName = ""
             }, trailing: Button("Save"){
                 if(eventType == .local){
-                    data.localEvents.append(Event(newEventName))
+                    data.localEvents.append(Event(newEventName, type: .local))
                 } else if eventType == .virtual {
-                    data.virtualEvents.append(VirtualEvent(newEventName))
+                    data.virtualEvents.append(Event(newEventName, type: .local))
                 }
                 newEventName = ""
                 bool = false
@@ -83,7 +83,6 @@ struct AlertControlView: UIViewControllerRepresentable {
     @Binding var confirmation: Bool
     var title: String
     var message: String
-    var virtualEvents = [VirtualEvent]()
     func makeUIViewController(context: Context) -> some UIViewController {
         return UIViewController()
     }

@@ -78,11 +78,7 @@ struct EventView: View {
             }
         }
     }
-    func viewSelect() -> some View{
-        switch event{
-        
-        }
-    }
+    
     func tabSelect() -> some View{
         switch selectedTab{
         case .teams: return TeamList().format()

@@ -20,10 +20,10 @@ struct MatchView: View {
     init(_ m: Match, _ e: Event){
         match = m
         event = e
-        scoreRed0 = (m.red.0.scores.find(m.id))
-        scoreRed1 = (m.red.1.scores.find(m.id))
-        scoreBlue0 = (m.blue.0.scores.find(m.id))
-        scoreBlue1 = (m.blue.1.scores.find(m.id))
+        scoreRed0 = (m.red.0?.scores.find(m.id))!
+        scoreRed1 = (m.red.1?.scores.find(m.id))!
+        scoreBlue0 = (m.blue.0?.scores.find(m.id))!
+        scoreBlue1 = (m.blue.1?.scores.find(m.id))!
     }
     enum currentView{
         case r0
@@ -55,7 +55,7 @@ struct MatchView: View {
                     Spacer()
                 }
                 HStack(spacing: 20){
-                    Button("\(match.red.0.name.capitalized)"){
+                    Button("\(match.red.0?.name.capitalized ?? "")"){
                         self.curr = .r0
                         changeColor(color: .red)
                     }.disabled(self.curr == .r0)
@@ -63,7 +63,7 @@ struct MatchView: View {
                     
                     .multilineTextAlignment(/*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                     
-                    Button("\(match.red.1.name.capitalized)"){
+                    Button("\(match.red.1?.name.capitalized ?? "")"){
                         self.curr = .r1
                         changeColor(color: .red)
                     }.disabled(self.curr == .r1)
@@ -72,7 +72,7 @@ struct MatchView: View {
                     .multilineTextAlignment(/*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                     
                     Spacer()
-                    Button("\(match.blue.0.name.capitalized)"){
+                    Button("\(match.blue.0?.name.capitalized ?? "")"){
                         changeColor(color: .blue)
                         self.curr = .b0
                     }.disabled(self.curr == .b0)
@@ -80,7 +80,7 @@ struct MatchView: View {
                    
                     .multilineTextAlignment(.center)
                     
-                    Button("\(match.blue.1.name.capitalized)"){
+                    Button("\(match.blue.1?.name.capitalized ?? "")"){
                         changeColor(color: .blue)
                         self.curr = .b1
                     }.disabled(self.curr == .b1)
@@ -103,10 +103,10 @@ struct MatchView: View {
     }
     func adjustments() -> some View{
         switch curr{
-        case .r0: return Adjustments(match.red.0, match, match.red.0.scores.find(match.id), event)
-            case .r1: return Adjustments(match.red.1, match, match.red.1.scores.find(match.id), event)
-            case .b0: return Adjustments(match.blue.0, match, match.blue.0.scores.find(match.id), event)
-        case .b1: return Adjustments(match.blue.1, match, match.blue.1.scores.find(match.id), event)
+        case .r0: return Adjustments(match.red.0!, match, match.red.0!.scores.find(match.id), event)
+        case .r1: return Adjustments(match.red.1!, match, match.red.1!.scores.find(match.id), event)
+        case .b0: return Adjustments(match.blue.0!, match, match.blue.0!.scores.find(match.id), event)
+        case .b1: return Adjustments(match.blue.1!, match, match.blue.1!.scores.find(match.id), event)
         }
     }
 }

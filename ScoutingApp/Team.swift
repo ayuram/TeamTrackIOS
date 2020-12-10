@@ -136,8 +136,8 @@ extension Array where Element == Score {
     }
 }
 extension Array where Element == Team{
-    func findByNumber(_ number: String) -> Team{
-        self.reduce(Team()){ $1.number == number ? $1 : $0}
+    func findByNumber(_ number: String) -> Team?{
+        return self.reduce(.none){ $1.number == number ? $1 : $0}
     }
 }
 class Team: ObservableObject, Identifiable, Codable {
@@ -232,7 +232,7 @@ class Team: ObservableObject, Identifiable, Codable {
         lhs.number > rhs.number
     }
 }
-typealias Side = (Team, Team)
+typealias Side = (Team?, Team?)
 class Match: Identifiable, ObservableObject, Codable{
     var id: UUID = UUID()
     @Published var red: Side = (Team("", ""), Team("", ""))
@@ -242,20 +242,20 @@ class Match: Identifiable, ObservableObject, Codable{
         id = UUID()
         self.red = red
         self.blue = blue
-        self.red.0.scores.addScore(Score(id))
-        self.red.1.scores.addScore(Score(id))
-        self.blue.0.scores.addScore(Score(id))
-        self.blue.1.scores.addScore(Score(id))
+        self.red.0?.scores.addScore(Score(id))
+        self.red.1?.scores.addScore(Score(id))
+        self.blue.0?.scores.addScore(Score(id))
+        self.blue.1?.scores.addScore(Score(id))
     }
     init(red: Side, blue: Side, type: EventType){
         self.type = type
         id = UUID()
         self.red = red
         self.blue = blue
-        self.red.0.scores.addScore(Score(id))
-        self.red.1.scores.addScore(Score(id))
-        self.blue.0.scores.addScore(Score(id))
-        self.blue.1.scores.addScore(Score(id))
+        self.red.0?.scores.addScore(Score(id))
+        self.red.1?.scores.addScore(Score(id))
+        self.blue.0?.scores.addScore(Score(id))
+        self.blue.1?.scores.addScore(Score(id))
     }
     init(_ t: Team){
         type = .virtual
@@ -283,12 +283,12 @@ class Match: Identifiable, ObservableObject, Codable{
         case blue0, blue1
     }
     func score() -> String{
-        let r1 = red.0.scores.reduce(Score()){ $1.id == self.id ? $1 : $0 }
-        let r2 = red.1.scores.reduce(Score()){ $1.id == self.id ? $1 : $0 }
-        let b1 = blue.0.scores.reduce(Score()){ $1.id == self.id ? $1 : $0 }
-        let b2 = blue.0.scores.reduce(Score()){ $1.id == self.id ? $1 : $0 }
+        let r1 = red.0?.scores.reduce(Score()){ $1.id == self.id ? $1 : $0 }
+        let r2 = red.1?.scores.reduce(Score()){ $1.id == self.id ? $1 : $0 }
+        let b1 = blue.0?.scores.reduce(Score()){ $1.id == self.id ? $1 : $0 }
+        let b2 = blue.0?.scores.reduce(Score()){ $1.id == self.id ? $1 : $0 }
         
-        return "\((r1.val()) + (r2.val())) - \((b1.val()) + (b2.val()))"
+        return "\((r1?.val() ?? 0) + (r2?.val() ?? 0)) - \((b1?.val() ?? 0) + (b2?.val() ?? 0))"
         
     }
 }
@@ -316,10 +316,10 @@ class Event: ObservableObject, Codable, Identifiable{
         if let d = UserDefaults.standard.data(forKey: "Matches"){
             if let decoded = try? JSONDecoder().decode([Match].self, from: d){
                 for match in decoded{
-                    match.red.0 = teams.findByNumber(match.red.0.number)
-                    match.red.1 = teams.findByNumber(match.red.1.number)
-                    match.blue.0 = teams.findByNumber(match.blue.0.number)
-                    match.blue.1 = teams.findByNumber(match.blue.1.number)
+                    match.red.0 = teams.findByNumber(match.red.0?.number ?? "")
+                    match.red.1 = teams.findByNumber(match.red.1?.number ?? "")
+                    match.blue.0 = teams.findByNumber(match.blue.0?.number ?? "")
+                    match.blue.1 = teams.findByNumber(match.blue.1?.number ?? "")
                 }
                 matches = decoded
             }
@@ -349,14 +349,9 @@ class Event: ObservableObject, Codable, Identifiable{
         for team in teams {
             team.type = type
         }
-        
-        
         for match in matches {
             match.type = type
-        }
-        
-        
-        
+        }   
     }
     func bestTeam() -> [Team]?{
         let arr = teams.sorted { $0.avgScore() > $1.avgScore() }[0 ... 3]
@@ -450,47 +445,11 @@ class Event: ObservableObject, Codable, Identifiable{
             .min() ?? 1
     }
 }
-class VirtualEvent: ObservableObject, Codable, Identifiable{
-    @Published var teams: [Team]
-    @Published var matches: [VirtualMatch]
-    let name: String
-    init(){
-        name = "FIRST Event"
-        teams = []
-        matches = []
-    }
-    init(_ name: String){
-        self.name = name
-        teams = []
-        matches = []
-    }
-    required init(from decoder: Decoder) throws{
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        teams = try container.decode([Team].self, forKey: .teams)
-        matches = try container.decode([VirtualMatch].self, forKey: .matches)
-        name = try container.decode(String.self, forKey: .name)
-    }
-    enum CodingKeys: String, CodingKey{
-        case teams
-        case matches
-        case name
-    }
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(teams, forKey: .teams)
-        try container.encode(matches, forKey: .matches)
-        try container.encode(name, forKey: .name)
-    }
-}
-class VirtualMatch: ObservableObject, Codable{
-    var team: Team
-    let id: UUID
-}
 class DataModel: ObservableObject{
     @Published var localEvents: [Event]
-    @Published var virtualEvents: [VirtualEvent]
+    @Published var virtualEvents: [Event]
     @Published var liveEvents: [Event]
-    init(local: [Event], virtual: [VirtualEvent], live: [Event]){
+    init(local: [Event], virtual: [Event], live: [Event]){
         localEvents = local
         virtualEvents = virtual
         liveEvents = live
@@ -499,23 +458,23 @@ class DataModel: ObservableObject{
                 localEvents = decoded
                 for event in localEvents{
                     for match in event.matches{
-                        match.red.0 = event.teams.findByNumber(match.red.0.number)
-                        match.red.1 = event.teams.findByNumber(match.red.1.number)
-                        match.blue.0 = event.teams.findByNumber(match.blue.0.number)
-                        match.blue.1 = event.teams.findByNumber(match.blue.1.number)
+                        match.red.0 = event.teams.findByNumber(match.red.0?.number ?? "")
+                        match.red.1 = event.teams.findByNumber(match.red.1?.number ?? "")
+                        match.blue.0 = event.teams.findByNumber(match.blue.0?.number ?? "")
+                        match.blue.1 = event.teams.findByNumber(match.blue.1?.number ?? "")
                     }
                 }
             }
         }
         if let d = UserDefaults.standard.data(forKey: "VirtualEvents"){
-            if let decoded = try? JSONDecoder().decode([VirtualEvent].self, from: d){
+            if let decoded = try? JSONDecoder().decode([Event].self, from: d){
                 virtualEvents = decoded
                 for event in localEvents{
                     for match in event.matches{
-                        match.red.0 = event.teams.findByNumber(match.red.0.number)
-                        match.red.1 = event.teams.findByNumber(match.red.1.number)
-                        match.blue.0 = event.teams.findByNumber(match.blue.0.number)
-                        match.blue.1 = event.teams.findByNumber(match.blue.1.number)
+                        match.red.0 = event.teams.findByNumber(match.red.0?.number ?? "")
+                        match.red.1 = event.teams.findByNumber(match.red.1?.number ?? "")
+                        match.blue.0 = event.teams.findByNumber(match.blue.0?.number ?? "")
+                        match.blue.1 = event.teams.findByNumber(match.blue.1?.number ?? "")
                     }
                 }
             }
