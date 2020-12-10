@@ -302,6 +302,7 @@ class Event: ObservableObject, Codable, Identifiable{
         teams = []
         matches = []
         self.type = type
+        switchType(to: type)
     }
     init(){
         name = "FIRST Event"

@@ -31,6 +31,7 @@ struct VirtualEventNav: View{
             Spacer()
             Image(systemName: "rectangle.stack.person.crop.fill")
         }.frame(height: 30, alignment: .leading)
+        .navLink(EventView(event: event).format())
     }
 }
 struct TournamentNav: View{

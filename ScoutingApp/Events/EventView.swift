@@ -16,6 +16,17 @@ struct EventView: View {
     @State var bool = false
     let defaultAnimation = Animation.interactiveSpring(response: 0.3, dampingFraction: 0.6, blendDuration: 1)
     var body: some View {
+        switch event.type{
+        case .virtual: return virtualEventView().format()
+        default: return eventView().format()
+        }
+        
+    }
+    func virtualEventView() -> some View{
+        TeamList()
+            .environmentObject(event)
+    }
+    func eventView() -> some View {
         ZStack{
             VStack{
                 tabSelect()
@@ -78,7 +89,6 @@ struct EventView: View {
             }
         }
     }
-    
     func tabSelect() -> some View{
         switch selectedTab{
         case .teams: return TeamList().format()

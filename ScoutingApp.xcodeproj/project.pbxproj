@@ -29,7 +29,6 @@
 		C9702B2E252EF1AF008A7167 /* TeamView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9702B2B252EF1AF008A7167 /* TeamView.swift */; };
 		C9813A372581C56F008F68B2 /* StyledFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9813A362581C56F008F68B2 /* StyledFrame.swift */; };
 		C9AE17922580C34900769713 /* SwiftUICharts in Frameworks */ = {isa = PBXBuildFile; productRef = C9AE17912580C34900769713 /* SwiftUICharts */; };
-		C9AE179B2581AFB100769713 /* VirtualEventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9AE179A2581AFB100769713 /* VirtualEventView.swift */; };
 		C9D9E99B254A00D600E42210 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D9E99A254A00D600E42210 /* CardView.swift */; };
 		C9EACF3A256253DC004B586E /* CustomStepper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9EACF39256253DC004B586E /* CustomStepper.swift */; };
 		C9F28BA0253002A90011F59F /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = C9F28B9F253002A90011F59F /* ComposableArchitecture */; };
@@ -82,7 +81,6 @@
 		C9702B2A252EF1AF008A7167 /* TeamNav.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamNav.swift; sourceTree = "<group>"; };
 		C9702B2B252EF1AF008A7167 /* TeamView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamView.swift; sourceTree = "<group>"; };
 		C9813A362581C56F008F68B2 /* StyledFrame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyledFrame.swift; sourceTree = "<group>"; };
-		C9AE179A2581AFB100769713 /* VirtualEventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualEventView.swift; sourceTree = "<group>"; };
 		C9D9E99A254A00D600E42210 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		C9EACF39256253DC004B586E /* CustomStepper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomStepper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -158,7 +156,6 @@
 				C9702B28252EF1AF008A7167 /* Team */,
 				C9702B0A252EF16A008A7167 /* Match */,
 				C9702AE2252EF152008A7167 /* Preview Content */,
-				C9AE17962581910F00769713 /* VirtualEvents */,
 				C94A45FB257CB62700BADC87 /* Events */,
 				C9702AE5252EF152008A7167 /* Info.plist */,
 			);
@@ -209,14 +206,6 @@
 				C9702B2B252EF1AF008A7167 /* TeamView.swift */,
 			);
 			path = Team;
-			sourceTree = "<group>";
-		};
-		C9AE17962581910F00769713 /* VirtualEvents */ = {
-			isa = PBXGroup;
-			children = (
-				C9AE179A2581AFB100769713 /* VirtualEventView.swift */,
-			);
-			path = VirtualEvents;
 			sourceTree = "<group>";
 		};
 		C9AE179F2581B63E00769713 /* GraphicAssets */ = {
@@ -376,7 +365,6 @@
 				C9702B2C252EF1AF008A7167 /* TeamList.swift in Sources */,
 				C94A4606257CB8B700BADC87 /* EventView.swift in Sources */,
 				C9702B24252EF19C008A7167 /* Team.swift in Sources */,
-				C9AE179B2581AFB100769713 /* VirtualEventView.swift in Sources */,
 				C9702B1F252EF18A008A7167 /* ThemedButton.swift in Sources */,
 				C9EACF3A256253DC004B586E /* CustomStepper.swift in Sources */,
 				C9702B2D252EF1AF008A7167 /* TeamNav.swift in Sources */,

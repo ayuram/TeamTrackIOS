@@ -69,7 +69,7 @@ struct EventsList: View {
                 if(eventType == .local){
                     data.localEvents.append(Event(newEventName, type: .local))
                 } else if eventType == .virtual {
-                    data.virtualEvents.append(Event(newEventName, type: .local))
+                    data.virtualEvents.append(Event(newEventName, type: .virtual))
                 }
                 newEventName = ""
                 bool = false

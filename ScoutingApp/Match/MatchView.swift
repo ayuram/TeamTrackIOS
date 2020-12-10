@@ -36,70 +36,84 @@ struct MatchView: View {
             gradient
                 .animation(.default)
                 .ignoresSafeArea(.container, edges: .all)
-                
+            
             VStack{
                 Spacer()
-                HStack{
-                    Spacer()
-                    Text("\(scoreRed0.val() + scoreRed1.val())")
-                        .font(.largeTitle)
-                        .frame(width: 100)
-                    Spacer()
-                    Text("-")
-                        .font(.largeTitle)
-                    Spacer()
+                if match.type != .virtual {
                     
-                    Text("\(scoreBlue0.val() + scoreBlue1.val())")
-                        .font(.largeTitle)
-                        .frame(width: 100)
-                    Spacer()
+                    VStack{
+                        HStack{
+                            Spacer()
+                            Text("\(scoreRed0.val() + scoreRed1.val())")
+                                .font(.largeTitle)
+                                .frame(width: 100)
+                            Spacer()
+                            Text("-")
+                                .font(.largeTitle)
+                            Spacer()
+                            
+                            Text("\(scoreBlue0.val() + scoreBlue1.val())")
+                                .font(.largeTitle)
+                                .frame(width: 100)
+                            Spacer()
+                        }
+                        HStack(spacing: 20){
+                            Button("\(match.red.0?.name.capitalized ?? "")"){
+                                self.curr = .r0
+                                changeColor(color: .red)
+                            }.disabled(self.curr == .r0)
+                            .accentColor(.red)
+                            
+                            .multilineTextAlignment(/*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                            
+                            Button("\(match.red.1?.name.capitalized ?? "")"){
+                                self.curr = .r1
+                                changeColor(color: .red)
+                            }.disabled(self.curr == .r1)
+                            .accentColor(.red)
+                            
+                            .multilineTextAlignment(/*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                            
+                            Spacer()
+                            Button("\(match.blue.0?.name.capitalized ?? "")"){
+                                changeColor(color: .blue)
+                                self.curr = .b0
+                            }.disabled(self.curr == .b0)
+                            .accentColor(.blue)
+                            
+                            .multilineTextAlignment(.center)
+                            
+                            Button("\(match.blue.1?.name.capitalized ?? "")"){
+                                changeColor(color: .blue)
+                                self.curr = .b1
+                            }.disabled(self.curr == .b1)
+                            .accentColor(.blue)
+                            
+                            .multilineTextAlignment(/*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                            
+                        }.padding()
+                    }
                 }
-                HStack(spacing: 20){
-                    Button("\(match.red.0?.name.capitalized ?? "")"){
-                        self.curr = .r0
-                        changeColor(color: .red)
-                    }.disabled(self.curr == .r0)
-                    .accentColor(.red)
-                    
-                    .multilineTextAlignment(/*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                    
-                    Button("\(match.red.1?.name.capitalized ?? "")"){
-                        self.curr = .r1
-                        changeColor(color: .red)
-                    }.disabled(self.curr == .r1)
-                    .accentColor(.red)
-                    
-                    .multilineTextAlignment(/*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                    
-                    Spacer()
-                    Button("\(match.blue.0?.name.capitalized ?? "")"){
-                        changeColor(color: .blue)
-                        self.curr = .b0
-                    }.disabled(self.curr == .b0)
-                    .accentColor(.blue)
-                   
-                    .multilineTextAlignment(.center)
-                    
-                    Button("\(match.blue.1?.name.capitalized ?? "")"){
-                        changeColor(color: .blue)
-                        self.curr = .b1
-                    }.disabled(self.curr == .b1)
-                    .accentColor(.blue)
-                    
-                    .multilineTextAlignment(/*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                    
-                }.padding()
                 adjustments()
-                
             }
+            
         }
-            .navigationBarTitle("Match Stats")
+        .navigationBarTitle("Match Stats")
         .onChange(of: match.score(), perform: { _ in
-        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-    })
+            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+        })
+        .onAppear(perform: {
+            if match.type == .virtual{
+                changeColor(color: .green)
+            }
+        })
     }
     func changeColor(color: Color){
-        gradient = LinearGradient(gradient: Gradient(colors: [color, Color("background"), Color("background"), Color("background"), Color("background")]), startPoint: .topTrailing, endPoint: .bottomLeading)
+        var c = color
+        if match.type == .virtual {
+            c = .green
+        }
+        gradient = LinearGradient(gradient: Gradient(colors: [c, Color("background"), Color("background"), Color("background"), Color("background")]), startPoint: .topTrailing, endPoint: .bottomLeading)
     }
     func adjustments() -> some View{
         switch curr{
@@ -116,6 +130,7 @@ struct Adjustments: View{
     let match: Match
     let data: Event
     @State var state = currentState.auto
+    var font = Font.headline
     enum currentState{
         case auto
         case tele
@@ -126,11 +141,26 @@ struct Adjustments: View{
         match = m
         score = s
         data = d
+        if match.type == .virtual {
+            font = .title3
+        }
     }
     var body: some View{
         VStack{
             Text("\(team.name.capitalized) : \((score.val()))")
-                .font(.headline)
+                .font(font)
+            if match.type == .virtual{
+                HStack{
+                    Text("Autonomous : \((score.val()))")
+                        .font(.caption)
+                    Spacer()
+                    Text("Tele-Op : \((score.val()))")
+                        .font(.caption)
+                    Spacer()
+                    Text("Endgame : \((score.val()))")
+                        .font(.caption)
+                }.padding()
+            }
             Divider()
             HStack{
                 Picker(selection: $state, label: Text("")){
@@ -141,14 +171,14 @@ struct Adjustments: View{
                 .padding(.horizontal, 5)
             }
             Divider()
-                view()
-                    .frame(width: UIScreen.main.bounds.width, alignment: .top)
-                    .onChange(of: match.score(), perform: { value in
-                        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-                        data.saveTeams()
-                    })
+            view()
+                .frame(width: UIScreen.main.bounds.width, alignment: .top)
+                .onChange(of: match.score(), perform: { value in
+                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                    data.saveTeams()
+                })
             Spacer()
-                
+            
         }
         
     }
@@ -238,6 +268,6 @@ struct Auto: View{
 struct MatchView_Previews: PreviewProvider {
     static var previews: some View {
         MatchView(Match(red: (Team("2", "ELementary Schooling People"), Team("3", "LOTS OF PEOPLE IN A ROOM")),blue: (Team("0", "charlies"), Team("1", "deltas"))), Event())
-            
+        
     }
 }

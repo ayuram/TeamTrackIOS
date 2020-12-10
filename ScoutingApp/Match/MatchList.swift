@@ -12,13 +12,21 @@ import Combine
 struct MatchList: View {
     @EnvironmentObject var data: Event
     @State var add = false
+    var matches: [Match]
     init(){
+        matches = [Match]()
+        matches = data.matches
         UITableView.appearance().backgroundColor = UIColor(Color("background"))
+    }
+    init(_ m: [Match]){
+        matches = m
+        UITableView.appearance().backgroundColor = UIColor(Color("background"))
+
     }
     var body: some View {
         
             List{
-                ForEach(data.matches){ match in
+                ForEach(matches){ match in
                     matchNav(match, data)
                 }
                 .onDelete(perform: delete)
