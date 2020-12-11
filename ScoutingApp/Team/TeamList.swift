@@ -24,7 +24,7 @@ struct TeamList: View {
                 }
                 .onDelete(perform: { indexSet in
                     event.teams.remove(atOffsets: indexSet)
-                    event.saveTeams()
+                    dataModel.saveEvents()
                 })
                 .onMove(perform: move)
             }
@@ -41,7 +41,7 @@ struct TeamList: View {
     }
     func move(from source: IndexSet, to destination: Int){
         event.teams.move(fromOffsets: source, toOffset: destination)
-        event.saveTeams()
+        dataModel.saveEvents()
     }
     @State var name: (String, String) = ("", "")
     func sht() -> some View{
@@ -70,6 +70,7 @@ struct TeamList: View {
                 event.addTeam(Team(name.0, name.1))
                 name.0 = ""
                 name.1 = ""
+                dataModel.saveEvents()
                 self.sheet = false
             }
             .disabled(name.0.trimmingCharacters(in: .whitespacesAndNewlines) == "" || name.1.trimmingCharacters(in: .whitespacesAndNewlines) == ""))

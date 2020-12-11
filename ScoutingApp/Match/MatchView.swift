@@ -17,7 +17,7 @@ struct MatchView: View {
     @ObservedObject var scoreBlue0: Score
     @ObservedObject var scoreBlue1: Score
     let event: Event
-    @State var gradient: LinearGradient = LinearGradient(gradient: Gradient(colors: [Color.red, Color("background"), Color("background"), Color("background"), Color("background")]), startPoint: .topTrailing, endPoint: .bottomLeading)
+    @State var gradient: LinearGradient = LinearGradient(gradient: Gradient(colors: [Color.red, Color("background"), Color("background"), Color("background"), Color("background")]), startPoint: .top, endPoint: .bottom)
     init(_ m: Match, _ e: Event){
         match = m
         event = e
@@ -96,6 +96,7 @@ struct MatchView: View {
                     }
                 }
                 adjustments()
+                    .environmentObject(dataModel)
             }
             
         }
@@ -114,7 +115,7 @@ struct MatchView: View {
         if match.type == .virtual {
             c = .green
         }
-        gradient = LinearGradient(gradient: Gradient(colors: [c, Color("background"), Color("background"), Color("background"), Color("background")]), startPoint: .topTrailing, endPoint: .bottomLeading)
+        gradient = LinearGradient(gradient: Gradient(colors: [c, Color("background"), Color("background"), Color("background"), Color("background")]), startPoint: .top, endPoint: .bottom)
     }
     func adjustments() -> some View{
         switch curr{
@@ -126,6 +127,7 @@ struct MatchView: View {
     }
 }
 struct Adjustments: View{
+    @EnvironmentObject var dataModel: DataModel
     @ObservedObject var team: Team
     @ObservedObject var score: Score
     let match: Match
@@ -158,7 +160,7 @@ struct Adjustments: View{
                     Text("Tele-Op : \((score.tele.total()))")
                         .font(.caption)
                     Spacer()
-                    Text("Endgame : \((score.tele.total()))")
+                    Text("Endgame : \((score.endgame.total()))")
                         .font(.caption)
                 }.padding()
             }
@@ -176,7 +178,7 @@ struct Adjustments: View{
                 .frame(width: UIScreen.main.bounds.width, alignment: .top)
                 .onChange(of: match.score(), perform: { value in
                     UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-                    data.saveTeams()
+                    dataModel.saveEvents()
                 })
             Spacer()
             
@@ -270,6 +272,5 @@ struct MatchView_Previews: PreviewProvider {
     static var previews: some View {
         MatchView(Match(red: (Team("2", "ELementary Schooling People"), Team("3", "LOTS OF PEOPLE IN A ROOM")),blue: (Team("0", "charlies"), Team("1", "deltas"))), Event())
             .environmentObject(DataModel())
-        
     }
 }

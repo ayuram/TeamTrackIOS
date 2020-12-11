@@ -62,6 +62,7 @@ struct MatchList: View {
             .onDelete(perform: delete)
             .onMove(perform: { indices, newOffset in
                 event.matches.move(fromOffsets: indices, toOffset: newOffset)
+                dataModel.saveEvents()
             })
             }
         }.navigationBarTitle("Matches")
@@ -96,8 +97,7 @@ struct MatchList: View {
                 match.blue.1?.scores.removeAll {$0.id == match.id}
             }
         event.matches.remove(atOffsets: offsets)
-        event.saveMatches()
-        event.saveTeams()
+        dataModel.saveEvents()
     }
     @State var red0: String = ""
     @State var red1: String = ""
@@ -145,8 +145,7 @@ struct MatchList: View {
             let b0 = event.dictTeams()[blue0] ?? Team("","")
             let b1 = event.dictTeams()[blue1] ?? Team("","")
             event.addMatch(Match(red: (r0,r1), blue: (b0, b1)))
-            //self.matches.append(Match(red: (r0, r1), blue: (b0, b1)))
-            //matches.append(Match(red: (r0, r1), blue: (b0, b1)))
+            dataModel.saveEvents()
             add.toggle()
         }.accentColor(.blue))
         .navigationBarTitle(Text("Blue Alliance"))

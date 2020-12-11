@@ -65,7 +65,6 @@ class Score: ObservableObject, Codable{
         try container.encode(auto, forKey: .auto)
         try container.encode(tele, forKey: .tele)
         try container.encode(endgame, forKey: .endgame)
-        print("i was here")
     }
     init(_ m: Match){
         id = m.id
@@ -360,16 +359,9 @@ class Event: ObservableObject, Codable, Identifiable{
         }
         if(!bool){
             teams.append(team)
-            saveTeams()
+            //saveTeams()
         }
         sortTeams()
-    }
-    func saveTeams(){
-        let encoder = JSONEncoder()
-        if let encoded = try? encoder.encode(teams) {
-            let defaults = UserDefaults.standard
-            defaults.set(encoded, forKey: "Teams")
-        }
     }
     func addMatch(_ match: Match){
         var bool: Bool = false
@@ -380,14 +372,6 @@ class Event: ObservableObject, Codable, Identifiable{
         }
         if(!bool){
             matches.append(match)
-            saveMatches()
-        }
-    }
-    func saveMatches(){
-        let encoder = JSONEncoder()
-        if let encoded = try? encoder.encode(matches) {
-            let defaults = UserDefaults.standard
-            defaults.set(encoded, forKey: "Matches")
         }
     }
     func sortTeams() -> Void{
@@ -479,7 +463,6 @@ class DataModel: ObservableObject{
         localEvents = []
         virtualEvents = []
         liveEvents = []
-        
         disenfranchise()
         if let data = UserDefaults.standard.data(forKey: "LocalEvents"){
             if let decoded = try? JSONDecoder().decode([Event].self, from: data){
@@ -497,51 +480,19 @@ class DataModel: ObservableObject{
         if let d = UserDefaults.standard.data(forKey: "VirtualEvents"){
             if let decoded = try? JSONDecoder().decode([Event].self, from: d){
                 virtualEvents = decoded
-                for event in localEvents{
+                for event in virtualEvents{
                     for match in event.matches{
                         match.red.0 = event.teams.findByNumber(match.red.0?.number ?? "")
-                        match.red.1 = event.teams.findByNumber(match.red.1?.number ?? "")
-                        match.blue.0 = event.teams.findByNumber(match.blue.0?.number ?? "")
-                        match.blue.1 = event.teams.findByNumber(match.blue.1?.number ?? "")
+                        match.red.1 = .none
+                        match.blue.0 = .none
+                        match.blue.1 = .none
+                        print("WOWOWOWOW")
                     }
                 }
             }
         }
         
         setTypes()
-    }
-    init(local: [Event], virtual: [Event], live: [Event]){
-        localEvents = local
-        virtualEvents = virtual
-        liveEvents = live
-        if let data = UserDefaults.standard.data(forKey: "LocalEvents"){
-            if let decoded = try? JSONDecoder().decode([Event].self, from: data){
-                localEvents = decoded
-                for event in localEvents{
-                    for match in event.matches{
-                        match.red.0 = event.teams.findByNumber(match.red.0?.number ?? "")
-                        match.red.1 = event.teams.findByNumber(match.red.1?.number ?? "")
-                        match.blue.0 = event.teams.findByNumber(match.blue.0?.number ?? "")
-                        match.blue.1 = event.teams.findByNumber(match.blue.1?.number ?? "")
-                    }
-                }
-            }
-        }
-        if let d = UserDefaults.standard.data(forKey: "VirtualEvents"){
-            if let decoded = try? JSONDecoder().decode([Event].self, from: d){
-                virtualEvents = decoded
-                for event in localEvents{
-                    for match in event.matches{
-                        match.red.0 = event.teams.findByNumber(match.red.0?.number ?? "")
-                        match.red.1 = event.teams.findByNumber(match.red.1?.number ?? "")
-                        match.blue.0 = event.teams.findByNumber(match.blue.0?.number ?? "")
-                        match.blue.1 = event.teams.findByNumber(match.blue.1?.number ?? "")
-                    }
-                }
-            }
-        }
-        setTypes()
-        
     }
     private func setTypes() {
         for event in localEvents {
@@ -554,7 +505,6 @@ class DataModel: ObservableObject{
             event.switchType(to: .live)
         }
     }
-    
     func saveEvents(){
         let encoder = JSONEncoder()
         if let encoded = try? encoder.encode(localEvents) {
@@ -564,6 +514,7 @@ class DataModel: ObservableObject{
         if let encoded = try? encoder.encode(virtualEvents) {
             let defaults = UserDefaults.standard
             defaults.set(encoded, forKey: "VirtualEvents")
+            print("hello world")
         }
     }
 }

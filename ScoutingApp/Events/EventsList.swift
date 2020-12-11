@@ -29,12 +29,28 @@ struct EventsList: View {
                                 EventNav(event: event)
                                     .environmentObject(data)
                             }
+                            .onDelete(perform: { indexSet in
+                                data.localEvents.remove(atOffsets: indexSet)
+                                data.saveEvents()
+                            })
+                            .onMove(perform: { indices, newOffset in
+                                data.localEvents.move(fromOffsets: indices, toOffset: newOffset)
+                                data.saveEvents()
+                            })
                         }
                         Section(header: Text("Virtual Tournaments")){
                             ForEach(data.virtualEvents){ event in
                                 VirtualEventNav(event: event)
                                     .environmentObject(data)
                             }
+                            .onDelete(perform: { indexSet in
+                                data.virtualEvents.remove(atOffsets: indexSet)
+                                data.saveEvents()
+                            })
+                            .onMove(perform: { indices, newOffset in
+                                data.virtualEvents.move(fromOffsets: indices, toOffset: newOffset)
+                                data.saveEvents()
+                            })
                         }
                     }
                     
@@ -71,6 +87,7 @@ struct EventsList: View {
                 } else if eventType == .virtual {
                     data.virtualEvents.append(Event(newEventName, type: .virtual))
                 }
+                data.saveEvents()
                 newEventName = ""
                 bool = false
             })
