@@ -24,8 +24,9 @@ struct MyButtonStyle: ButtonStyle {
     }
 }
 struct TeamView: View {
+    @EnvironmentObject var dataModel: DataModel
     @ObservedObject var team: Team
-    @ObservedObject var data: Event
+    @ObservedObject var event: Event
     @State private var animateChart = false
     @State var sheet = false
     let maxWidth = UIScreen.main.bounds.width
@@ -42,8 +43,17 @@ struct TeamView: View {
             VStack {
                 //LineView(data: [1, 5, 3, 2, 1])
                 lineChart()
-                NavigationLink(destination: MatchList().environmentObject(data)){
-                    Text("Matches")
+                if event.type == .virtual{
+                    NavigationLink(destination: MatchList(team: team, event: event).environmentObject(dataModel)){
+                        Text("Matches")
+                            .foregroundColor(.black)
+                            .frame(width: UIScreen.main.bounds.width - 40, height: 40)
+                            .background(Color.green)
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                            .shadow(radius: 10)
+                            .shadow(radius: 10)
+                            .buttonStyle(PlainButtonStyle())
+                    }
                 }
                 Text("General")
                     .bold()
@@ -56,15 +66,15 @@ struct TeamView: View {
                     CardView(){
                         VStack{
                             HStack{
-                                BarGraph(name: "Average", val: team.avgScore(), max: data.maxScore())
+                                BarGraph(name: "Average", val: team.avgScore(), max: event.maxScore())
                                     .frame(height: 100)
                                     .animation(defaultAnimation)
                                 Spacer()
-                                BarGraph(name: "Best Score", val: team.bestScore(), max: data.maxScore())
+                                BarGraph(name: "Best Score", val: team.bestScore(), max: event.maxScore())
                                     .frame(height: 100)
                                     .animation(defaultAnimation)
                                 Spacer()
-                                BarGraph(name: "Consistency", val: data.lowestMAD(), max: team.MAD(), flip: true)
+                                BarGraph(name: "Consistency", val: event.lowestMAD(), max: team.MAD(), flip: true)
                                     .animation(defaultAnimation)
                             }
                             .padding()
@@ -92,15 +102,15 @@ struct TeamView: View {
                     CardView(){
                         VStack{
                             HStack{
-                                BarGraph(name: "Average", val: team.avgAutoScore(), max: data.maxAutoScore())
+                                BarGraph(name: "Average", val: team.avgAutoScore(), max: event.maxAutoScore())
                                     .frame(height: 100)
                                     .animation(defaultAnimation)
                                 Spacer()
-                                BarGraph(name: "Best Score", val: team.bestAutoScore(), max: data.maxAutoScore())
+                                BarGraph(name: "Best Score", val: team.bestAutoScore(), max: event.maxAutoScore())
                                     .frame(height: 100)
                                     .animation(defaultAnimation)
                                 Spacer()
-                                BarGraph(name: "Consistency", val: data.lowestAutoMAD(), max: team.autoMAD(), flip: true)
+                                BarGraph(name: "Consistency", val: event.lowestAutoMAD(), max: team.autoMAD(), flip: true)
                                     .animation(defaultAnimation)
                             }
                             .padding()
@@ -129,15 +139,15 @@ struct TeamView: View {
                     CardView(){
                         VStack{
                             HStack{
-                                BarGraph(name: "Average", val: team.avgTeleScore(), max: data.maxTeleScore())
+                                BarGraph(name: "Average", val: team.avgTeleScore(), max: event.maxTeleScore())
                                     .frame(height: 100)
                                     .animation(defaultAnimation)
                                 Spacer()
-                                BarGraph(name: "Best Score", val: team.bestTeleScore(), max: data.maxTeleScore())
+                                BarGraph(name: "Best Score", val: team.bestTeleScore(), max: event.maxTeleScore())
                                     .frame(height: 100)
                                     .animation(defaultAnimation)
                                 Spacer()
-                                BarGraph(name: "Consistency", val: data.lowestTeleMAD(), max: team.teleMAD(), flip: true)
+                                BarGraph(name: "Consistency", val: event.lowestTeleMAD(), max: team.teleMAD(), flip: true)
                                     .animation(defaultAnimation)
                             }
                             .padding()
@@ -166,15 +176,15 @@ struct TeamView: View {
                     CardView(){
                         VStack{
                             HStack{
-                                BarGraph(name: "Average", val: team.avgEndScore(), max: data.maxEndScore())
+                                BarGraph(name: "Average", val: team.avgEndScore(), max: event.maxEndScore())
                                     .frame(height: 100)
                                     .animation(defaultAnimation)
                                 Spacer()
-                                BarGraph(name: "Best Score", val: team.bestEndScore(), max: data.maxEndScore())
+                                BarGraph(name: "Best Score", val: team.bestEndScore(), max: event.maxEndScore())
                                     .frame(height: 100)
                                     .animation(defaultAnimation)
                                 Spacer()
-                                BarGraph(name: "Consistency", val: data.lowestEndMAD(), max: team.endMAD(), flip: true)
+                                BarGraph(name: "Consistency", val: event.lowestEndMAD(), max: team.endMAD(), flip: true)
                                     .animation(defaultAnimation)
                             }
                             .padding()
@@ -240,6 +250,7 @@ extension Array where Element == CGFloat{
 }
 struct TeamView_Previews: PreviewProvider {
     static var previews: some View {
-        TeamView(team: Team("11", "A"), data: Event())
+        TeamView(team: Team("11", "A"), event: Event())
+            .environmentObject(DataModel())
     }
 }

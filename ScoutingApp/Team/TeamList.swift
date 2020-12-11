@@ -10,17 +10,21 @@ import SwiftUI
 import Combine
 
 struct TeamList: View {
-    @EnvironmentObject var data: Event
+    @EnvironmentObject var dataModel: DataModel
+    let event: Event
     @State var sheet = false
+    init(_ e : Event){
+        event = e
+    }
     var body: some View {
         VStack{
             List{
-                ForEach(data.teams){ team in
-                    TeamNav(team, data)
+                ForEach(event.teams){ team in
+                    TeamNav(team, event)
                 }
                 .onDelete(perform: { indexSet in
-                    data.teams.remove(atOffsets: indexSet)
-                    data.saveTeams()
+                    event.teams.remove(atOffsets: indexSet)
+                    event.saveTeams()
                 })
                 .onMove(perform: move)
             }
@@ -36,8 +40,8 @@ struct TeamList: View {
         
     }
     func move(from source: IndexSet, to destination: Int){
-        data.teams.move(fromOffsets: source, toOffset: destination)
-        data.saveTeams()
+        event.teams.move(fromOffsets: source, toOffset: destination)
+        event.saveTeams()
     }
     @State var name: (String, String) = ("", "")
     func sht() -> some View{
@@ -62,8 +66,8 @@ struct TeamList: View {
                 name.1 = ""
                 self.sheet = false
             },trailing: Button("Save"){
-                data.addTeam(Team(name.0, name.1))
-                data.addTeam(Team(name.0, name.1))
+                event.addTeam(Team(name.0, name.1))
+                event.addTeam(Team(name.0, name.1))
                 name.0 = ""
                 name.1 = ""
                 self.sheet = false
@@ -73,14 +77,14 @@ struct TeamList: View {
     }
     func check(val: (String, String)) -> Bool {
         let number = val.0.trimmingCharacters(in: .whitespacesAndNewlines)
-        return !data.teams.contains{$0.number == number}
+        return !event.teams.contains{$0.number == number}
     }
 }
 
 
 struct TeamList_Previews: PreviewProvider {
     static var previews: some View {
-        TeamList()
-            .environmentObject(Event())
+        TeamList(Event())
+            .environmentObject(DataModel())
     }
 }

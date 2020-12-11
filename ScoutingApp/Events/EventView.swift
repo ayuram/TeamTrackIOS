@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct EventView: View {
+    @EnvironmentObject var dataModel: DataModel
     enum Tabs{
         case teams, matches
     }
@@ -20,11 +21,10 @@ struct EventView: View {
         case .virtual: return virtualEventView().format()
         default: return eventView().format()
         }
-        
     }
     func virtualEventView() -> some View{
-        TeamList()
-            .environmentObject(event)
+        TeamList(event)
+            .environmentObject(dataModel)
     }
     func eventView() -> some View {
         ZStack{
@@ -44,7 +44,7 @@ struct EventView: View {
                         Button(action: {
                             selectedTab = .teams
                             bool = true
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.6){
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4){
                                 bool = false
                             }
                         }, label: {
@@ -66,7 +66,7 @@ struct EventView: View {
                         Button(action: {
                             selectedTab = .matches
                             bool = true
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.6){
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4){
                                 bool = false
                             }
                         }, label: {
@@ -91,8 +91,8 @@ struct EventView: View {
     }
     func tabSelect() -> some View{
         switch selectedTab{
-        case .teams: return TeamList().format()
-        case .matches: return MatchList().format()
+        case .teams: return TeamList(event).environmentObject(dataModel).format()
+        case .matches: return MatchList(event).environmentObject(dataModel).format()
         }
     }
     func check(_ tab: Tabs) -> Bool{
@@ -106,5 +106,6 @@ struct EventView: View {
 struct EventView_Previews: PreviewProvider {
     static var previews: some View {
         EventView(event: Event())
+            .environmentObject(DataModel())
     }
 }

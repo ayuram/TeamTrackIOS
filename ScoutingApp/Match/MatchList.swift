@@ -10,46 +10,84 @@ import SwiftUI
 import Combine
 
 struct MatchList: View {
-    @EnvironmentObject var data: Event
+    @EnvironmentObject var dataModel: DataModel
+    @ObservedObject var event: Event
     @State var add = false
-    var matches: [Match]
-    init(){
-        matches = [Match]()
-        matches = data.matches
+    var team: Team? = .none
+
+    init(_ e: Event){
+        event = e
         UITableView.appearance().backgroundColor = UIColor(Color("background"))
     }
-    init(_ m: [Match]){
-        matches = m
+    init(team: Team, event: Event){
+        self.team = team
+        self.event = event
         UITableView.appearance().backgroundColor = UIColor(Color("background"))
-
     }
     var body: some View {
-        
-            List{
-                ForEach(matches){ match in
-                    matchNav(match, data)
-                }
-                .onDelete(perform: delete)
-                .onMove(perform: { indices, newOffset in
-                    data.matches.move(fromOffsets: indices, toOffset: newOffset)
-                })
-            }.navigationBarTitle("Matches")
-            .navigationBarItems(trailing: Button("Add"){
-                add.toggle()
-                red0 = data.teams[0].number
-                red1 = data.teams[0].number
-                blue0 = data.teams[0].number
-                blue1 = data.teams[0].number
-            }.disabled(data.teams.count == 0))
-            .sheet(isPresented: $add) {
-                AddMatch
+        switch team{
+        case .none: return List{
+            ForEach(event.matches){ match in
+                matchNav(match, event)
             }
-            .frame(width: UIScreen.main.bounds.width)
+            .onDelete(perform: delete)
+            .onMove(perform: { indices, newOffset in
+                event.matches.move(fromOffsets: indices, toOffset: newOffset)
+            })
+        }.navigationBarTitle("Matches")
+        .navigationBarItems(trailing: Button("Add"){
+            if event.type == .virtual{
+               event.addMatch(Match(team: team ?? Team("", "")))
+            }
+            else{
+                add.toggle()
+                red0 = event.teams[0].number
+                red1 = event.teams[0].number
+                blue0 = event.teams[0].number
+                blue1 = event.teams[0].number
+            }
+        }.disabled(event.teams.count == 0))
+        .sheet(isPresented: $add) {
+            AddMatch
+        }
+        .frame(width: UIScreen.main.bounds.width)
+        .format()
+        
+        default: return List{
+            if event.matches.filter({$0.red.0 == team || $0.red.1 == team || $0.blue.0 == team || $0.blue.1 == team}).count != 0{
+            ForEach(0...event.matches.filter({$0.red.0 == team || $0.red.1 == team || $0.blue.0 == team || $0.blue.1 == team}).count - 1, id: \.self){
+                
+                matchNav(event.matches.filter({$0.red.0 == team || $0.red.1 == team || $0.blue.0 == team || $0.blue.1 == team})[$0], event, index: $0)
+            }
+            .onDelete(perform: delete)
+            .onMove(perform: { indices, newOffset in
+                event.matches.move(fromOffsets: indices, toOffset: newOffset)
+            })
+            }
+        }.navigationBarTitle("Matches")
+        .navigationBarItems(trailing: Button("Add"){
+            if event.type == .virtual{
+                event.addMatch(Match(team: team ?? Team("", "")))
+            }
+            else{
+                add.toggle()
+                red0 = event.teams[0].number
+                red1 = event.teams[0].number
+                blue0 = event.teams[0].number
+                blue1 = event.teams[0].number
+            }
+        }.disabled(event.teams.count == 0))
+        .sheet(isPresented: $add) {
+            AddMatch
+        }
+        .frame(width: UIScreen.main.bounds.width)
+        .format()
+        }
         
     }
     func delete(at offsets: IndexSet){
         let matches = offsets
-            .map{data.matches[$0]}
+            .map{event.matches[$0]}
         matches
             .map{ match in
                 match.red.0?.scores.removeAll {$0.id == match.id}
@@ -57,9 +95,9 @@ struct MatchList: View {
                 match.blue.0?.scores.removeAll {$0.id == match.id}
                 match.blue.1?.scores.removeAll {$0.id == match.id}
             }
-        data.matches.remove(atOffsets: offsets)
-        data.saveMatches()
-        data.saveTeams()
+        event.matches.remove(atOffsets: offsets)
+        event.saveMatches()
+        event.saveTeams()
     }
     @State var red0: String = ""
     @State var red1: String = ""
@@ -70,12 +108,12 @@ struct MatchList: View {
         NavigationView{
             VStack{
                 Picker(selection: $red0, label: Text("")){
-                    ForEach(data.teams){ team in
+                    ForEach(event.teams){ team in
                         Text("\(team.number) \(team.name)").tag(team.number)
                     }
                 }
                 Picker(selection: $red1, label: Text("")){
-                    ForEach(data.teams){ team in
+                    ForEach(event.teams){ team in
                         Text("\(team.number) \(team.name)").tag(team.number)
                     }
                 }
@@ -91,22 +129,24 @@ struct MatchList: View {
     var blue: some View{
         VStack{
             Picker(selection: $blue0, label: Text("")){
-                ForEach(data.teams){ team in
+                ForEach(event.teams){ team in
                     Text("\(team.number) \(team.name)").tag(team.number)
                 }
             }
             Picker(selection: $blue1, label: Text("")){
-                ForEach(data.teams){ team in
+                ForEach(event.teams){ team in
                     Text("\(team.number) \(team.name)").tag(team.number)
                 }
             }
         }
         .navigationBarItems(trailing: Button("Save"){
-            let r0 = data.dictTeams()[red0] ?? Team("","")
-            let r1 = data.dictTeams()[red1] ?? Team("","")
-            let b0 = data.dictTeams()[blue0] ?? Team("","")
-            let b1 = data.dictTeams()[blue1] ?? Team("","")
-            data.addMatch(Match(red: (r0,r1), blue: (b0, b1)))
+            let r0 = event.dictTeams()[red0] ?? Team("","")
+            let r1 = event.dictTeams()[red1] ?? Team("","")
+            let b0 = event.dictTeams()[blue0] ?? Team("","")
+            let b1 = event.dictTeams()[blue1] ?? Team("","")
+            event.addMatch(Match(red: (r0,r1), blue: (b0, b1)))
+            //self.matches.append(Match(red: (r0, r1), blue: (b0, b1)))
+            //matches.append(Match(red: (r0, r1), blue: (b0, b1)))
             add.toggle()
         }.accentColor(.blue))
         .navigationBarTitle(Text("Blue Alliance"))
@@ -116,7 +156,8 @@ struct MatchList: View {
 
 struct MatchList_Previews: PreviewProvider {
     static var previews: some View {
-        MatchList().environmentObject(Event())
+        MatchList(Event())
+            .environmentObject(DataModel())
     }
 }
 

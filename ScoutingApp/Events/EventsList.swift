@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct EventsList: View {
-    @ObservedObject var data: DataModel
+    @EnvironmentObject var data: DataModel
     @State var bool = false
     @State var acSh = false
     @State var confirmation = false
@@ -16,8 +16,6 @@ struct EventsList: View {
     @State var eventType = EventType.local
     @State var titleString = ""
     init(){
-        data = DataModel()
-        data.localEvents.append(Event())
         UITableView.appearance().backgroundColor = UIColor(Color("background"))
     }
     var body: some View {
@@ -29,11 +27,13 @@ struct EventsList: View {
                         Section(header: Text("Local Scrimmages")){
                             ForEach(data.localEvents){ event in
                                 EventNav(event: event)
+                                    .environmentObject(data)
                             }
                         }
                         Section(header: Text("Virtual Tournaments")){
                             ForEach(data.virtualEvents){ event in
                                 VirtualEventNav(event: event)
+                                    .environmentObject(data)
                             }
                         }
                     }
@@ -146,5 +146,7 @@ struct AlertControlView: UIViewControllerRepresentable {
 struct EventsList_Previews: PreviewProvider {
     static var previews: some View {
         EventsList()
+            .preferredColorScheme(.dark)
+            .environmentObject(DataModel())
     }
 }

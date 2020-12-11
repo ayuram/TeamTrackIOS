@@ -9,6 +9,7 @@ import CoreHaptics
 import SwiftUI
 
 struct MatchView: View {
+    @EnvironmentObject var dataModel: DataModel
     @ObservedObject var match: Match
     @State var curr: currentView = .r0
     @ObservedObject var scoreRed0: Score
@@ -20,10 +21,10 @@ struct MatchView: View {
     init(_ m: Match, _ e: Event){
         match = m
         event = e
-        scoreRed0 = (m.red.0?.scores.find(m.id))!
-        scoreRed1 = (m.red.1?.scores.find(m.id))!
-        scoreBlue0 = (m.blue.0?.scores.find(m.id))!
-        scoreBlue1 = (m.blue.1?.scores.find(m.id))!
+        scoreRed0 = (m.red.0?.scores.find(m.id)) ?? Score()
+        scoreRed1 = (m.red.1?.scores.find(m.id)) ?? Score()
+        scoreBlue0 = (m.blue.0?.scores.find(m.id)) ?? Score()
+        scoreBlue1 = (m.blue.1?.scores.find(m.id)) ?? Score()
     }
     enum currentView{
         case r0
@@ -151,13 +152,13 @@ struct Adjustments: View{
                 .font(font)
             if match.type == .virtual{
                 HStack{
-                    Text("Autonomous : \((score.val()))")
+                    Text("Autonomous : \((score.auto.total()))")
                         .font(.caption)
                     Spacer()
-                    Text("Tele-Op : \((score.val()))")
+                    Text("Tele-Op : \((score.tele.total()))")
                         .font(.caption)
                     Spacer()
-                    Text("Endgame : \((score.val()))")
+                    Text("Endgame : \((score.tele.total()))")
                         .font(.caption)
                 }.padding()
             }
@@ -268,6 +269,7 @@ struct Auto: View{
 struct MatchView_Previews: PreviewProvider {
     static var previews: some View {
         MatchView(Match(red: (Team("2", "ELementary Schooling People"), Team("3", "LOTS OF PEOPLE IN A ROOM")),blue: (Team("0", "charlies"), Team("1", "deltas"))), Event())
+            .environmentObject(DataModel())
         
     }
 }

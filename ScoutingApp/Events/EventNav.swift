@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct EventNav: View {
+    @EnvironmentObject var dataModel: DataModel
     let event: Event
     var body: some View {
         HStack {
@@ -18,10 +19,11 @@ struct EventNav: View {
             Spacer()
             Image(systemName: "person.3.fill")
         }.frame(height: 30, alignment: .leading)
-        .navLink(AnyView(EventView(event: event)))
+        .navLink(AnyView(EventView(event: event).environmentObject(dataModel)))
     }
 }
 struct VirtualEventNav: View{
+    @EnvironmentObject var dataModel: DataModel
     let event: Event
     var body: some View{
         HStack {
@@ -31,10 +33,11 @@ struct VirtualEventNav: View{
             Spacer()
             Image(systemName: "rectangle.stack.person.crop.fill")
         }.frame(height: 30, alignment: .leading)
-        .navLink(EventView(event: event).format())
+        .navLink(EventView(event: event).environmentObject(dataModel).format())
     }
 }
 struct TournamentNav: View{
+    @EnvironmentObject var dataModel: DataModel
     let event: Event
     var body: some View{
         HStack {
@@ -51,8 +54,8 @@ struct TournamentNav: View{
 struct EventNav_Previews: PreviewProvider {
     static var previews: some View {
         VStack{
-            EventNav(event: Event())
-            TournamentNav(event: Event())
+            EventNav(event: Event()).environmentObject(DataModel())
+            TournamentNav(event: Event()).environmentObject(DataModel())
         }
     }
 }
