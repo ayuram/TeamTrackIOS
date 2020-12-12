@@ -468,7 +468,7 @@ class DataModel: ObservableObject{
         localEvents = []
         virtualEvents = []
         liveEvents = []
-        //disenfranchise()
+        disenfranchise()
         print("initializing")
         if let data = UserDefaults.standard.data(forKey: "LocalEvents"){
             if let decoded = try? JSONDecoder().decode([Event].self, from: data){
