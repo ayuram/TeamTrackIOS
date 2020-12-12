@@ -176,7 +176,7 @@ struct Adjustments: View{
             Divider()
             view()
                 .frame(width: UIScreen.main.bounds.width, alignment: .top)
-                .onChange(of: match.score(), perform: { _ in
+                .onChange(of: match.total(), perform: { _ in
                     UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                     dataModel.saveEvents()
                 })

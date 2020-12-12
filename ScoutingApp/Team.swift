@@ -299,10 +299,18 @@ class Match: Identifiable, ObservableObject, Codable{
         let r1 = red.0?.scores.reduce(Score()){ $1.id == self.id ? $1 : $0 }
         let r2 = red.1?.scores.reduce(Score()){ $1.id == self.id ? $1 : $0 }
         let b1 = blue.0?.scores.reduce(Score()){ $1.id == self.id ? $1 : $0 }
-        let b2 = blue.0?.scores.reduce(Score()){ $1.id == self.id ? $1 : $0 }
+        let b2 = blue.1?.scores.reduce(Score()){ $1.id == self.id ? $1 : $0 }
         
         return "\((r1?.val() ?? 0) + (r2?.val() ?? 0)) - \((b1?.val() ?? 0) + (b2?.val() ?? 0))"
         
+    }
+    func total() -> Int{
+        let r1 = red.0?.scores.reduce(Score()){ $1.id == self.id ? $1 : $0 }.val() ?? 0
+        let r2 = red.1?.scores.reduce(Score()){ $1.id == self.id ? $1 : $0 }.val() ?? 0
+        let b1 = blue.0?.scores.reduce(Score()){ $1.id == self.id ? $1 : $0 }.val() ?? 0
+        let b2 = blue.1?.scores.reduce(Score()){ $1.id == self.id ? $1 : $0 }.val() ?? 0
+        
+        return r1 + r2 + b1 + b2
     }
 }
 class Event: ObservableObject, Codable, Identifiable{
