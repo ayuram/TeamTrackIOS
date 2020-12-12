@@ -30,6 +30,7 @@ struct VirtualEventNav: View{
             Image(systemName: "externaldrive.fill")
                 .foregroundColor(Color("AccentColor"))
             Text(event.name)
+                .bold()
             Spacer()
             Image(systemName: "rectangle.stack.person.crop.fill")
         }.frame(height: 30, alignment: .leading)
