@@ -130,7 +130,7 @@ struct Adjustments: View{
     @EnvironmentObject var dataModel: DataModel
     @ObservedObject var team: Team
     @ObservedObject var score: Score
-    let match: Match
+    @ObservedObject var match: Match
     let data: Event
     @State var state = currentState.auto
     var font = Font.headline
@@ -176,7 +176,7 @@ struct Adjustments: View{
             Divider()
             view()
                 .frame(width: UIScreen.main.bounds.width, alignment: .top)
-                .onChange(of: match.score(), perform: { value in
+                .onChange(of: match.score(), perform: { _ in
                     UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                     dataModel.saveEvents()
                 })

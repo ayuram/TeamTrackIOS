@@ -136,7 +136,7 @@ extension Array where Element == Score {
 }
 extension Array where Element == Team{
     func findByNumber(_ number: String) -> Team?{
-        return self.reduce(.none){ $1.number == number ? $1 : $0}
+        return self.reduce(Team("000", "????")){ $1.number == number ? $1 : $0}
     }
 }
 class Team: ObservableObject, Identifiable, Codable, Equatable{
@@ -240,9 +240,10 @@ class Match: Identifiable, ObservableObject, Codable{
     var id: UUID = UUID()
     @Published var red: Side = (Team("", ""), Team("", ""))
     @Published var blue: Side = (Team("", ""), Team("", ""))
-    var type = EventType.local
+    var type: EventType = .local
     init(red: Side, blue: Side){
         id = UUID()
+        type = .local
         self.red = red
         self.blue = blue
         self.red.0?.scores.addScore(Score(id))
@@ -264,10 +265,13 @@ class Match: Identifiable, ObservableObject, Codable{
         type = .virtual
         id = UUID()
         self.red.0 = team
-        self.red.1 = .none
-        self.blue.0 = .none
-        self.blue.1 = .none
+        self.red.1 = Team("", "")
+        self.blue.0 = Team("", "")
+        self.blue.1 = Team("", "")
         self.red.0?.scores.addScore(Score(id))
+        self.red.1?.scores.addScore(Score(id))
+        self.blue.0?.scores.addScore(Score(id))
+        self.blue.1?.scores.addScore(Score(id))
     }
     required init(from decoder: Decoder) throws{
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -320,7 +324,7 @@ class Event: ObservableObject, Codable, Identifiable{
         type = .local
     }
     required init(from decoder: Decoder) throws{
-        type = .local
+        type = .virtual
         let container = try decoder.container(keyedBy: CodingKeys.self)
         teams = try container.decode([Team].self, forKey: .teams)
         matches = try container.decode([Match].self, forKey: .matches)
@@ -432,6 +436,7 @@ class DataModel: ObservableObject{
         if let data = UserDefaults.standard.data(forKey: "Teams"){
             if let decoded = try? JSONDecoder().decode([Team].self, from: data){
                 teams = decoded
+                print("teams decoded \(teams)")
             }
         }
         var matches = [Match]()
@@ -463,10 +468,12 @@ class DataModel: ObservableObject{
         localEvents = []
         virtualEvents = []
         liveEvents = []
-        disenfranchise()
+        //disenfranchise()
+        print("initializing")
         if let data = UserDefaults.standard.data(forKey: "LocalEvents"){
             if let decoded = try? JSONDecoder().decode([Event].self, from: data){
                 localEvents = decoded
+                print("localEvent \(localEvents)")
                 for event in localEvents{
                     for match in event.matches{
                         match.red.0 = event.teams.findByNumber(match.red.0?.number ?? "")
@@ -477,9 +484,11 @@ class DataModel: ObservableObject{
                 }
             }
         }
-        if let d = UserDefaults.standard.data(forKey: "VirtualEvents"){
-            if let decoded = try? JSONDecoder().decode([Event].self, from: d){
+        
+        if let data = UserDefaults.standard.data(forKey: "Virtual"){
+            if let decoded = try? JSONDecoder().decode([Event].self, from: data){
                 virtualEvents = decoded
+                print(virtualEvents)
                 for event in virtualEvents{
                     for match in event.matches{
                         match.red.0 = event.teams.findByNumber(match.red.0?.number ?? "")
@@ -490,11 +499,13 @@ class DataModel: ObservableObject{
                     }
                 }
             }
+            
         }
+        
         
         setTypes()
     }
-    private func setTypes() {
+    func setTypes() {
         for event in localEvents {
             event.switchType(to: .local)
         }
@@ -506,15 +517,17 @@ class DataModel: ObservableObject{
         }
     }
     func saveEvents(){
+        setTypes()
         let encoder = JSONEncoder()
-        if let encoded = try? encoder.encode(localEvents) {
+        if let encoded = try? JSONEncoder().encode(localEvents) {
             let defaults = UserDefaults.standard
             defaults.set(encoded, forKey: "LocalEvents")
         }
+       
         if let encoded = try? encoder.encode(virtualEvents) {
             let defaults = UserDefaults.standard
-            defaults.set(encoded, forKey: "VirtualEvents")
-            print("hello world")
+            defaults.set(encoded, forKey: "Virtual")
+            print(type(of: type(of: encoded)))
         }
     }
 }

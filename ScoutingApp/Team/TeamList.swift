@@ -11,7 +11,7 @@ import Combine
 
 struct TeamList: View {
     @EnvironmentObject var dataModel: DataModel
-    let event: Event
+    @ObservedObject var event: Event
     @State var sheet = false
     init(_ e : Event){
         event = e

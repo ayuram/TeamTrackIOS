@@ -9,11 +9,11 @@ import SwiftUI
 
 @main
 struct ScoutingAppApp: App {
-    var dataModel: DataModel = DataModel()
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environmentObject(dataModel)
+                
         }
     }
 }

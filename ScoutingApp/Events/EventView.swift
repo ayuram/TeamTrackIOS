@@ -12,7 +12,7 @@ struct EventView: View {
     enum Tabs{
         case teams, matches
     }
-    let event: Event
+    @ObservedObject var event: Event
     @State var selectedTab = Tabs.teams
     @State var bool = false
     let defaultAnimation = Animation.interactiveSpring(response: 0.3, dampingFraction: 0.6, blendDuration: 1)
@@ -30,7 +30,6 @@ struct EventView: View {
         ZStack{
             VStack{
                 tabSelect()
-                    .environmentObject(event)
                 RoundedRectangle(cornerRadius: 25.0)
                     .fill(Color.green)
                     .frame(height: 80)

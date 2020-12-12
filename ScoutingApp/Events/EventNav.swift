@@ -12,7 +12,7 @@ struct EventNav: View {
     let event: Event
     var body: some View {
         HStack {
-            Image(systemName: "externaldrive.fill.badge.plus")
+            Image(systemName: "externaldrive.fill")
                 .foregroundColor(Color("AccentColor"))
             Text(event.name)
                 .bold()
@@ -27,7 +27,7 @@ struct VirtualEventNav: View{
     let event: Event
     var body: some View{
         HStack {
-            Image(systemName: "externaldrive.fill.badge.plus")
+            Image(systemName: "externaldrive.fill")
                 .foregroundColor(Color("AccentColor"))
             Text(event.name)
             Spacer()

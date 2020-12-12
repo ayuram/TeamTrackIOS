@@ -36,11 +36,11 @@ struct matchNav: View {
         NavigationLink(destination: MatchView(match, event).environmentObject(dataModel)){
             HStack{
                 VStack{
-                    Text("\(match.red.0!.name) & \(match.red.1!.name)")
+                    Text("\(match.red.0?.name ?? "DNE") & \(match.red.1?.name ?? "DNE")")
                         .font(.custom("", size: 14))
                     Text("VS")
                         .foregroundColor(Color.red)
-                    Text("\(match.blue.0!.name) & \(match.blue.1!.name)")
+                    Text("\(match.blue.0?.name ?? "DNE") & \(match.blue.1?.name ?? "DNE")")
                         .font(.custom("", size: 14))
                 }
                 Spacer()

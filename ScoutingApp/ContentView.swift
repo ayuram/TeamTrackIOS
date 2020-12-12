@@ -7,13 +7,13 @@
 
 import SwiftUI
 struct ContentView: View {
-    @EnvironmentObject var data: DataModel
+    @ObservedObject var dataModel: DataModel = DataModel()
     init(){
         UITableView.appearance().backgroundColor = UIColor(Color("background"))
     }
     var body: some View {
         EventsList()
-            .environmentObject(data)
+            .environmentObject(dataModel)
     }
 }
 
@@ -21,6 +21,5 @@ struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
             .preferredColorScheme(.dark)
-            .environmentObject(DataModel())
     }
 }
