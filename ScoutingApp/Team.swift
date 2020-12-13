@@ -135,7 +135,7 @@ extension Array where Element == Score {
     }
 }
 extension Array where Element == Team{
-    func findByNumber(_ number: String) -> Team?{
+    func findByNumber(_ number: String) -> Team{
         return self.reduce(Team("000", "????")){ $1.number == number ? $1 : $0}
     }
 }
@@ -235,7 +235,7 @@ class Team: ObservableObject, Identifiable, Codable, Equatable{
         lhs.number == rhs.number
     }
 }
-typealias Side = (Team?, Team?)
+typealias Side = (Team, Team)
 class Match: Identifiable, ObservableObject, Codable{
     var id: UUID = UUID()
     @Published var red: Side = (Team("", ""), Team("", ""))
@@ -246,20 +246,20 @@ class Match: Identifiable, ObservableObject, Codable{
         type = .local
         self.red = red
         self.blue = blue
-        self.red.0?.scores.addScore(Score(id))
-        self.red.1?.scores.addScore(Score(id))
-        self.blue.0?.scores.addScore(Score(id))
-        self.blue.1?.scores.addScore(Score(id))
+        self.red.0.scores.addScore(Score(id))
+        self.red.1.scores.addScore(Score(id))
+        self.blue.0.scores.addScore(Score(id))
+        self.blue.1.scores.addScore(Score(id))
     }
     init(red: Side, blue: Side, type: EventType){
         self.type = type
         id = UUID()
         self.red = red
         self.blue = blue
-        self.red.0?.scores.addScore(Score(id))
-        self.red.1?.scores.addScore(Score(id))
-        self.blue.0?.scores.addScore(Score(id))
-        self.blue.1?.scores.addScore(Score(id))
+        self.red.0.scores.addScore(Score(id))
+        self.red.1.scores.addScore(Score(id))
+        self.blue.0.scores.addScore(Score(id))
+        self.blue.1.scores.addScore(Score(id))
     }
     init(team: Team){
         type = .virtual
@@ -268,10 +268,10 @@ class Match: Identifiable, ObservableObject, Codable{
         self.red.1 = Team("", "")
         self.blue.0 = Team("", "")
         self.blue.1 = Team("", "")
-        self.red.0?.scores.addScore(Score(id))
-        self.red.1?.scores.addScore(Score(id))
-        self.blue.0?.scores.addScore(Score(id))
-        self.blue.1?.scores.addScore(Score(id))
+        self.red.0.scores.addScore(Score(id))
+        self.red.1.scores.addScore(Score(id))
+        self.blue.0.scores.addScore(Score(id))
+        self.blue.1.scores.addScore(Score(id))
     }
     required init(from decoder: Decoder) throws{
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -296,19 +296,19 @@ class Match: Identifiable, ObservableObject, Codable{
         case blue0, blue1
     }
     func score() -> String{
-        let r1 = red.0?.scores.reduce(Score()){ $1.id == self.id ? $1 : $0 }
-        let r2 = red.1?.scores.reduce(Score()){ $1.id == self.id ? $1 : $0 }
-        let b1 = blue.0?.scores.reduce(Score()){ $1.id == self.id ? $1 : $0 }
-        let b2 = blue.1?.scores.reduce(Score()){ $1.id == self.id ? $1 : $0 }
+        let r1 = red.0.scores.reduce(Score()){ $1.id == self.id ? $1 : $0 }
+        let r2 = red.1.scores.reduce(Score()){ $1.id == self.id ? $1 : $0 }
+        let b1 = blue.0.scores.reduce(Score()){ $1.id == self.id ? $1 : $0 }
+        let b2 = blue.1.scores.reduce(Score()){ $1.id == self.id ? $1 : $0 }
         
-        return "\((r1?.val() ?? 0) + (r2?.val() ?? 0)) - \((b1?.val() ?? 0) + (b2?.val() ?? 0))"
+        return "\((r1.val() ) + (r2.val() )) - \((b1.val() ) + (b2.val() ))"
         
     }
     func total() -> Int{
-        let r1 = red.0?.scores.reduce(Score()){ $1.id == self.id ? $1 : $0 }.val() ?? 0
-        let r2 = red.1?.scores.reduce(Score()){ $1.id == self.id ? $1 : $0 }.val() ?? 0
-        let b1 = blue.0?.scores.reduce(Score()){ $1.id == self.id ? $1 : $0 }.val() ?? 0
-        let b2 = blue.1?.scores.reduce(Score()){ $1.id == self.id ? $1 : $0 }.val() ?? 0
+        let r1 = red.0.scores.reduce(Score()){ $1.id == self.id ? $1 : $0 }.val()
+        let r2 = red.1.scores.reduce(Score()){ $1.id == self.id ? $1 : $0 }.val()
+        let b1 = blue.0.scores.reduce(Score()){ $1.id == self.id ? $1 : $0 }.val()
+        let b2 = blue.1.scores.reduce(Score()){ $1.id == self.id ? $1 : $0 }.val()
         
         return r1 + r2 + b1 + b2
     }
@@ -451,10 +451,10 @@ class DataModel: ObservableObject{
         if let d = UserDefaults.standard.data(forKey: "Matches"){
             if let decoded = try? JSONDecoder().decode([Match].self, from: d){
                 for match in decoded{
-                    match.red.0 = teams.findByNumber(match.red.0?.number ?? "")
-                    match.red.1 = teams.findByNumber(match.red.1?.number ?? "")
-                    match.blue.0 = teams.findByNumber(match.blue.0?.number ?? "")
-                    match.blue.1 = teams.findByNumber(match.blue.1?.number ?? "")
+                    match.red.0 = teams.findByNumber(match.red.0.number )
+                    match.red.1 = teams.findByNumber(match.red.1.number )
+                    match.blue.0 = teams.findByNumber(match.blue.0.number )
+                    match.blue.1 = teams.findByNumber(match.blue.1.number )
                 }
                 matches = decoded
             }
@@ -484,10 +484,10 @@ class DataModel: ObservableObject{
                 print("localEvent \(localEvents)")
                 for event in localEvents{
                     for match in event.matches{
-                        match.red.0 = event.teams.findByNumber(match.red.0?.number ?? "")
-                        match.red.1 = event.teams.findByNumber(match.red.1?.number ?? "")
-                        match.blue.0 = event.teams.findByNumber(match.blue.0?.number ?? "")
-                        match.blue.1 = event.teams.findByNumber(match.blue.1?.number ?? "")
+                        match.red.0 = event.teams.findByNumber(match.red.0.number)
+                        match.red.1 = event.teams.findByNumber(match.red.1.number)
+                        match.blue.0 = event.teams.findByNumber(match.blue.0.number)
+                        match.blue.1 = event.teams.findByNumber(match.blue.1.number)
                     }
                 }
             }
@@ -499,10 +499,10 @@ class DataModel: ObservableObject{
                 print(virtualEvents)
                 for event in virtualEvents{
                     for match in event.matches{
-                        match.red.0 = event.teams.findByNumber(match.red.0?.number ?? "")
-                        match.red.1 = .none
-                        match.blue.0 = .none
-                        match.blue.1 = .none
+                        match.red.0 = event.teams.findByNumber(match.red.0.number)
+                        match.red.1 = Team("", "")
+                        match.blue.0 = Team("", "")
+                        match.blue.1 = Team("", "")
                         print("WOWOWOWOW")
                     }
                 }
