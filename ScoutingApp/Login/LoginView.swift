@@ -12,14 +12,12 @@ struct LoginView: View {
         ZStack{
             LinearGradient(gradient: Gradient(colors: [Color.blue, Color.purple]), startPoint: .topLeading, endPoint: .bottomTrailing)
             .edgesIgnoringSafeArea(.all)
-            Image("LoadingScreenUniversal")
-                .resizable()
-                .scaledToFit()
-            VStack {
+            VStack{
+                Image("LoadingScreen2")
+                    .resizable()
+                    .scaledToFit()
+                    .padding(.top)
                 Spacer()
-                HStack{
-                    Text("Hello World!")
-                }
             }
         }
     }
