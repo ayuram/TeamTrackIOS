@@ -528,7 +528,7 @@ class DataModel: ObservableObject {
             event.switchType(to: .virtual)
         }
         for event in liveEvents {
-            event.switchType(to: .live(ids: (UUID(), UUID())))
+            event.switchType(to: .live)
         }
     }
     func saveEvents(){
@@ -554,8 +554,9 @@ class DataModel: ObservableObject {
         }
     }
 }
-enum EventType {
+enum EventType: Equatable{
     case local
     case virtual
-    case live(ids: (UUID, UUID))
+    case live
+    
 }
