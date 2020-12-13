@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import FirebaseFirestore
 extension Int{
     func double() -> Double {
         Double(self)
@@ -435,7 +436,12 @@ class Event: ObservableObject, Codable, Identifiable{
             .min() ?? 1
     }
 }
-class DataModel: ObservableObject{
+struct User: Codable{
+    let name: String
+    let id: UUID
+}
+class DataModel: ObservableObject {
+    var user: User? = .none
     @Published var localEvents: [Event]
     @Published var virtualEvents: [Event]
     @Published var liveEvents: [Event]
@@ -444,7 +450,6 @@ class DataModel: ObservableObject{
         if let data = UserDefaults.standard.data(forKey: "Teams"){
             if let decoded = try? JSONDecoder().decode([Team].self, from: data){
                 teams = decoded
-                print("teams decoded \(teams)")
             }
         }
         var matches = [Match]()
@@ -503,14 +508,16 @@ class DataModel: ObservableObject{
                         match.red.1 = Team("", "")
                         match.blue.0 = Team("", "")
                         match.blue.1 = Team("", "")
-                        print("WOWOWOWOW")
                     }
                 }
             }
             
         }
-        
-        
+        if let data = UserDefaults.standard.data(forKey: "User"){
+            if let decoded = try? JSONDecoder().decode(User.self, from: data){
+                user = decoded
+            }
+        }
         setTypes()
     }
     func setTypes() {
@@ -521,7 +528,7 @@ class DataModel: ObservableObject{
             event.switchType(to: .virtual)
         }
         for event in liveEvents {
-            event.switchType(to: .live)
+            event.switchType(to: .live(ids: (UUID(), UUID())))
         }
     }
     func saveEvents(){
@@ -538,9 +545,17 @@ class DataModel: ObservableObject{
             print(type(of: type(of: encoded)))
         }
     }
+    func setUser(name: String){
+        user = User(name: name, id: UUID())
+        let encoder = JSONEncoder()
+        if let encoded = try? encoder.encode(user) {
+            let defaults = UserDefaults.standard
+            defaults.set(encoded, forKey: "User")
+        }
+    }
 }
 enum EventType {
     case local
     case virtual
-    case live
+    case live(ids: (UUID, UUID))
 }
