@@ -30,6 +30,7 @@
 		C9702B2D252EF1AF008A7167 /* TeamNav.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9702B2A252EF1AF008A7167 /* TeamNav.swift */; };
 		C9702B2E252EF1AF008A7167 /* TeamView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9702B2B252EF1AF008A7167 /* TeamView.swift */; };
 		C9813A372581C56F008F68B2 /* StyledFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9813A362581C56F008F68B2 /* StyledFrame.swift */; };
+		C9890AC82586A66200FD4A10 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9890AC72586A66200FD4A10 /* LoginView.swift */; };
 		C9AE17922580C34900769713 /* SwiftUICharts in Frameworks */ = {isa = PBXBuildFile; productRef = C9AE17912580C34900769713 /* SwiftUICharts */; };
 		C9B9EF7D2585B8310032C132 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C9B9EF7C2585B8310032C132 /* GoogleService-Info.plist */; };
 		C9B9EFCE2585BF1B0032C132 /* CodeScanner in Frameworks */ = {isa = PBXBuildFile; productRef = C9B9EFCD2585BF1B0032C132 /* CodeScanner */; };
@@ -90,6 +91,7 @@
 		C9702B2A252EF1AF008A7167 /* TeamNav.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamNav.swift; sourceTree = "<group>"; };
 		C9702B2B252EF1AF008A7167 /* TeamView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamView.swift; sourceTree = "<group>"; };
 		C9813A362581C56F008F68B2 /* StyledFrame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyledFrame.swift; sourceTree = "<group>"; };
+		C9890AC72586A66200FD4A10 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		C9B9EF7C2585B8310032C132 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		C9D9E99A254A00D600E42210 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		C9EACF39256253DC004B586E /* CustomStepper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomStepper.swift; sourceTree = "<group>"; };
@@ -185,6 +187,7 @@
 		C9702ADB252EF14E008A7167 /* ScoutingApp */ = {
 			isa = PBXGroup;
 			children = (
+				C9890AC62586A64100FD4A10 /* Login */,
 				C9702ADC252EF14E008A7167 /* ScoutingAppApp.swift */,
 				C907765A253115D2006ED382 /* ContentView.swift */,
 				C9702AE0252EF152008A7167 /* Assets.xcassets */,
@@ -245,6 +248,14 @@
 				C9702B2B252EF1AF008A7167 /* TeamView.swift */,
 			);
 			path = Team;
+			sourceTree = "<group>";
+		};
+		C9890AC62586A64100FD4A10 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				C9890AC72586A66200FD4A10 /* LoginView.swift */,
+			);
+			path = Login;
 			sourceTree = "<group>";
 		};
 		C9AE179F2581B63E00769713 /* GraphicAssets */ = {
@@ -524,6 +535,7 @@
 				C9813A372581C56F008F68B2 /* StyledFrame.swift in Sources */,
 				C907765B253115D2006ED382 /* ContentView.swift in Sources */,
 				C9702B0F252EF16A008A7167 /* matchNav.swift in Sources */,
+				C9890AC82586A66200FD4A10 /* LoginView.swift in Sources */,
 				C9702B2E252EF1AF008A7167 /* TeamView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
