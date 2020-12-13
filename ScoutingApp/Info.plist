@@ -31,12 +31,12 @@
 	<true/>
 	<key>UILaunchScreen</key>
 	<dict>
-		<key>UIImageRespectsSafeAreaInsets</key>
-		<true/>
 		<key>UIColorName</key>
 		<string>AccentColor</string>
 		<key>UIImageName</key>
 		<string>LoadingScreenUniversal</string>
+		<key>UIImageRespectsSafeAreaInsets</key>
+		<true/>
 	</dict>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
