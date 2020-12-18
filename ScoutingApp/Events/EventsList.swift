@@ -10,11 +10,13 @@ import SwiftUI
 struct EventsList: View {
     @EnvironmentObject var data: DataModel
     @State var bool = false
+    @State var liveBool = false
     @State var acSh = false
     @State var confirmation = false
     @State var newEventName = ""
     @State var eventType = EventType.local
     @State var titleString = ""
+    let url = URL(string: "https:api.com.cuttlefish.net")!
     init(){
         UITableView.appearance().backgroundColor = UIColor(Color("background"))
     }
@@ -65,16 +67,18 @@ struct EventsList: View {
                 ActionSheet(title: Text("Add New Event"), message: Text("Select Event Type"), buttons: [
                     .default(Text("Local Scrimmage")) {eventType = .local; titleString = "New Local Event"; bool = true},
                     .default(Text("Virtual Tournament")) {eventType = .virtual; titleString = "New Virtual Event"; bool = true},
-                    .default(Text("Live Tournament")) { eventType = .live; titleString = "New Live Event" },
+                    .default(Text("Live Tournament")) { eventType = .live; titleString = "New Live Event"; liveBool = true},
                     .cancel()
                 ])
             })
             .sheet(isPresented: $bool, content: {
                 sheet()
             })
+            .sheet(isPresented: $liveBool, content: {
+                liveFinder()
+            })
         }
     }
-    
     func sheet() -> some View{
         NavigationView{
             VStack{
@@ -95,6 +99,39 @@ struct EventsList: View {
                 data.saveEvents()
                 newEventName = ""
                 bool = false
+            })
+        }
+    }
+    func liveFinder() -> some View{
+        NavigationView{
+            ScrollView{
+                HStack{
+                    TextField("Search for event", text: $newEventName)
+                        .padding(.leading, 24)
+                }
+                .padding()
+                .background(Color(.systemGray5))
+                .cornerRadius(6)
+                .padding(.horizontal)
+                .overlay(
+                    HStack {
+                        Image(systemName: "magnifyingglass")
+                        Spacer()
+                        Image(systemName: "xmark.circle.fill")
+                    }.padding(.horizontal, 32)
+                )
+                ForEach((0 ..< 20).filter({ "\($0)".contains(newEventName) || newEventName.isEmpty}), id: \.self){ num in
+                    HStack{
+                        Text("\(num)")
+                        Spacer()
+                    }.padding()
+                    Divider()
+                }
+            }
+            .navigationBarTitle("Find Tournament")
+            .navigationBarItems(leading: Button("Cancel"){
+                liveBool = false
+                newEventName = ""
             })
         }
     }
@@ -168,7 +205,9 @@ struct AlertControlView: UIViewControllerRepresentable {
 struct EventsList_Previews: PreviewProvider {
     static var previews: some View {
         EventsList()
+            .liveFinder()
             .preferredColorScheme(.dark)
             .environmentObject(DataModel())
+            
     }
 }

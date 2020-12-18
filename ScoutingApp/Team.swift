@@ -315,6 +315,7 @@ class Match: Identifiable, ObservableObject, Codable{
     }
 }
 class Event: ObservableObject, Codable, Identifiable{
+    var id: (UUID, UUID)? = .none
     @Published var teams: [Team]
     @Published var matches: [Match]
     let name: String
@@ -559,5 +560,5 @@ class DataModel: ObservableObject {
 enum EventType: Equatable{
     case local
     case virtual
-    case live(UUID, UUID)
+    case live
 }
