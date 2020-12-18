@@ -247,7 +247,6 @@ struct Tele: View{
             Stepper("\(score.tele.midGoals) Middle Goals", value: $score.tele.midGoals, in: 0 ... Int.max)
             Stepper("\(score.tele.lowGoals) Low Goals", value: $score.tele.lowGoals, in: 0 ... Int.max)
         }
-        
     }
 }
 struct Auto: View{
@@ -264,8 +263,8 @@ struct Auto: View{
             Toggle(isOn: $score.auto.navigated) {
                 Text("Navigated")
             }
+            .toggleStyle(SwitchToggleStyle(tint: Color("AccentColor")))
         }
-        
     }
 }
 struct MatchView_Previews: PreviewProvider {

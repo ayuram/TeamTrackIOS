@@ -27,6 +27,8 @@ struct LineGraph: Shape {
             p.move(to: CGPoint(x: 0, y: (1 - start) * rect.height))
             for idx in dataPoints.indices {
                 p.addLine(to: point(at: idx))
+                //p.addArc(tangent1End: point(at: idx), tangent2End: point(at: idx), radius: 50)
+//                p.addRelativeArc(center: point(at: idx), radius: 10, startAngle: Angle(degrees: 0), delta: Angle(degrees: 5))
             }
         }
     }
@@ -47,7 +49,8 @@ struct LineChart: View{
                 }
                 LineGraph(data.normalized)
                     .trim(to: animateChart ? 1 : 0)
-                    .stroke(color, lineWidth: 3)
+                    //.stroke(color, lineWidth: 3)
+                    .stroke(color, style: StrokeStyle(lineWidth: 3, lineCap: .round, lineJoin: .round))
                     .onAppear(perform: {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2){
                             self.animateChart = true

@@ -538,11 +538,13 @@ class DataModel: ObservableObject {
             let defaults = UserDefaults.standard
             defaults.set(encoded, forKey: "LocalEvents")
         }
-       
         if let encoded = try? encoder.encode(virtualEvents) {
             let defaults = UserDefaults.standard
             defaults.set(encoded, forKey: "Virtual")
-            print(type(of: type(of: encoded)))
+        }
+        if let encoded = try? encoder.encode(liveEvents) {
+            let defaults = UserDefaults.standard
+            defaults.set(encoded, forKey: "Live")
         }
     }
     func setUser(name: String){
@@ -557,6 +559,5 @@ class DataModel: ObservableObject {
 enum EventType: Equatable{
     case local
     case virtual
-    case live
-    
+    case live(UUID, UUID)
 }

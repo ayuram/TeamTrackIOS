@@ -53,6 +53,7 @@ struct EventsList: View {
                             })
                         }
                     }
+                    .listStyle(InsetGroupedListStyle())
                     
                 }
             }
@@ -64,6 +65,7 @@ struct EventsList: View {
                 ActionSheet(title: Text("Add New Event"), message: Text("Select Event Type"), buttons: [
                     .default(Text("Local Scrimmage")) {eventType = .local; titleString = "New Local Event"; bool = true},
                     .default(Text("Virtual Tournament")) {eventType = .virtual; titleString = "New Virtual Event"; bool = true},
+                    .default(Text("Live Tournament")) { eventType = .live; titleString = "New Live Event" },
                     .cancel()
                 ])
             })
@@ -72,6 +74,7 @@ struct EventsList: View {
             })
         }
     }
+    
     func sheet() -> some View{
         NavigationView{
             VStack{
@@ -86,6 +89,8 @@ struct EventsList: View {
                     data.localEvents.append(Event(newEventName, type: .local))
                 } else if eventType == .virtual {
                     data.virtualEvents.append(Event(newEventName, type: .virtual))
+                } else if eventType == .live {
+                    data.liveEvents.append(Event(newEventName, type: .live))
                 }
                 data.saveEvents()
                 newEventName = ""
