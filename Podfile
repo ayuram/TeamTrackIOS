@@ -8,6 +8,7 @@ target 'ScoutingApp' do
   # Pods for ScoutingApp
 pod 'Firebase/Analytics'
 pod 'Firebase/Auth'
+pod 'GoogleSignIn'
 pod 'Firebase/Firestore'
   target 'ScoutingAppTests' do
     inherit! :search_paths

@@ -12,6 +12,8 @@ struct ThemedButton: View {
     var text: String = "Button"
     var buttonColor: Color = Color.green
     var textColor: Color = Color.white
+    var width: CGFloat = 90
+    var height: CGFloat = 50
     var action: () -> Void
     var body: some View {
             Button(action: action) {
@@ -20,7 +22,7 @@ struct ThemedButton: View {
                     .fontWeight(.medium)
                     .foregroundColor(textColor)
                     .fixedSize(horizontal: false, vertical: true)
-                    .frame(width: 90.0, height: 50.0)
+                    .frame(width: width, height: height)
             }
             //.background(buttonColor)
             .background(buttonColor.opacity(0.8))

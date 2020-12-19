@@ -28,20 +28,36 @@ struct EventView: View {
     }
     func eventView() -> some View {
         ZStack{
-            VStack{
-                tabSelect()
-                RoundedRectangle(cornerRadius: 25.0)
-                    .fill(Color.green)
-                    .frame(height: 80)
-                    .shadow(radius: 5)
-            }
+            tabSelect()
             VStack{
                 Spacer()
+                if selectedTab == .matches && event.type == .live{
+                    HStack{
+                        Button(action: {
+                            
+                        }, label: {
+                            ZStack{
+                                Capsule()
+                                    .frame(width: 100, height: 30)
+                                Text("Sync")
+                                    .foregroundColor(.green)
+                            }
+                        }).buttonStyle(PlainButtonStyle())
+                        Spacer()
+                    }
+                    .padding(.horizontal)
+                }
                 ZStack{
+                    RoundedRectangle(cornerRadius: 25.0)
+                        .fill(Color.green)
+                        .frame(height: 80)
+                        .shadow(radius: 5)
                     HStack{
                         Spacer()
                         Button(action: {
-                            selectedTab = .teams
+                            withAnimation(.linear){
+                                selectedTab = .teams
+                            }
                             bool = true
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.4){
                                 bool = false
@@ -57,13 +73,15 @@ struct EventView: View {
                             .clipShape(Circle())
                             .shadow(color: absCheck(.teams) ? .accentColor : .clear, radius: absCheck(.teams) ? 5 : 0)
                             .shadow(color: absCheck(.teams) ? .accentColor : .clear, radius: absCheck(.teams) ? 5 : 0)
-                            .offset(y: check(.teams) ? -25 : -10)
+                            .offset(y: check(.teams) ? -25 : 0)
                             .animation(defaultAnimation)
                         })
                         Spacer()
                         Spacer()
                         Button(action: {
-                            selectedTab = .matches
+                            withAnimation(.linear){
+                                selectedTab = .matches
+                            }
                             bool = true
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.4){
                                 bool = false
@@ -79,7 +97,7 @@ struct EventView: View {
                             .clipShape(Circle())
                             .shadow(color: absCheck(.matches) ? .accentColor : .clear, radius: absCheck(.matches) ? 5 : 0)
                             .shadow(color: absCheck(.matches) ? .accentColor : .clear, radius: absCheck(.matches) ? 5 : 0)
-                            .offset(y: check(.matches) ? -25 : -10)
+                            .offset(y: check(.matches) ? -25 : 0)
                             .animation(defaultAnimation)
                         })
                         Spacer()

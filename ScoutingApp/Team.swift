@@ -318,6 +318,8 @@ class Event: ObservableObject, Codable, Identifiable{
     var id: (UUID, UUID)? = .none
     @Published var teams: [Team]
     @Published var matches: [Match]
+    var matchStore: [Match] = []
+    var teamStore: [Team] = []
     let name: String
     var type: EventType
     init(_ name: String, type: EventType) {
@@ -351,6 +353,17 @@ class Event: ObservableObject, Codable, Identifiable{
         try container.encode(matches, forKey: .matches)
         try container.encode(name, forKey: .name)
     }
+    var syncable: Bool {
+        true
+    }
+    func sync() {
+        if syncable{
+            let db = Firestore.firestore()
+            guard let ids = id
+            else { return }
+            let docRef = db.document("\(ids.0)")
+        }
+    }
     func switchType(to type: EventType){
         self.type = type
         for team in teams {
@@ -373,7 +386,6 @@ class Event: ObservableObject, Codable, Identifiable{
         }
         if(!bool){
             teams.append(team)
-            //saveTeams()
         }
         sortTeams()
     }

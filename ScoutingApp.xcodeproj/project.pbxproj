@@ -31,9 +31,9 @@
 		C9702B2E252EF1AF008A7167 /* TeamView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9702B2B252EF1AF008A7167 /* TeamView.swift */; };
 		C9813A372581C56F008F68B2 /* StyledFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9813A362581C56F008F68B2 /* StyledFrame.swift */; };
 		C9890AC82586A66200FD4A10 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9890AC72586A66200FD4A10 /* LoginView.swift */; };
-		C9AE17922580C34900769713 /* SwiftUICharts in Frameworks */ = {isa = PBXBuildFile; productRef = C9AE17912580C34900769713 /* SwiftUICharts */; };
+		C9AE17922580C34900769713 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = C9AE17912580C34900769713 /* SwiftPackageProductDependency */; };
 		C9B9EF7D2585B8310032C132 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C9B9EF7C2585B8310032C132 /* GoogleService-Info.plist */; };
-		C9B9EFCE2585BF1B0032C132 /* CodeScanner in Frameworks */ = {isa = PBXBuildFile; productRef = C9B9EFCD2585BF1B0032C132 /* CodeScanner */; };
+		C9B9EFCE2585BF1B0032C132 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = C9B9EFCD2585BF1B0032C132 /* SwiftPackageProductDependency */; };
 		C9D9E99B254A00D600E42210 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D9E99A254A00D600E42210 /* CardView.swift */; };
 		C9EACF3A256253DC004B586E /* CustomStepper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9EACF39256253DC004B586E /* CustomStepper.swift */; };
 		CF49B46AC45868F550497083 /* Pods_ScoutingAppTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF5FECD60E5DA84A98DEE57D /* Pods_ScoutingAppTests.framework */; };
@@ -104,8 +104,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C9AE17922580C34900769713 /* SwiftUICharts in Frameworks */,
-				C9B9EFCE2585BF1B0032C132 /* CodeScanner in Frameworks */,
+				C9AE17922580C34900769713 /* BuildFile in Frameworks */,
+				C9B9EFCE2585BF1B0032C132 /* BuildFile in Frameworks */,
 				6E97A97CD9282B975F441B63 /* Pods_ScoutingApp.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -283,6 +283,7 @@
 				C9702AD6252EF14E008A7167 /* Frameworks */,
 				C9702AD7252EF14E008A7167 /* Resources */,
 				39DA3664707161F3F801DF09 /* [CP] Embed Pods Frameworks */,
+				545920A4DD41FC6B76866346 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -290,8 +291,8 @@
 			);
 			name = ScoutingApp;
 			packageProductDependencies = (
-				C9AE17912580C34900769713 /* SwiftUICharts */,
-				C9B9EFCD2585BF1B0032C132 /* CodeScanner */,
+				C9AE17912580C34900769713 /* SwiftPackageProductDependency */,
+				C9B9EFCD2585BF1B0032C132 /* SwiftPackageProductDependency */,
 			);
 			productName = ScoutingApp;
 			productReference = C9702AD9252EF14E008A7167 /* ScoutingApp.app */;
@@ -325,6 +326,7 @@
 				C9702AF2252EF152008A7167 /* Frameworks */,
 				C9702AF3252EF152008A7167 /* Resources */,
 				34CB211386F6060A1ED461AA /* [CP] Embed Pods Frameworks */,
+				0349EDBF2A377EC654E682F3 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -368,8 +370,8 @@
 			);
 			mainGroup = C9702AD0252EF14E008A7167;
 			packageReferences = (
-				C9AE17902580C34900769713 /* XCRemoteSwiftPackageReference "ChartView" */,
-				C9B9EFCC2585BF1B0032C132 /* XCRemoteSwiftPackageReference "CodeScanner" */,
+				C9AE17902580C34900769713 /* RemoteSwiftPackageReference */,
+				C9B9EFCC2585BF1B0032C132 /* RemoteSwiftPackageReference */,
 			);
 			productRefGroup = C9702ADA252EF14E008A7167 /* Products */;
 			projectDirPath = "";
@@ -410,6 +412,23 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		0349EDBF2A377EC654E682F3 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ScoutingApp-ScoutingAppUITests/Pods-ScoutingApp-ScoutingAppUITests-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ScoutingApp-ScoutingAppUITests/Pods-ScoutingApp-ScoutingAppUITests-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ScoutingApp-ScoutingAppUITests/Pods-ScoutingApp-ScoutingAppUITests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		32E52437B4C58A54E1D26F26 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -464,6 +483,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ScoutingApp/Pods-ScoutingApp-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		545920A4DD41FC6B76866346 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ScoutingApp/Pods-ScoutingApp-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ScoutingApp/Pods-ScoutingApp-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ScoutingApp/Pods-ScoutingApp-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		B5A3A7A02C7C5F7F0DBAB862 /* [CP] Check Pods Manifest.lock */ = {
@@ -864,7 +900,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		C9AE17902580C34900769713 /* XCRemoteSwiftPackageReference "ChartView" */ = {
+		C9AE17902580C34900769713 /* RemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/AppPear/ChartView";
 			requirement = {
@@ -872,7 +908,7 @@
 				minimumVersion = 1.5.4;
 			};
 		};
-		C9B9EFCC2585BF1B0032C132 /* XCRemoteSwiftPackageReference "CodeScanner" */ = {
+		C9B9EFCC2585BF1B0032C132 /* RemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/twostraws/CodeScanner";
 			requirement = {
@@ -883,14 +919,14 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		C9AE17912580C34900769713 /* SwiftUICharts */ = {
+		C9AE17912580C34900769713 /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C9AE17902580C34900769713 /* XCRemoteSwiftPackageReference "ChartView" */;
+			package = C9AE17902580C34900769713 /* RemoteSwiftPackageReference */;
 			productName = SwiftUICharts;
 		};
-		C9B9EFCD2585BF1B0032C132 /* CodeScanner */ = {
+		C9B9EFCD2585BF1B0032C132 /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C9B9EFCC2585BF1B0032C132 /* XCRemoteSwiftPackageReference "CodeScanner" */;
+			package = C9B9EFCC2585BF1B0032C132 /* RemoteSwiftPackageReference */;
 			productName = CodeScanner;
 		};
 /* End XCSwiftPackageProductDependency section */

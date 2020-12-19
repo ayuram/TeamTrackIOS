@@ -205,7 +205,7 @@ struct AlertControlView: UIViewControllerRepresentable {
 struct EventsList_Previews: PreviewProvider {
     static var previews: some View {
         EventsList()
-            .liveFinder()
+            //.liveFinder()
             .preferredColorScheme(.dark)
             .environmentObject(DataModel())
             
