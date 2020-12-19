@@ -8,6 +8,7 @@
 
 import Foundation
 import FirebaseFirestore
+import Combine
 extension Int{
     func double() -> Double {
         Double(self)

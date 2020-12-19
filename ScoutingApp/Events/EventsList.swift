@@ -16,15 +16,17 @@ struct EventsList: View {
     @State var newEventName = ""
     @State var eventType = EventType.local
     @State var titleString = ""
+    
+    
     let url = URL(string: "https:api.com.cuttlefish.net")!
     init(){
         UITableView.appearance().backgroundColor = UIColor(Color("background"))
     }
     var body: some View {
        NavigationView{
-            ZStack{
+        ZStack(alignment: .bottom){
 //                AlertControlView(textString: $newEventName, showAlert: $bool, confirmation: $confirmation, title: titleString, message: "Enter Name")
-                VStack{
+                
                     List{
                         Section(header: Text("Local Scrimmages")){
                             ForEach(data.localEvents){ event in
@@ -56,8 +58,63 @@ struct EventsList: View {
                         }
                     }
                     .listStyle(InsetGroupedListStyle())
-                    
+                ZStack{
+                    RoundedRectangle(cornerRadius: 25.0)
+                        .fill(Color.green)
+                        .frame(height: 80)
+                        .shadow(radius: 5)
+                    HStack{
+                        Spacer()
+                        Button(action: {
+                            withAnimation(.linear){
+                                selectedTab = .events
+                            }
+                            tabBool = true
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4){
+                                tabBool = false
+                            }
+                        }, label: {
+                            VStack{
+                                Image(systemName: "rectangle.grid.1x2.fill")
+                                Text("Events")
+                                    .font(.caption)
+                            }
+                            .frame(width: check(.events) ? 70 : 60, height: check(.events) ? 70 : 60)
+                            .background(Color.white)
+                            .clipShape(Circle())
+                            .shadow(color: absCheck(.events) ? .accentColor : .clear, radius: absCheck(.events) ? 5 : 0)
+                            .shadow(color: absCheck(.events) ? .accentColor : .clear, radius: absCheck(.events) ? 5 : 0)
+                            .offset(y: check(.events) ? -25 : 0)
+                            .animation(defaultAnimation)
+                        })
+                        Spacer()
+                        Spacer()
+                        Button(action: {
+                            withAnimation(.linear){
+                                selectedTab = .profile
+                            }
+                            tabBool = true
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4){
+                                tabBool = false
+                            }
+                        }, label: {
+                            VStack{
+                                Image(systemName: "person.crop.circle.fill")
+                                Text("Profile")
+                                    .font(.caption)
+                            }
+                            .frame(width: check(.profile) ? 70 : 60, height: check(.profile) ? 70 : 60)
+                            .background(Color.white)
+                            .clipShape(Circle())
+                            .shadow(color: absCheck(.profile) ? .accentColor : .clear, radius: absCheck(.profile) ? 5 : 0)
+                            .shadow(color: absCheck(.profile) ? .accentColor : .clear, radius: absCheck(.profile) ? 5 : 0)
+                            .offset(y: check(.profile) ? -25 : 0)
+                            .animation(defaultAnimation)
+                        })
+                        Spacer()
+                    }
                 }
+                .padding(.bottom)
             }
             .navigationBarTitle("Events")
             .navigationBarItems(leading: EditButton(), trailing: Button("Add"){
@@ -78,6 +135,12 @@ struct EventsList: View {
                 liveFinder()
             })
         }
+    }
+    func check(_ tab: Tabs) -> Bool{
+        tab == selectedTab && tabBool
+    }
+    func absCheck(_ tab: Tabs) -> Bool{
+        tab == selectedTab
     }
     func sheet() -> some View{
         NavigationView{

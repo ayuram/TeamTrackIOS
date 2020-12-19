@@ -40,17 +40,18 @@ struct LoginView: View {
                 .frame(width: 300, height: 100, alignment: .center)
                 .background(Color("background"))
                 .clipShape(Capsule())
-                .shadow(color: success ? .green : .red, radius: success ? 3 : 10)
+                .shadow(color: .green, radius: success ? 3 : 10)
                 .animation(.default)
                 HStack{
                     ThemedButton(text: "Register", buttonColor: .yellow, width: 150){
+                        
                     }
                     ThemedButton(text: "Login", width: 150){
                         
                     }
                 }
                 GSignIn()
-                    .frame(height: 60)
+                    .frame(width: 320, height: 48)
             }
             
         }
