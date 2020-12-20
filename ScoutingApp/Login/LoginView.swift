@@ -21,7 +21,6 @@ struct LoginView: View {
                 .padding(.top)
             VStack(){
                 Spacer()
-                    .frame(height: 450)
                 VStack{
                     HStack{
                         Image(systemName: "person.circle.fill")
