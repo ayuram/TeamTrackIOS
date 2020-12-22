@@ -40,7 +40,6 @@ struct LoginView: View {
                 .background(Color("background"))
                 .clipShape(Capsule())
                 .shadow(color: .green, radius: success ? 3 : 10)
-                .animation(.default)
                 HStack{
                     ThemedButton(text: "Register", buttonColor: .yellow, width: 150){
                         
