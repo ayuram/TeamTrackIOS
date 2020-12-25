@@ -23,43 +23,38 @@ struct EventsList: View {
         UITableView.appearance().backgroundColor = UIColor(Color("background"))
     }
     var body: some View {
-       NavigationView{
-        ZStack(alignment: .bottom){
-//                AlertControlView(textString: $newEventName, showAlert: $bool, confirmation: $confirmation, title: titleString, message: "Enter Name")
-                
-                    List{
-                        Section(header: Text("Local Scrimmages")){
-                            ForEach(data.localEvents){ event in
-                                EventNav(event: event)
-                                    .environmentObject(data)
-                            }
-                            .onDelete(perform: { indexSet in
-                                data.localEvents.remove(atOffsets: indexSet)
-                                data.saveEvents()
-                            })
-                            .onMove(perform: { indices, newOffset in
-                                data.localEvents.move(fromOffsets: indices, toOffset: newOffset)
-                                data.saveEvents()
-                            })
-                        }
-                        Section(header: Text("Virtual Tournaments")){
-                            ForEach(data.virtualEvents){ event in
-                                VirtualEventNav(event: event)
-                                    .environmentObject(data)
-                            }
-                            .onDelete(perform: { indexSet in
-                                data.virtualEvents.remove(atOffsets: indexSet)
-                                data.saveEvents()
-                            })
-                            .onMove(perform: { indices, newOffset in
-                                data.virtualEvents.move(fromOffsets: indices, toOffset: newOffset)
-                                data.saveEvents()
-                            })
-                        }
+        
+            List{
+                Section(header: Text("Local Scrimmages")){
+                    ForEach(data.localEvents){ event in
+                        EventNav(event: event)
+                            .environmentObject(data)
                     }
-                    .listStyle(InsetGroupedListStyle())
-                
+                    .onDelete(perform: { indexSet in
+                        data.localEvents.remove(atOffsets: indexSet)
+                        data.saveEvents()
+                    })
+                    .onMove(perform: { indices, newOffset in
+                        data.localEvents.move(fromOffsets: indices, toOffset: newOffset)
+                        data.saveEvents()
+                    })
+                }
+                Section(header: Text("Virtual Tournaments")){
+                    ForEach(data.virtualEvents){ event in
+                        VirtualEventNav(event: event)
+                            .environmentObject(data)
+                    }
+                    .onDelete(perform: { indexSet in
+                        data.virtualEvents.remove(atOffsets: indexSet)
+                        data.saveEvents()
+                    })
+                    .onMove(perform: { indices, newOffset in
+                        data.virtualEvents.move(fromOffsets: indices, toOffset: newOffset)
+                        data.saveEvents()
+                    })
+                }
             }
+            .listStyle(InsetGroupedListStyle())
             .navigationBarTitle("Events")
             .navigationBarItems(leading: EditButton(), trailing: Button("Add"){
                 acSh = true
@@ -78,7 +73,7 @@ struct EventsList: View {
             .sheet(isPresented: $liveBool, content: {
                 liveFinder()
             })
-        }
+        
     }
     func sheet() -> some View{
         NavigationView{
@@ -209,6 +204,6 @@ struct EventsList_Previews: PreviewProvider {
             //.liveFinder()
             .preferredColorScheme(.dark)
             .environmentObject(DataModel())
-            
+        
     }
 }

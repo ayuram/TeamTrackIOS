@@ -31,10 +31,11 @@
 		C9702B2E252EF1AF008A7167 /* TeamView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9702B2B252EF1AF008A7167 /* TeamView.swift */; };
 		C9813A372581C56F008F68B2 /* StyledFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9813A362581C56F008F68B2 /* StyledFrame.swift */; };
 		C9890AC82586A66200FD4A10 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9890AC72586A66200FD4A10 /* LoginView.swift */; };
-		C9AE17922580C34900769713 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = C9AE17912580C34900769713 /* SwiftPackageProductDependency */; };
+		C9AE17922580C34900769713 /* SwiftUICharts in Frameworks */ = {isa = PBXBuildFile; productRef = C9AE17912580C34900769713 /* SwiftUICharts */; };
 		C9B9EF7D2585B8310032C132 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C9B9EF7C2585B8310032C132 /* GoogleService-Info.plist */; };
-		C9B9EFCE2585BF1B0032C132 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = C9B9EFCD2585BF1B0032C132 /* SwiftPackageProductDependency */; };
+		C9B9EFCE2585BF1B0032C132 /* CodeScanner in Frameworks */ = {isa = PBXBuildFile; productRef = C9B9EFCD2585BF1B0032C132 /* CodeScanner */; };
 		C9D9E99B254A00D600E42210 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D9E99A254A00D600E42210 /* CardView.swift */; };
+		C9E5EF32259564DD00956ABF /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9E5EF31259564DD00956ABF /* Profile.swift */; };
 		C9EACF3A256253DC004B586E /* CustomStepper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9EACF39256253DC004B586E /* CustomStepper.swift */; };
 		CF49B46AC45868F550497083 /* Pods_ScoutingAppTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF5FECD60E5DA84A98DEE57D /* Pods_ScoutingAppTests.framework */; };
 /* End PBXBuildFile section */
@@ -94,6 +95,7 @@
 		C9890AC72586A66200FD4A10 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		C9B9EF7C2585B8310032C132 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		C9D9E99A254A00D600E42210 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
+		C9E5EF31259564DD00956ABF /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
 		C9EACF39256253DC004B586E /* CustomStepper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomStepper.swift; sourceTree = "<group>"; };
 		EF5FECD60E5DA84A98DEE57D /* Pods_ScoutingAppTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ScoutingAppTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F55290CF7CDDD46275462D7A /* Pods-ScoutingApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ScoutingApp.debug.xcconfig"; path = "Target Support Files/Pods-ScoutingApp/Pods-ScoutingApp.debug.xcconfig"; sourceTree = "<group>"; };
@@ -104,8 +106,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C9AE17922580C34900769713 /* BuildFile in Frameworks */,
-				C9B9EFCE2585BF1B0032C132 /* BuildFile in Frameworks */,
+				C9AE17922580C34900769713 /* SwiftUICharts in Frameworks */,
+				C9B9EFCE2585BF1B0032C132 /* CodeScanner in Frameworks */,
 				6E97A97CD9282B975F441B63 /* Pods_ScoutingApp.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -187,6 +189,7 @@
 		C9702ADB252EF14E008A7167 /* ScoutingApp */ = {
 			isa = PBXGroup;
 			children = (
+				C9E5EF31259564DD00956ABF /* Profile.swift */,
 				C9890AC62586A64100FD4A10 /* Login */,
 				C9702ADC252EF14E008A7167 /* ScoutingAppApp.swift */,
 				C907765A253115D2006ED382 /* ContentView.swift */,
@@ -291,8 +294,8 @@
 			);
 			name = ScoutingApp;
 			packageProductDependencies = (
-				C9AE17912580C34900769713 /* SwiftPackageProductDependency */,
-				C9B9EFCD2585BF1B0032C132 /* SwiftPackageProductDependency */,
+				C9AE17912580C34900769713 /* SwiftUICharts */,
+				C9B9EFCD2585BF1B0032C132 /* CodeScanner */,
 			);
 			productName = ScoutingApp;
 			productReference = C9702AD9252EF14E008A7167 /* ScoutingApp.app */;
@@ -370,8 +373,8 @@
 			);
 			mainGroup = C9702AD0252EF14E008A7167;
 			packageReferences = (
-				C9AE17902580C34900769713 /* RemoteSwiftPackageReference */,
-				C9B9EFCC2585BF1B0032C132 /* RemoteSwiftPackageReference */,
+				C9AE17902580C34900769713 /* XCRemoteSwiftPackageReference "ChartView" */,
+				C9B9EFCC2585BF1B0032C132 /* XCRemoteSwiftPackageReference "CodeScanner" */,
 			);
 			productRefGroup = C9702ADA252EF14E008A7167 /* Products */;
 			projectDirPath = "";
@@ -563,6 +566,7 @@
 				C9702B2D252EF1AF008A7167 /* TeamNav.swift in Sources */,
 				C9451F1125495A6300767AFE /* BarFullView.swift in Sources */,
 				C9702B15252EF174008A7167 /* BarGraph.swift in Sources */,
+				C9E5EF32259564DD00956ABF /* Profile.swift in Sources */,
 				C9702B10252EF16A008A7167 /* MatchList.swift in Sources */,
 				C9702B0E252EF16A008A7167 /* MatchView.swift in Sources */,
 				C9702ADD252EF14E008A7167 /* ScoutingAppApp.swift in Sources */,
@@ -900,7 +904,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		C9AE17902580C34900769713 /* RemoteSwiftPackageReference */ = {
+		C9AE17902580C34900769713 /* XCRemoteSwiftPackageReference "ChartView" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/AppPear/ChartView";
 			requirement = {
@@ -908,7 +912,7 @@
 				minimumVersion = 1.5.4;
 			};
 		};
-		C9B9EFCC2585BF1B0032C132 /* RemoteSwiftPackageReference */ = {
+		C9B9EFCC2585BF1B0032C132 /* XCRemoteSwiftPackageReference "CodeScanner" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/twostraws/CodeScanner";
 			requirement = {
@@ -919,14 +923,14 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		C9AE17912580C34900769713 /* SwiftPackageProductDependency */ = {
+		C9AE17912580C34900769713 /* SwiftUICharts */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C9AE17902580C34900769713 /* RemoteSwiftPackageReference */;
+			package = C9AE17902580C34900769713 /* XCRemoteSwiftPackageReference "ChartView" */;
 			productName = SwiftUICharts;
 		};
-		C9B9EFCD2585BF1B0032C132 /* SwiftPackageProductDependency */ = {
+		C9B9EFCD2585BF1B0032C132 /* CodeScanner */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C9B9EFCC2585BF1B0032C132 /* RemoteSwiftPackageReference */;
+			package = C9B9EFCC2585BF1B0032C132 /* XCRemoteSwiftPackageReference "CodeScanner" */;
 			productName = CodeScanner;
 		};
 /* End XCSwiftPackageProductDependency section */

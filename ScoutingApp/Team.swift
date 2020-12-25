@@ -323,6 +323,7 @@ class Event: ObservableObject, Codable, Identifiable{
     var teamStore: [Team] = []
     let name: String
     var type: EventType
+    var functions: [() -> Void] = [{print("hello")}]
     init(_ name: String, type: EventType) {
         self.name = name
         teams = []
@@ -363,6 +364,9 @@ class Event: ObservableObject, Codable, Identifiable{
             guard let ids = id
             else { return }
             let docRef = db.document("\(ids.0)")
+        }
+        for f in functions {
+            f()
         }
     }
     func switchType(to type: EventType){
@@ -456,6 +460,7 @@ struct User: Codable{
 }
 class DataModel: ObservableObject {
     var user: User? = .none
+    
     @Published var localEvents: [Event]
     @Published var virtualEvents: [Event]
     @Published var liveEvents: [Event]
