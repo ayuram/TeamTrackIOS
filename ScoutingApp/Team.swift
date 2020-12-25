@@ -47,6 +47,13 @@ class Score: ObservableObject, Codable{
     @Published var auto = AutoScore()
     @Published var tele = TeleScore()
     @Published var endgame = EndgameScore()
+    func copy() -> Score {
+        let s = Score(id)
+        s.auto = auto
+        s.tele = tele
+        s.endgame = endgame
+        return s
+    }
     enum CodingKeys: CodingKey {
         case id
         case auto
@@ -56,7 +63,6 @@ class Score: ObservableObject, Codable{
     required init(from decoder: Decoder) throws{
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(UUID.self, forKey: .id)
-        //print("scores \(id)")
         auto = try container.decode(AutoScore.self, forKey: .auto)
         tele = try container.decode(TeleScore.self, forKey: .tele)
         endgame = try container.decode(EndgameScore.self, forKey: .endgame)
@@ -78,7 +84,6 @@ class Score: ObservableObject, Codable{
         id = UUID()
     }
     func val() -> Int {
-        //print(id)
         return auto.total() + tele.total() + endgame.total()
     }
     static func < (_ lhs: Score, _ rhs: Score) -> Bool{

@@ -17,11 +17,16 @@ struct ContentView: View {
     init(){
         UITableView.appearance().backgroundColor = UIColor(Color("background"))
     }
+    func tabSelect() -> some View{
+        switch selectedTab{
+        case .events: return EventsList().environmentObject(dataModel).format()
+        case .profile: return Profile().environmentObject(dataModel).format()
+        }
+    }
     var body: some View {
         NavigationView{
             ZStack{
-                EventsList()
-                    .environmentObject(dataModel)
+                tabSelect()
                 VStack{
                     Spacer()
                     ZStack{
