@@ -369,9 +369,24 @@ class Event: ObservableObject, Codable, Identifiable{
                 bool = true
             }
         }
+        
         if(!bool){
+            for match in matches {
+                if match.red.0.number == team.number {
+                    team.scores.addScore(match.red.0.scores.find(match.id))
+                    match.red.0 = team
+                } else if match.red.1.number == team.number {
+                    team.scores.addScore(match.red.1.scores.find(match.id))
+                    match.red.1 = team
+                } else if match.blue.0.number == team.number {
+                    team.scores.addScore(match.blue.0.scores.find(match.id))
+                    match.blue.0 = team
+                } else if match.blue.1.number == team.number {
+                    team.scores.addScore(match.blue.1.scores.find(match.id))
+                    match.blue.1 = team
+                }
+            }
             teams.append(team)
-            //saveTeams()
         }
         sortTeams()
     }
@@ -503,14 +518,11 @@ class DataModel: ObservableObject{
                         match.red.1 = Team("", "")
                         match.blue.0 = Team("", "")
                         match.blue.1 = Team("", "")
-                        print("WOWOWOWOW")
                     }
                 }
             }
             
         }
-        
-        
         setTypes()
     }
     func setTypes() {
