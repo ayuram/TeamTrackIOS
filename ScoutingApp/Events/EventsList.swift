@@ -63,15 +63,17 @@ struct EventsList: View {
                 ActionSheet(title: Text("Add New Event"), message: Text("Select Event Type"), buttons: [
                     .default(Text("Local Scrimmage")) {eventType = .local; titleString = "New Local Event"; bool = true},
                     .default(Text("Virtual Tournament")) {eventType = .virtual; titleString = "New Virtual Event"; bool = true},
-                    .default(Text("Live Tournament")) { eventType = .live; titleString = "New Live Event"; liveBool = true},
+                    .default(Text("Live Tournament")) { eventType = .live; titleString = "New Live Event"; bool = true},
                     .cancel()
                 ])
             })
             .sheet(isPresented: $bool, content: {
-                sheet()
-            })
-            .sheet(isPresented: $liveBool, content: {
-                liveFinder()
+                if eventType == .live{
+                    liveFinder()
+                }
+                else{
+                    sheet()
+                }
             })
         
     }
