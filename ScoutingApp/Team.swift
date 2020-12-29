@@ -395,6 +395,21 @@ class Event: ObservableObject, Codable, Identifiable{
             }
         }
         if(!bool){
+            for match in matches {
+                if match.red.0.number == team.number {
+                    team.scores.addScore(match.red.0.scores.find(match.id))
+                    match.red.0 = team
+                } else if match.red.1.number == team.number {
+                    team.scores.addScore(match.red.1.scores.find(match.id))
+                    match.red.1 = team
+                } else if match.blue.0.number == team.number {
+                    team.scores.addScore(match.blue.0.scores.find(match.id))
+                    match.blue.0 = team
+                } else if match.blue.1.number == team.number {
+                    team.scores.addScore(match.blue.1.scores.find(match.id))
+                    match.blue.1 = team
+                }
+            }
             teams.append(team)
         }
         sortTeams()
