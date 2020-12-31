@@ -28,7 +28,6 @@ struct TeamView: View {
     @ObservedObject var team: Team
     @ObservedObject var event: Event
     @State private var animateChart = false
-    @State var sheet = false
     let maxWidth = UIScreen.main.bounds.width
     let cardWidth = UIScreen.main.bounds.width - 50
     let defaultAnimation = Animation.interactiveSpring(response: 0.3, dampingFraction: 0.6, blendDuration: 1)
@@ -38,6 +37,7 @@ struct TeamView: View {
     @State var autoBool = false
     @State var teleBool = false
     @State var endBool = false
+    @State var dice: Dice? = .none
     var body: some View {
         ScrollView {
             VStack {
@@ -55,79 +55,95 @@ struct TeamView: View {
                             .buttonStyle(PlainButtonStyle())
                     }
                 }
-                Text("General")
-                    .bold()
-                    .padding()
-                    .animation(defaultAnimation)
-                Button(action: {
-                    genBool.toggle()
-                    UIImpactFeedbackGenerator(style: .light).impactOccurred()
-                }, label: {
-                    CardView(){
-                        VStack{
-                            HStack{
-                                BarGraph(name: "Average", val: team.avgScore(), max: event.maxScore())
-                                    .frame(height: 100)
-                                    .animation(defaultAnimation)
-                                Spacer()
-                                BarGraph(name: "Best Score", val: team.bestScore(), max: event.maxScore())
-                                    .frame(height: 100)
-                                    .animation(defaultAnimation)
-                                Spacer()
-                                BarGraph(name: "Consistency", val: event.lowestMAD(), max: team.MAD(), flip: true)
-                                    .animation(defaultAnimation)
+                Group{
+                    Text("General")
+                        .bold()
+                        .padding()
+                        .animation(defaultAnimation)
+                    Button(action: {
+                        genBool.toggle()
+                        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                    }, label: {
+                        CardView(){
+                            VStack{
+                                HStack{
+                                    BarGraph(name: "Average", val: team.avgScore(), max: event.maxScore())
+                                        .frame(height: 100)
+                                        .animation(defaultAnimation)
+                                    Spacer()
+                                    BarGraph(name: "Best Score", val: team.bestScore(), max: event.maxScore())
+                                        .frame(height: 100)
+                                        .animation(defaultAnimation)
+                                    Spacer()
+                                    BarGraph(name: "Consistency", val: event.lowestMAD(), max: team.MAD(), flip: true)
+                                        .animation(defaultAnimation)
+                                }
+                                .padding()
+                                if genBool {
+                                    LineChart(data: team.scores.map{CGFloat($0.val())})
+                                        .padding()
+                                        .transition(.asymmetric(insertion: .scale, removal: .opacity))
+                                }
                             }
-                            .padding()
-                            if genBool {
-                                LineChart(data: team.scores.map{CGFloat($0.val())})
-                                    .padding()
-                                    .transition(.asymmetric(insertion: .scale, removal: .opacity))
-                            }
+                            .frame(height: genBool ? newHeight : 250)
+                            .format()
                         }
-                        .frame(height: genBool ? newHeight : 250)
-                        .format()
-                    }
-                    .frame(width: genBool ? maxWidth : cardWidth, height: genBool ? newHeight : 250)
-                })
-                .buttonStyle(MyButtonStyle())
-                .animation(defaultAnimation)
-                Text("Autonomous")
-                    .bold()
-                    .padding()
+                        .frame(width: genBool ? maxWidth : cardWidth, height: genBool ? newHeight : 250)
+                    })
+                    .buttonStyle(MyButtonStyle())
                     .animation(defaultAnimation)
-                Button(action: {
-                    autoBool.toggle()
-                    UIImpactFeedbackGenerator(style: .light).impactOccurred()
-                }, label: {
-                    CardView(){
-                        VStack{
-                            HStack{
-                                BarGraph(name: "Average", val: team.avgAutoScore(), max: event.maxAutoScore())
-                                    .frame(height: 100)
-                                    .animation(defaultAnimation)
-                                Spacer()
-                                BarGraph(name: "Best Score", val: team.bestAutoScore(), max: event.maxAutoScore())
-                                    .frame(height: 100)
-                                    .animation(defaultAnimation)
-                                Spacer()
-                                BarGraph(name: "Consistency", val: event.lowestAutoMAD(), max: team.autoMAD(), flip: true)
-                                    .animation(defaultAnimation)
+                }
+                Group{
+                    Text("Autonomous")
+                        .bold()
+                        .padding()
+                        .animation(defaultAnimation)
+                    Text("Stack Height")
+                        .font(.caption)
+                        .animation(defaultAnimation)
+                    Picker(selection: $dice, label: Text("")){
+                        Text("0").tag(Dice?.some(.one))
+                        Text("1").tag(Dice?.some(.two))
+                        Text("4").tag(Dice?.some(.three))
+                        Text("All Cases").tag(Dice?.none)
+                    }.pickerStyle(SegmentedPickerStyle())
+                    .padding(.horizontal)
+                    .animation(defaultAnimation)
+                
+                    Button(action: {
+                        autoBool.toggle()
+                        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                    }, label: {
+                        CardView(){
+                            VStack{
+                                HStack{
+                                    BarGraph(name: "Average", val: team.avgAutoScore(), max: event.maxAutoScore())
+                                        .frame(height: 100)
+                                        .animation(defaultAnimation)
+                                    Spacer()
+                                    BarGraph(name: "Best Score", val: team.bestAutoScore(), max: event.maxAutoScore())
+                                        .frame(height: 100)
+                                        .animation(defaultAnimation)
+                                    Spacer()
+                                    BarGraph(name: "Consistency", val: event.lowestAutoMAD(), max: team.autoMAD(), flip: true)
+                                        .animation(defaultAnimation)
+                                }
+                                .padding()
+                                if autoBool {
+                                    LineChart(data: team.scores.map{CGFloat($0.auto.total())})
+                                        .padding()
+                                        .transition(.asymmetric(insertion: .scale, removal: .opacity))
+                                }
                             }
-                            .padding()
-                            if autoBool {
-                                LineChart(data: team.scores.map{CGFloat($0.auto.total())})
-                                    .padding()
-                                    .transition(.asymmetric(insertion: .scale, removal: .opacity))
-                            }
+                            .frame(height: autoBool ? newHeight : 250)
+                            .format()
                         }
-                        .frame(height: autoBool ? newHeight : 250)
-                        .format()
-                    }
-                    .frame(width: autoBool ? maxWidth : cardWidth, height: autoBool ? newHeight : 250)
-                })
-                .buttonStyle(MyButtonStyle())
-                .animation(defaultAnimation)
-                //Divider()
+                        .frame(width: autoBool ? maxWidth : cardWidth, height: autoBool ? newHeight : 250)
+                    })
+                    .buttonStyle(MyButtonStyle())
+                    .animation(defaultAnimation)
+                
+                }
                 Text("Tele-Op")
                     .bold()
                     .padding()
@@ -202,7 +218,7 @@ struct TeamView: View {
                 .animation(defaultAnimation)
                 .buttonStyle(MyButtonStyle())
             }
-            .frame(width: maxWidth)
+            //.frame(width: maxWidth)
         }.navigationBarTitle(team.name)
         .navigationBarItems(trailing: Button(action: {
             if isFullScreen(){

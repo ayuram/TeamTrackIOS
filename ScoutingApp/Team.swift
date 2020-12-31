@@ -12,6 +12,21 @@ extension Int{
         Double(self)
     }
 }
+enum Dice: Int, Codable{
+    case one
+    case two
+    case three
+    func maxScore() -> Int{
+        switch self {
+        case .one:
+            return 104
+        case .two:
+            return 116
+        case .three:
+            return 152
+        }
+    }
+}
 struct AutoScore: Codable, Equatable {
     var wobbleGoals: Int = 0
     var lowGoals: Int = 0
@@ -42,19 +57,21 @@ struct EndgameScore: Codable, Equatable {
 }
 class Score: ObservableObject, Codable{
     var id: UUID
+    var scoringCase: Dice = .one
     @Published var auto = AutoScore()
     @Published var tele = TeleScore()
     @Published var endgame = EndgameScore()
     enum CodingKeys: CodingKey {
         case id
+        case scoringCase
         case auto
         case tele
         case endgame
     }
     required init(from decoder: Decoder) throws{
         let container = try decoder.container(keyedBy: CodingKeys.self)
+        scoringCase = try container.decode(Dice.self, forKey: .scoringCase)
         id = try container.decode(UUID.self, forKey: .id)
-        //print("scores \(id)")
         auto = try container.decode(AutoScore.self, forKey: .auto)
         tele = try container.decode(TeleScore.self, forKey: .tele)
         endgame = try container.decode(EndgameScore.self, forKey: .endgame)
@@ -65,6 +82,7 @@ class Score: ObservableObject, Codable{
         try container.encode(auto, forKey: .auto)
         try container.encode(tele, forKey: .tele)
         try container.encode(endgame, forKey: .endgame)
+        try container.encode(scoringCase, forKey: .scoringCase)
     }
     init(_ m: Match){
         id = m.id
@@ -76,7 +94,6 @@ class Score: ObservableObject, Codable{
         id = UUID()
     }
     func val() -> Int {
-        //print(id)
         return auto.total() + tele.total() + endgame.total()
     }
     static func < (_ lhs: Score, _ rhs: Score) -> Bool{
@@ -124,8 +141,8 @@ extension Array where Element == Score {
     }
     mutating func addScore(_ s: Score){
         var bool: Bool = false
-        self.map {
-            if($0.id == s.id){
+        for score in self{
+            if(score.id == s.id){
                 bool = true
             }
         }
@@ -186,6 +203,19 @@ class Team: ObservableObject, Identifiable, Codable, Equatable{
         switch scores.map({$0.val()}).count{
         case 0: return 0
         default: return scores.map{$0.auto.total().double()}.mean()
+        }
+    }
+    func avgAutoScore(dice: Dice) -> Double{
+        let arr = scores.filter{$0.scoringCase == dice}
+        switch arr.count{
+        case 0: return 0
+        default: return arr.map{$0.auto.total().double()}.mean()
+        }
+    }
+    func avgAutoDeviation() -> Double {
+        switch scores.map({$0.val()}).count {
+            case 0: return 0
+            default: return scores.map{$0.scoringCase.maxScore().double() - $0.auto.total().double()}.mean()
         }
     }
     func avgTeleScore() -> Double {
@@ -364,8 +394,8 @@ class Event: ObservableObject, Codable, Identifiable{
     }
     func addTeam(_ team: Team){
         var bool: Bool = false
-        teams.map {
-            if($0.number == team.number){
+        for t in teams{
+            if(t.number == team.number){
                 bool = true
             }
         }
@@ -392,8 +422,8 @@ class Event: ObservableObject, Codable, Identifiable{
     }
     func addMatch(_ match: Match){
         var bool: Bool = false
-        matches.map {
-            if($0.id == match.id){
+        for m in matches{
+            if(m.id == match.id){
                 bool = true
             }
         }
