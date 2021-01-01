@@ -26,6 +26,13 @@ enum Dice: Int, Codable{
             return 152
         }
     }
+    func stackHeight() -> Int {
+        switch self {
+        case .one: return 0
+        case .two: return 1
+        case .three: return 4
+        }
+    }
 }
 struct AutoScore: Codable, Equatable {
     var wobbleGoals: Int = 0
@@ -115,30 +122,6 @@ extension Array where Element == Score {
     func find(_ id: UUID) -> Score{
         self.reduce(Score()){ $1.id == id ? $1 : $0}
     }
-    func avgAutoScore() -> Double {
-        switch self.map({$0.val()}).count{
-        case 0: return 0
-        default: return self.map{$0.auto.total().double()}.mean()
-        }
-    }
-    func avgTeleScore() -> Double {
-        switch self.map({$0.val()}).count{
-        case 0: return 0
-        default: return self.map{$0.tele.total().double()}.mean()
-        }
-    }
-    func avgEndScore() -> Double {
-        switch self.map({$0.val()}).count{
-        case 0: return 0
-        default: return self.map{$0.endgame.total().double()}.mean()
-        }
-    }
-    func avgScore() -> Double{
-        switch self.map({$0.val()}).count{
-        case 0: return 0
-        default: return self.map{Double($0.val())}.mean()
-        }
-    }
     mutating func addScore(_ s: Score){
         var bool: Bool = false
         for score in self{
@@ -199,23 +182,11 @@ class Team: ObservableObject, Identifiable, Codable, Equatable{
         default: return scores.map{Double($0.val())}.mean()
         }
     }
-    func avgAutoScore() -> Double {
-        switch scores.map({$0.val()}).count{
-        case 0: return 0
-        default: return scores.map{$0.auto.total().double()}.mean()
-        }
-    }
-    func avgAutoScore(dice: Dice) -> Double{
-        let arr = scores.filter{$0.scoringCase == dice}
+    func avgAutoScore(dice: Dice?) -> Double{
+        let arr = dice != .none ? scores.filter{$0.scoringCase == dice} : scores
         switch arr.count{
         case 0: return 0
         default: return arr.map{$0.auto.total().double()}.mean()
-        }
-    }
-    func avgAutoDeviation() -> Double {
-        switch scores.map({$0.val()}).count {
-            case 0: return 0
-            default: return scores.map{$0.scoringCase.maxScore().double() - $0.auto.total().double()}.mean()
         }
     }
     func avgTeleScore() -> Double {
@@ -233,8 +204,9 @@ class Team: ObservableObject, Identifiable, Codable, Equatable{
     func bestScore() -> Double {
         scores.compactMap{ Double($0.val()) }.max() ?? 0
     }
-    func bestAutoScore() -> Double {
-        scores.compactMap { $0.auto.total().double() }.max() ?? 0
+    func bestAutoScore(dice: Dice?) -> Double {
+        let arr = dice != .none ? scores.filter{$0.scoringCase == dice} : scores
+        return arr.compactMap { $0.auto.total().double() }.max() ?? 0
     }
     func bestTeleScore() -> Double {
         scores.compactMap { $0.tele.total().double() }.max() ?? 0
@@ -245,8 +217,9 @@ class Team: ObservableObject, Identifiable, Codable, Equatable{
     func MAD() -> Double{
         scores.map {$0.val().double()}.MAD()
     }
-    func autoMAD() -> Double{
-        scores.map {$0.auto.total().double()}.MAD()
+    func autoMAD(dice: Dice?) -> Double{
+        let arr = dice != .none ? scores.filter{$0.scoringCase == dice} : scores
+        return arr.map {$0.auto.total().double()}.MAD()
     }
     func teleMAD() -> Double{
         scores.map {$0.tele.total().double()}.MAD()
@@ -270,6 +243,7 @@ class Match: Identifiable, ObservableObject, Codable{
     var id: UUID = UUID()
     @Published var red: Side = (Team("", ""), Team("", ""))
     @Published var blue: Side = (Team("", ""), Team("", ""))
+    @Published var scoringCase: Dice = .one
     var type: EventType = .local
     init(red: Side, blue: Side){
         id = UUID()
@@ -306,7 +280,7 @@ class Match: Identifiable, ObservableObject, Codable{
     required init(from decoder: Decoder) throws{
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(UUID.self, forKey: .id)
-        //print("matches \(id)")
+        scoringCase = try container.decode(Dice.self, forKey: .scoringCase)
         red.0 = try container.decode(Team.self, forKey: .red0)
         red.1 = try container.decode(Team.self, forKey: .red1)
         blue.0 = try container.decode(Team.self, forKey: .blue0)
@@ -315,6 +289,7 @@ class Match: Identifiable, ObservableObject, Codable{
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
+        try container.encode(scoringCase, forKey: .scoringCase)
         try container.encode(red.0, forKey: .red0)
         try container.encode(blue.0, forKey: .blue0)
         try container.encode(blue.1, forKey: .blue1)
@@ -322,6 +297,7 @@ class Match: Identifiable, ObservableObject, Codable{
     }
     enum CodingKeys: CodingKey{
         case id
+        case scoringCase
         case red0, red1
         case blue0, blue1
     }
@@ -333,6 +309,12 @@ class Match: Identifiable, ObservableObject, Codable{
         
         return "\((r1.val() ) + (r2.val() )) - \((b1.val() ) + (b2.val() ))"
         
+    }
+    func changeCase(){
+        red.0.scores.find(id).scoringCase = scoringCase
+        red.1.scores.find(id).scoringCase = scoringCase
+        blue.0.scores.find(id).scoringCase = scoringCase
+        blue.1.scores.find(id).scoringCase = scoringCase
     }
     func total() -> Int{
         let r1 = red.0.scores.reduce(Score()){ $1.id == self.id ? $1 : $0 }.val()
@@ -444,9 +426,9 @@ class Event: ObservableObject, Codable, Identifiable{
             .map { $0.bestScore() }
             .max() ?? 0
     }
-    func maxAutoScore() -> Double {
+    func maxAutoScore(dice: Dice?) -> Double {
         teams
-            .map { $0.bestAutoScore() }
+            .map { $0.bestAutoScore(dice: dice) }
             .max() ?? 0
     }
     func maxTeleScore() -> Double {
@@ -469,9 +451,9 @@ class Event: ObservableObject, Codable, Identifiable{
             .map { $0.teleMAD() }
             .min() ?? 1
     }
-    func lowestAutoMAD() -> Double {
+    func lowestAutoMAD(dice: Dice?) -> Double {
         teams
-            .map { $0.autoMAD() }
+            .map { $0.autoMAD(dice: dice) }
             .min() ?? 1
     }
     func lowestEndMAD() -> Double {

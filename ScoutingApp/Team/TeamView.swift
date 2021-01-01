@@ -50,7 +50,7 @@ struct TeamView: View {
                             .frame(width: UIScreen.main.bounds.width - 40, height: 40)
                             .background(Color.green)
                             .clipShape(RoundedRectangle(cornerRadius: 8))
-                            .shadow(radius: 10)
+                            .shadow(color: Color("text"),radius: 10)
                             .shadow(radius: 10)
                             .buttonStyle(PlainButtonStyle())
                     }
@@ -107,7 +107,8 @@ struct TeamView: View {
                         Text("4").tag(Dice?.some(.three))
                         Text("All Cases").tag(Dice?.none)
                     }.pickerStyle(SegmentedPickerStyle())
-                    .padding(.horizontal)
+                    .padding(.horizontal, 25)
+                    .padding(.bottom, 5)
                     .animation(defaultAnimation)
                 
                     Button(action: {
@@ -117,20 +118,20 @@ struct TeamView: View {
                         CardView(){
                             VStack{
                                 HStack{
-                                    BarGraph(name: "Average", val: team.avgAutoScore(), max: event.maxAutoScore())
+                                    BarGraph(name: "Average", val: team.avgAutoScore(dice: dice), max: event.maxAutoScore(dice: dice))
                                         .frame(height: 100)
                                         .animation(defaultAnimation)
                                     Spacer()
-                                    BarGraph(name: "Best Score", val: team.bestAutoScore(), max: event.maxAutoScore())
+                                    BarGraph(name: "Best Score", val: team.bestAutoScore(dice: dice), max: event.maxAutoScore(dice: dice))
                                         .frame(height: 100)
                                         .animation(defaultAnimation)
                                     Spacer()
-                                    BarGraph(name: "Consistency", val: event.lowestAutoMAD(), max: team.autoMAD(), flip: true)
+                                    BarGraph(name: "Consistency", val: event.lowestAutoMAD(dice: dice), max: team.autoMAD(dice: dice), flip: true)
                                         .animation(defaultAnimation)
                                 }
                                 .padding()
                                 if autoBool {
-                                    LineChart(data: team.scores.map{CGFloat($0.auto.total())})
+                                    LineChart(data: dice == .none ?  team.scores.map{CGFloat($0.auto.total())} : team.scores.filter{$0.scoringCase == dice}.map{CGFloat($0.auto.total())})
                                         .padding()
                                         .transition(.asymmetric(insertion: .scale, removal: .opacity))
                                 }

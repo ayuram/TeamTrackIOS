@@ -21,7 +21,9 @@ struct EventsList: View {
     var body: some View {
        NavigationView{
             ZStack{
-//                AlertControlView(textString: $newEventName, showAlert: $bool, confirmation: $confirmation, title: titleString, message: "Enter Name")
+                AlertControlView(textString: $newEventName, showAlert: $bool, type: eventType, arr: getArray(of: eventType), title: "New Event", message: "Enter a name"){
+                    data.saveEvents()
+                }
                 VStack{
                     List{
                         Section(header: Text("Local Scrimmages")){
@@ -53,6 +55,7 @@ struct EventsList: View {
                             })
                         }
                     }
+                    .listStyle(InsetGroupedListStyle())
                     
                 }
             }
@@ -67,9 +70,13 @@ struct EventsList: View {
                     .cancel()
                 ])
             })
-            .sheet(isPresented: $bool, content: {
-                sheet()
-            })
+        }
+    }
+    func getArray(of type: EventType) -> Binding<[Event]> {
+        switch type{
+        case .local: return $data.localEvents
+        case .virtual: return $data.virtualEvents
+        case .live: return $data.liveEvents
         }
     }
     func sheet() -> some View{
@@ -97,9 +104,11 @@ struct EventsList: View {
 struct AlertControlView: UIViewControllerRepresentable {
     @Binding var textString: String
     @Binding var showAlert: Bool
-    @Binding var confirmation: Bool
+    let type: EventType
+    @Binding var arr: [Event]
     var title: String
     var message: String
+    var function: () -> Void
     func makeUIViewController(context: Context) -> some UIViewController {
         return UIViewController()
     }
@@ -128,7 +137,8 @@ struct AlertControlView: UIViewControllerRepresentable {
                 }
                 alert.dismiss(animated: true){
                     self.showAlert = false
-                    self.confirmation = true
+                    arr.append(Event(textString, type: type))
+                    function()
                     self.textString = ""
                 }
             })

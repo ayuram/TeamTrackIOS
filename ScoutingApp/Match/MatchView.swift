@@ -18,6 +18,7 @@ struct MatchView: View {
     @ObservedObject var scoreBlue1: Score
     let event: Event
     @State var gradient: LinearGradient = LinearGradient(gradient: Gradient(colors: [Color.red, Color("background"), Color("background"), Color("background"), Color("background")]), startPoint: .top, endPoint: .bottom)
+    @State var dice: Dice = .one
     init(_ m: Match, _ e: Event){
         match = m
         event = e
@@ -37,11 +38,9 @@ struct MatchView: View {
             gradient
                 .animation(.default)
                 .ignoresSafeArea(.container, edges: .all)
-            
             VStack{
                 Spacer()
                 if match.type != .virtual {
-                    
                     VStack{
                         HStack{
                             Spacer()
@@ -98,9 +97,8 @@ struct MatchView: View {
                 adjustments()
                     .environmentObject(dataModel)
             }
-            
         }
-        .navigationBarTitle("Match Stats")
+        .navigationBarTitle("Match Stats", displayMode: .inline)
         .onChange(of: match.score(), perform: { _ in
             UIImpactFeedbackGenerator(style: .medium).impactOccurred()
         })
@@ -152,7 +150,15 @@ struct Adjustments: View{
         VStack{
             Text("\(team.name.capitalized) : \((score.val()))")
                 .font(font)
-            if match.type == .virtual{
+            Picker(selection: $match.scoringCase, label: Text("Stack Height : \(match.scoringCase.stackHeight()) rings").font(.caption)){
+                    Text("0").tag(Dice.one)
+                    Text("1").tag(Dice.two)
+                    Text("4").tag(Dice.three)
+            }.pickerStyle(MenuPickerStyle())
+            .onChange(of: match.scoringCase, perform: { value in
+                match.changeCase()
+            })
+           
                 HStack{
                     Text("Autonomous : \((score.auto.total()))")
                         .font(.caption)
@@ -163,7 +169,7 @@ struct Adjustments: View{
                     Text("Endgame : \((score.endgame.total()))")
                         .font(.caption)
                 }.padding()
-            }
+            
             Divider()
             HStack{
                 Picker(selection: $state, label: Text("")){
@@ -253,6 +259,7 @@ struct Tele: View{
 struct Auto: View{
     @ObservedObject var score: Score
     let event: Event
+    @State var dice: Dice = .one
     var body: some View{
         List{
             Stepper("\(score.auto.hiGoals) High Goals", value: $score.auto.hiGoals, in: 0 ... Int.max)
