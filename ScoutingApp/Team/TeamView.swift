@@ -31,13 +31,14 @@ struct TeamView: View {
     let maxWidth = UIScreen.main.bounds.width
     let cardWidth = UIScreen.main.bounds.width - 50
     let defaultAnimation = Animation.interactiveSpring(response: 0.3, dampingFraction: 0.6, blendDuration: 1)
-    let newHeight: CGFloat = 500
-    let chartStyle = ChartStyle(backgroundColor: .clear, accentColor: Color("AccentColor"), gradientColor: GradientColor(start: .green, end: .blue), textColor: Color("text"), legendTextColor: Color.gray, dropShadowColor: .green)
+    let newHeight: CGFloat = 430
+    let chartStyle = ChartStyle(backgroundColor: .clear, accentColor: .purple, gradientColor: GradientColor(start: .green, end: .blue), textColor: Color("text"), legendTextColor: Color.gray, dropShadowColor: .clear)
     @State var genBool = false
     @State var autoBool = false
     @State var teleBool = false
     @State var endBool = false
     @State var dice: Dice? = .none
+    @State var alertBool = false
     var body: some View {
         ScrollView {
             VStack {
@@ -61,7 +62,11 @@ struct TeamView: View {
                         .padding()
                         .animation(defaultAnimation)
                     Button(action: {
-                        genBool.toggle()
+                        if team.scores.count > 1{
+                            genBool.toggle()
+                        } else {
+                            alertBool.toggle()
+                        }
                         UIImpactFeedbackGenerator(style: .light).impactOccurred()
                     }, label: {
                         CardView(){
@@ -80,8 +85,7 @@ struct TeamView: View {
                                 }
                                 .padding()
                                 if genBool {
-                                    LineChart(data: team.scores.map{CGFloat($0.val())})
-                                        .padding()
+                                    LineChartView(data: team.scores.map{Double($0.val())}, title: "Timeline", style: chartStyle,  form: ChartForm.large, rateValue: team.scores.map{Double($0.val())}.percentChange())
                                         .transition(.asymmetric(insertion: .scale, removal: .opacity))
                                 }
                             }
@@ -112,7 +116,11 @@ struct TeamView: View {
                     .animation(defaultAnimation)
                 
                     Button(action: {
-                        autoBool.toggle()
+                        if team.scores.count > 1{
+                            autoBool.toggle()
+                        } else {
+                            alertBool.toggle()
+                        }
                         UIImpactFeedbackGenerator(style: .light).impactOccurred()
                     }, label: {
                         CardView(){
@@ -131,8 +139,7 @@ struct TeamView: View {
                                 }
                                 .padding()
                                 if autoBool {
-                                    LineChart(data: dice == .none ?  team.scores.map{CGFloat($0.auto.total())} : team.scores.filter{$0.scoringCase == dice}.map{CGFloat($0.auto.total())})
-                                        .padding()
+                                    LineChartView(data: dice == .none ?  team.scores.map{Double($0.auto.total())} : team.scores.filter{$0.scoringCase == dice}.map{Double($0.auto.total())}, title: "Timeline", style: chartStyle, form: ChartForm.large, rateValue: dice == .none ?  team.scores.map{Double($0.auto.total())}.percentChange() : team.scores.filter{$0.scoringCase == dice}.map{Double($0.auto.total())}.percentChange())
                                         .transition(.asymmetric(insertion: .scale, removal: .opacity))
                                 }
                             }
@@ -150,7 +157,11 @@ struct TeamView: View {
                     .padding()
                     .animation(defaultAnimation)
                 Button(action: {
-                    teleBool.toggle()
+                    if team.scores.count > 1{
+                        teleBool.toggle()
+                    } else {
+                        alertBool.toggle()
+                    }
                     UIImpactFeedbackGenerator(style: .light).impactOccurred()
                 }, label: {
                     CardView(){
@@ -169,8 +180,7 @@ struct TeamView: View {
                             }
                             .padding()
                             if teleBool {
-                                LineChart(data: team.scores.map{CGFloat($0.tele.total())})
-                                    .padding()
+                                LineChartView(data: team.scores.map{Double($0.tele.total())}, title: "Timeline", style: chartStyle, form: ChartForm.large, rateValue: team.scores.map{Double($0.tele.total())}.percentChange())
                                     .transition(.asymmetric(insertion: .scale, removal: .opacity))
                             }
                         }
@@ -187,7 +197,11 @@ struct TeamView: View {
                     .padding()
                     .animation(defaultAnimation)
                 Button(action: {
-                    endBool.toggle()
+                    if team.scores.count > 1{
+                        endBool.toggle()
+                    } else {
+                        alertBool.toggle()
+                    }
                     UIImpactFeedbackGenerator(style: .light).impactOccurred()
                 }, label: {
                     CardView(){
@@ -206,8 +220,7 @@ struct TeamView: View {
                             }
                             .padding()
                             if endBool {
-                                LineChart(data: team.scores.map{CGFloat($0.endgame.total())})
-                                    .padding()
+                                LineChartView(data: team.scores.map{Double($0.endgame.total())}, title: "Timeline", style: chartStyle, form: ChartForm.large, rateValue: team.scores.map{Double($0.endgame.total())}.percentChange())
                                     .transition(.asymmetric(insertion: .scale, removal: .opacity))
                             }
                         }
@@ -218,8 +231,9 @@ struct TeamView: View {
                 })
                 .animation(defaultAnimation)
                 .buttonStyle(MyButtonStyle())
+                Spacer()
+                    .frame(height: 300)
             }
-            //.frame(width: maxWidth)
         }.navigationBarTitle(team.name)
         .navigationBarItems(trailing: Button(action: {
             if isFullScreen(){
@@ -242,8 +256,9 @@ struct TeamView: View {
                 Text("Expand All")
             }
         }))
-        
-        
+        .alert(isPresented: $alertBool, content: {
+            Alert(title: Text("Not Enough Data"), message: Text("Enter more scores..."), dismissButton: .default(Text("Okay")))
+        })
     }
     func isFullScreen() -> Bool {
         genBool || autoBool || endBool || teleBool
@@ -263,6 +278,15 @@ extension Array where Element == CGFloat{
             return self.map { ($0 - min)/( max - min ) }
         }
         return []
+    }
+}
+extension Array where Element == Double{
+    func percentChange() -> Int {
+        if self.count < 2 {
+            return 0
+        } else {
+            return Int((self.last ?? 0 - self[self.count - 2])/self[self.count - 2] * 100)
+        }
     }
 }
 struct TeamView_Previews: PreviewProvider {

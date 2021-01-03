@@ -159,4 +159,3 @@ struct MatchList_Previews: PreviewProvider {
             .environmentObject(DataModel())
     }
 }
-

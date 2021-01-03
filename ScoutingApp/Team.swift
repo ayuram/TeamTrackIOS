@@ -301,6 +301,9 @@ class Match: Identifiable, ObservableObject, Codable{
         case red0, red1
         case blue0, blue1
     }
+    func allianceTotal(of side: Side) -> Int{
+        side.0.scores.find(id).val() + side.1.scores.find(id).val()
+    }
     func score() -> String{
         let r1 = red.0.scores.reduce(Score()){ $1.id == self.id ? $1 : $0 }
         let r2 = red.1.scores.reduce(Score()){ $1.id == self.id ? $1 : $0 }
@@ -411,6 +414,18 @@ class Event: ObservableObject, Codable, Identifiable{
         }
         if(!bool){
             matches.append(match)
+        }
+    }
+    func allianceScores(of team: Team) -> [Int]{
+        let arr = matches.filter { $0.red.0 == team || $0.red.1 == team || $0.blue.0 == team || $0.blue.1 == team }
+        return arr.map { match in
+            var total: Int = 0
+            if match.red.0 == team || match.red.1 == team {
+                total += match.allianceTotal(of: match.red)
+            } else if match.blue.0 == team || match.blue.1 == team {
+                total += match.allianceTotal(of: match.blue)
+            }
+            return total
         }
     }
     func sortTeams() -> Void{
