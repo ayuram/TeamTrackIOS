@@ -135,10 +135,11 @@ struct TeamView: View {
                                         .animation(defaultAnimation)
                                     Spacer()
                                     BarGraph(name: "Consistency", val: event.lowestAutoMAD(dice: dice), max: team.autoMAD(dice: dice), flip: true)
+                                        .frame(height: 100)
                                         .animation(defaultAnimation)
                                 }
                                 .padding()
-                                if autoBool {
+                                if autoBool && (dice == .none ?  team.scores.map{Double($0.auto.total())}.count : team.scores.filter{$0.scoringCase == dice}.count) >= 2{
                                     LineChartView(data: dice == .none ?  team.scores.map{Double($0.auto.total())} : team.scores.filter{$0.scoringCase == dice}.map{Double($0.auto.total())}, title: "Timeline", style: chartStyle, form: ChartForm.large, rateValue: dice == .none ?  team.scores.map{Double($0.auto.total())}.percentChange() : team.scores.filter{$0.scoringCase == dice}.map{Double($0.auto.total())}.percentChange())
                                         .transition(.asymmetric(insertion: .scale, removal: .opacity))
                                 }
@@ -180,6 +181,7 @@ struct TeamView: View {
                             }
                             .padding()
                             if teleBool {
+                                //LineChart(data: team.scores.map{CGFloat($0.tele.total())})
                                 LineChartView(data: team.scores.map{Double($0.tele.total())}, title: "Timeline", style: chartStyle, form: ChartForm.large, rateValue: team.scores.map{Double($0.tele.total())}.percentChange())
                                     .transition(.asymmetric(insertion: .scale, removal: .opacity))
                             }
@@ -284,8 +286,10 @@ extension Array where Element == Double{
     func percentChange() -> Int {
         if self.count < 2 {
             return 0
+        } else if self.mean() != 0{
+            return Int(((self.last ?? 0) - self.mean())/self.mean() * 100)
         } else {
-            return Int((self.last ?? 0 - self[self.count - 2])/self[self.count - 2] * 100)
+            return 100
         }
     }
 }

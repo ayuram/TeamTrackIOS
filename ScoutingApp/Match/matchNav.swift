@@ -21,10 +21,10 @@ struct matchNav: View {
         match = m
         event = e
         self.index = index
-        red0 = m.red.0.scores.find(m.id) 
-        red1 = m.red.1.scores.find(m.id) 
-        blue0 = m.blue.0.scores.find(m.id) 
-        blue1 = m.blue.1.scores.find(m.id) 
+        red0 = m.red.0?.scores.find(m.id) ?? Score()
+        red1 = m.red.1?.scores.find(m.id) ?? Score()
+        blue0 = m.blue.0?.scores.find(m.id) ?? Score()
+        blue1 = m.blue.1?.scores.find(m.id) ?? Score()
     }
     var body: some View {
         switch event.type {
@@ -36,11 +36,11 @@ struct matchNav: View {
         NavigationLink(destination: MatchView(match, event).environmentObject(dataModel)){
             HStack{
                 VStack{
-                    Text("\(match.red.0.name ) & \(match.red.1.name )")
+                    Text("\(match.red.0?.name ?? "?" ) & \(match.red.1?.name ?? "?")")
                         .font(.custom("", size: 14))
                     Text("VS")
                         .foregroundColor(Color.red)
-                    Text("\(match.blue.0.name ) & \(match.blue.1.name )")
+                    Text("\(match.blue.0?.name ?? "?" ) & \(match.blue.1?.name ?? "?")")
                         .font(.custom("", size: 14))
                 }
                 Spacer()
@@ -52,7 +52,7 @@ struct matchNav: View {
     func virtualMatchView() -> some View {
        NavigationLink(destination: MatchView(match, event)){
             HStack{
-                Text("\(match.red.0.name) - Match \(index + 1)")
+                Text("\(match.red.0?.name ?? "?") - Match \(index + 1)")
                 Spacer()
                 //Text(match.score())
                 Text("\(red0.val())")

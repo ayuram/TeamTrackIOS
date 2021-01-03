@@ -22,10 +22,10 @@ struct MatchView: View {
     init(_ m: Match, _ e: Event){
         match = m
         event = e
-        scoreRed0 = (m.red.0.scores.find(m.id)) 
-        scoreRed1 = (m.red.1.scores.find(m.id)) 
-        scoreBlue0 = (m.blue.0.scores.find(m.id)) 
-        scoreBlue1 = (m.blue.1.scores.find(m.id)) 
+        scoreRed0 = (m.red.0?.scores.find(m.id)) ?? Score()
+        scoreRed1 = (m.red.1?.scores.find(m.id)) ?? Score()
+        scoreBlue0 = (m.blue.0?.scores.find(m.id)) ?? Score()
+        scoreBlue1 = (m.blue.1?.scores.find(m.id)) ?? Score()
     }
     enum currentView{
         case r0
@@ -58,7 +58,7 @@ struct MatchView: View {
                             Spacer()
                         }
                         HStack(spacing: 20){
-                            Button("\(match.red.0.name.capitalized )"){
+                            Button("\(match.red.0?.name.capitalized ?? "?" )"){
                                 self.curr = .r0
                                 changeColor(color: .red)
                             }.disabled(self.curr == .r0)
@@ -66,7 +66,7 @@ struct MatchView: View {
                             
                             .multilineTextAlignment(/*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                             
-                            Button("\(match.red.1.name.capitalized )"){
+                            Button("\(match.red.1?.name.capitalized ?? "?" )"){
                                 self.curr = .r1
                                 changeColor(color: .red)
                             }.disabled(self.curr == .r1)
@@ -75,7 +75,7 @@ struct MatchView: View {
                             .multilineTextAlignment(/*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                             
                             Spacer()
-                            Button("\(match.blue.0.name.capitalized )"){
+                            Button("\(match.blue.0?.name.capitalized ?? "?" )"){
                                 changeColor(color: .blue)
                                 self.curr = .b0
                             }.disabled(self.curr == .b0)
@@ -83,7 +83,7 @@ struct MatchView: View {
                             
                             .multilineTextAlignment(.center)
                             
-                            Button("\(match.blue.1.name.capitalized )"){
+                            Button("\(match.blue.1?.name.capitalized ?? "?" )"){
                                 changeColor(color: .blue)
                                 self.curr = .b1
                             }.disabled(self.curr == .b1)
@@ -98,7 +98,7 @@ struct MatchView: View {
                     .environmentObject(dataModel)
             }
         }
-        .navigationBarTitle("Match Stats", displayMode: .inline)
+        .navigationBarTitle("Match Stats")
         .onChange(of: match.score(), perform: { _ in
             UIImpactFeedbackGenerator(style: .medium).impactOccurred()
         })
@@ -117,10 +117,10 @@ struct MatchView: View {
     }
     func adjustments() -> some View{
         switch curr{
-        case .r0: return Adjustments(match.red.0, match, match.red.0.scores.find(match.id), event)
-        case .r1: return Adjustments(match.red.1, match, match.red.1.scores.find(match.id), event)
-        case .b0: return Adjustments(match.blue.0, match, match.blue.0.scores.find(match.id), event)
-        case .b1: return Adjustments(match.blue.1, match, match.blue.1.scores.find(match.id), event)
+        case .r0: return Adjustments(match.red.0 ?? Team("???", "???"), match, match.red.0?.scores.find(match.id) ?? Score(), event)
+        case .r1: return Adjustments(match.red.1 ?? Team("???", "???"), match, match.red.1?.scores.find(match.id) ?? Score(), event)
+        case .b0: return Adjustments(match.blue.0 ?? Team("???", "???"), match, match.blue.0?.scores.find(match.id) ?? Score(), event)
+        case .b1: return Adjustments(match.blue.1 ?? Team("???", "???"), match, match.blue.1?.scores.find(match.id) ?? Score(), event)
         }
     }
 }
@@ -150,7 +150,7 @@ struct Adjustments: View{
         VStack{
             Text("\(team.name.capitalized) : \((score.val()))")
                 .font(font)
-            Picker(selection: $match.scoringCase, label: Text("Stack Height : \(match.scoringCase.stackHeight()) rings").font(.caption)){
+            Picker(selection: $match.scoringCase, label: Text("Stack Height : \(match.scoringCase.stackHeight()) rings").font(.body)){
                     Text("0").tag(Dice.one)
                     Text("1").tag(Dice.two)
                     Text("4").tag(Dice.three)
@@ -277,7 +277,7 @@ struct Auto: View{
 }
 struct MatchView_Previews: PreviewProvider {
     static var previews: some View {
-        MatchView(Match(red: (Team("2", "ELementary Schooling People"), Team("3", "LOTS OF PEOPLE IN A ROOM")),blue: (Team("0", "charlies"), Team("1", "deltas"))), Event())
+        MatchView(Match(red: (Team("2", "ELementary Schooling People"), Team("3", "LOTS OF PEOPLE IN A ROOM")),blue: (.none, .none)), Event())
             .environmentObject(DataModel())
     }
 }

@@ -91,10 +91,10 @@ struct MatchList: View {
             .map{event.matches[$0]}
         matches
             .map{ match in
-                match.red.0.scores.removeAll {$0.id == match.id}
-                match.red.1.scores.removeAll {$0.id == match.id}
-                match.blue.0.scores.removeAll {$0.id == match.id}
-                match.blue.1.scores.removeAll {$0.id == match.id}
+                match.red.0?.scores.removeAll {$0.id == match.id}
+                match.red.1?.scores.removeAll {$0.id == match.id}
+                match.blue.0?.scores.removeAll {$0.id == match.id}
+                match.blue.1?.scores.removeAll {$0.id == match.id}
             }
         event.matches.remove(atOffsets: offsets)
         dataModel.saveEvents()
