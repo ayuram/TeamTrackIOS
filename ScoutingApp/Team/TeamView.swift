@@ -287,7 +287,8 @@ extension Array where Element == Double{
         if self.count < 2 {
             return 0
         } else if self.mean() != 0{
-            return Int(((self.last ?? 0) - self.mean())/self.mean() * 100)
+            let oldMean = Array(self[0 ... self.endIndex - 1]).mean()
+            return Int((self.mean() - oldMean)/self.mean() * 100)
         } else {
             return 100
         }
