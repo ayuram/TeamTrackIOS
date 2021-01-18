@@ -287,10 +287,11 @@ extension Array where Element == Double{
         if self.count < 2 {
             return 0
         } else if self.mean() != 0{
-            let oldMean = Array(self[0 ... self.endIndex - 1]).mean()
+            let oldMean = Array(self[0 ... self.endIndex - 2]).mean()
+            print(oldMean)
             return Int((self.mean() - oldMean)/self.mean() * 100)
         } else {
-            return 100
+            return 0
         }
     }
 }

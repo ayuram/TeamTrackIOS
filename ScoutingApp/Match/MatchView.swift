@@ -157,6 +157,7 @@ struct Adjustments: View{
             }.pickerStyle(MenuPickerStyle())
             .onChange(of: match.scoringCase, perform: { value in
                 match.changeCase()
+                dataModel.saveEvents()
             })
            
                 HStack{
