@@ -10,6 +10,7 @@ import SwiftUI
 struct EventsList: View {
     @EnvironmentObject var data: DataModel
     @State var bool = false
+    //@State var alert = true
     @State var acSh = false
     @State var confirmation = false
     @State var newEventName = ""
@@ -60,7 +61,11 @@ struct EventsList: View {
                 }
             }
             .navigationBarTitle("Events")
-            .navigationBarItems(leading: EditButton(), trailing: Button("Add"){
+            .navigationBarItems(leading: Button("👀"){
+                if let url = URL(string: "https://www.youtube.com/playlist?list=PLDxjFQFO9emFugiSoMBMbJpAlyqztXKce"){
+                    UIApplication.shared.open(url)
+                }
+            }, trailing: Button("Add"){
                 acSh = true
             })
             .actionSheet(isPresented: $acSh, content: {
@@ -70,6 +75,9 @@ struct EventsList: View {
                     .cancel()
                 ])
             })
+//            .alert(isPresented: $alert, content: {
+//                Alert(title: Text("Attention"), message: Text("Due to unexpected circumstances, we've had to make some changes. This app will continue to remain functional as we work on a new one"), dismissButton: .default(Text("Okay")))
+//            })
         }
     }
     func getArray(of type: EventType) -> Binding<[Event]> {

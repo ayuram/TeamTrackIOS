@@ -278,7 +278,7 @@ struct Auto: View{
 }
 struct MatchView_Previews: PreviewProvider {
     static var previews: some View {
-        MatchView(Match(red: (Team("2", "ELementary Schooling People"), Team("3", "LOTS OF PEOPLE IN A ROOM")),blue: (.none, .none)), Event())
+        MatchView(Match(red: (Team("2", "Alpha"), Team("3", "Beta")),blue: (.none, .none)), Event())
             .environmentObject(DataModel())
     }
 }
