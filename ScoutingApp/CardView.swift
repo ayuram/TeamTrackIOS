@@ -11,6 +11,11 @@ extension View{
     func format() -> AnyView{
         AnyView(self)
     }
+    func cardView(_ color: Color = Color("background")) -> CardView{
+        CardView(color: color){
+           AnyView(self)
+        }
+    }
 }
 struct CardView: View {
     var color: Color = Color("background")

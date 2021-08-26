@@ -9,36 +9,53 @@
 import SwiftUI
 
 struct matchNav: View {
+    @EnvironmentObject var dataModel: DataModel
     @ObservedObject var match: Match
     @ObservedObject var red0: Score
     @ObservedObject var red1: Score
     @ObservedObject var blue0: Score
     @ObservedObject var blue1: Score
     let event: Event
-    init(_ m: Match, _ e: Event){
+    let index: Int
+    init(_ m: Match, _ e: Event, index: Int = 0){
         match = m
         event = e
-        red0 = m.red.0.scores.find(m.id)
-        red1 = m.red.1.scores.find(m.id)
-        blue0 = m.blue.0.scores.find(m.id)
-        blue1 = m.blue.1.scores.find(m.id)
+        self.index = index
+        red0 = m.red.0?.scores.find(m.id) ?? Score()
+        red1 = m.red.1?.scores.find(m.id) ?? Score()
+        blue0 = m.blue.0?.scores.find(m.id) ?? Score()
+        blue1 = m.blue.1?.scores.find(m.id) ?? Score()
     }
     var body: some View {
-        NavigationLink(destination: MatchView(match, event)){
+        switch event.type {
+        case .virtual: return virtualMatchView().format()
+        default: return localMatchView().format()
+        }
+    }
+    func localMatchView() -> some View{
+        NavigationLink(destination: MatchView(match, event).environmentObject(dataModel)){
             HStack{
                 VStack{
-                    Text("\(match.red.0.name) & \(match.red.1.name)")
+                    Text("\(match.red.0?.name ?? "?" ) & \(match.red.1?.name ?? "?")")
                         .font(.custom("", size: 14))
-                    
                     Text("VS")
                         .foregroundColor(Color.red)
-                    
-                    Text("\(match.blue.0.name) & \(match.blue.1.name)")
+                    Text("\(match.blue.0?.name ?? "?" ) & \(match.blue.1?.name ?? "?")")
                         .font(.custom("", size: 14))
                 }
                 Spacer()
-                //Text(match.score())
                 Text("\(red0.val() + red1.val()) - \(blue0.val() + blue1.val())")
+                    .padding(.trailing, 5)
+            }
+        }
+    }
+    func virtualMatchView() -> some View {
+       NavigationLink(destination: MatchView(match, event)){
+            HStack{
+                Text("\(match.red.0?.name ?? "?") - Match \(index + 1)")
+                Spacer()
+                //Text(match.score())
+                Text("\(red0.val())")
                     .padding(.trailing, 5)
             }
         }

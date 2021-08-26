@@ -7,16 +7,6 @@
 
 import SwiftUI
 
-//
-//  LineGraph.swift
-//  ProCrast
-//
-//  Created by Ayush Raman on 8/9/20.
-//  Copyright © 2020 Answer Key. All rights reserved.
-//
-
-import SwiftUI
-
 struct LineGraph: Shape {
     
     var dataPoints: [CGFloat] = []
@@ -63,7 +53,9 @@ struct LineChart: View{
                             self.animateChart = true
                         }
                     })
-                        .shadow(color: color, radius: 15, x: 10, y: 20)
+                        .shadow(color: color, radius: 15)
+                    .shadow(color: color, radius: 15)
+                    //.shadow(color: color, radius: 15)
                     .animation(.easeInOut(duration: 1.5))
                     .border(Color("text"))
             }

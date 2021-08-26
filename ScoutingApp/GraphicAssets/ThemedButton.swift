@@ -14,30 +14,25 @@ struct ThemedButton: View {
     var textColor: Color = Color.white
     var action: () -> Void
     var body: some View {
-        HStack {
-            Spacer()
             Button(action: action) {
                 Text(text).font(.system(size: 12))
-                    //.font(.system(.headline, design: .rounded))
-                
-                    .font(.system(.headline))
-                    .fontWeight(.bold)
+                    //.font(.subheadline)
+                    .fontWeight(.medium)
                     .foregroundColor(textColor)
                     .fixedSize(horizontal: false, vertical: true)
                     .frame(width: 90.0, height: 50.0)
             }
-            .background(buttonColor)
-        .clipShape(RoundedRectangle(cornerRadius: 10))
+            //.background(buttonColor)
+            .background(buttonColor.opacity(0.8))
+            .opacity(1)
+        .clipShape(RoundedRectangle(cornerRadius: 6))
                 //.overlay(Capsule().stroke(Color.black, lineWidth: 1.0))
-                .shadow(radius: 2.0)
-                
-            Spacer()
-        }
+            .shadow(radius: 8.0)
     }
 }
 
 struct ThemedButton_Previews: PreviewProvider {
     static var previews: some View {
-        ThemedButton(text: "Button"){}
+        ThemedButton(text: "Click Me"){}
     }
 }

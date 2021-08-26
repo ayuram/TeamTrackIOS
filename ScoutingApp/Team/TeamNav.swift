@@ -9,6 +9,7 @@
 import SwiftUI
 
 struct TeamNav: View {
+    @EnvironmentObject var dataModel: DataModel
     var team: Team
     var data: Event
     init(_ t: Team, _ d: Event){
@@ -16,7 +17,7 @@ struct TeamNav: View {
         data = d
     }
     var body: some View {
-        NavigationLink(destination: TeamView(team: team, data: data)){
+        NavigationLink(destination: TeamView(team: team, event: data).environmentObject(dataModel)){
         HStack{
             Text("\(team.number)".replacingOccurrences(of: ",", with: ""))
                 .bold()

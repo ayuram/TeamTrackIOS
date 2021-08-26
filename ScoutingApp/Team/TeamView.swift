@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import SwiftUICharts
 
 extension View{
     func navLink(_ v: AnyView) -> some View{
@@ -19,126 +20,169 @@ extension View{
 struct MyButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .scaleEffect(configuration.isPressed ? 0.95 : 1)
+            .scaleEffect(configuration.isPressed ? 0.96 : 1)
     }
 }
 struct TeamView: View {
+    @EnvironmentObject var dataModel: DataModel
     @ObservedObject var team: Team
-    @ObservedObject var data: Event
+    @ObservedObject var event: Event
     @State private var animateChart = false
-    @State var sheet = false
     let maxWidth = UIScreen.main.bounds.width
     let cardWidth = UIScreen.main.bounds.width - 50
     let defaultAnimation = Animation.interactiveSpring(response: 0.3, dampingFraction: 0.6, blendDuration: 1)
-    let newHeight: CGFloat = 500
+    let newHeight: CGFloat = 430
+    let chartStyle = ChartStyle(backgroundColor: .clear, accentColor: .purple, gradientColor: GradientColor(start: .green, end: .blue), textColor: Color("text"), legendTextColor: Color.gray, dropShadowColor: .clear)
     @State var genBool = false
     @State var autoBool = false
     @State var teleBool = false
     @State var endBool = false
+    @State var dice: Dice? = .none
+    @State var alertBool = false
     var body: some View {
         ScrollView {
             VStack {
                 //LineView(data: [1, 5, 3, 2, 1])
                 lineChart()
-                Text("General")
-                    .bold()
-                    .padding()
-                    .animation(defaultAnimation)
-                Button(action: {
-                    genBool.toggle()
-                    UIImpactFeedbackGenerator(style: .light).impactOccurred()
-                }, label: {
-                    CardView(){
-                        VStack{
-                            HStack{
-                                BarGraph(name: "Average", val: team.avgScore(), max: data.maxScore())
-                                    .frame(height: 100)
-                                    .animation(defaultAnimation)
-                                Spacer()
-                                BarGraph(name: "Best Score", val: team.bestScore(), max: data.maxScore())
-                                    .frame(height: 100)
-                                    .animation(defaultAnimation)
-                                Spacer()
-                                BarGraph(name: "Consistency", val: data.lowestMAD(), max: team.MAD(), flip: true)
-                                    .animation(defaultAnimation)
-                            }
-                            .padding()
-                            if genBool {
-                                LineChart(data: team.scores.map{CGFloat($0.val())})
-                                    .padding()
-                                    .transition(.asymmetric(insertion: .scale, removal: .opacity))
-                            }
-                        }
-                        .frame(height: genBool ? newHeight : 250)
-                        .format()
+                if event.type == .virtual{
+                    NavigationLink(destination: MatchList(team: team, event: event).environmentObject(dataModel)){
+                        Text("Matches")
+                            .foregroundColor(.black)
+                            .frame(width: UIScreen.main.bounds.width - 40, height: 40)
+                            .background(Color.green)
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                            .shadow(color: Color("text"),radius: 10)
+                            .shadow(radius: 10)
+                            .buttonStyle(PlainButtonStyle())
                     }
-                    .frame(width: genBool ? maxWidth : cardWidth, height: genBool ? newHeight : 250)
-                })
-                .buttonStyle(MyButtonStyle())
-                .animation(defaultAnimation)
-                Text("Autonomous")
-                    .bold()
-                    .padding()
-                    .animation(defaultAnimation)
-                Button(action: {
-                    autoBool.toggle()
-                    UIImpactFeedbackGenerator(style: .light).impactOccurred()
-                }, label: {
-                    CardView(){
-                        VStack{
-                            HStack{
-                                BarGraph(name: "Average", val: team.avgAutoScore(), max: data.maxAutoScore())
-                                    .frame(height: 100)
-                                    .animation(defaultAnimation)
-                                Spacer()
-                                BarGraph(name: "Best Score", val: team.bestAutoScore(), max: data.maxAutoScore())
-                                    .frame(height: 100)
-                                    .animation(defaultAnimation)
-                                Spacer()
-                                BarGraph(name: "Consistency", val: data.lowestAutoMAD(), max: team.autoMAD(), flip: true)
-                                    .animation(defaultAnimation)
-                            }
-                            .padding()
-                            if autoBool {
-                                LineChart(data: team.scores.map{CGFloat($0.auto.total())})
-                                    .padding()
-                                    .transition(.asymmetric(insertion: .scale, removal: .opacity))
-                            }
+                }
+                Group{
+                    Text("General")
+                        .bold()
+                        .padding()
+                        .animation(defaultAnimation)
+                    Button(action: {
+                        if team.scores.count > 1{
+                            genBool.toggle()
+                        } else {
+                            alertBool.toggle()
                         }
-                        .frame(height: autoBool ? newHeight : 250)
-                        .format()
-                    }
-                    .frame(width: autoBool ? maxWidth : cardWidth, height: autoBool ? newHeight : 250)
-                })
-                .buttonStyle(MyButtonStyle())
-                .animation(defaultAnimation)
-                //Divider()
+                        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                    }, label: {
+                        CardView(){
+                            VStack{
+                                HStack{
+                                    BarGraph(name: "Average", val: team.avgScore(), max: event.maxScore())
+                                        .frame(height: 100)
+                                        .animation(defaultAnimation)
+                                    Spacer()
+                                    BarGraph(name: "Best Score", val: team.bestScore(), max: event.maxScore())
+                                        .frame(height: 100)
+                                        .animation(defaultAnimation)
+                                    Spacer()
+                                    BarGraph(name: "Consistency", val: event.lowestMAD(), max: team.MAD(), flip: true)
+                                        .animation(defaultAnimation)
+                                }
+                                .padding()
+                                if genBool {
+                                    LineChartView(data: team.scores.map{Double($0.val())}, title: "Timeline", style: chartStyle,  form: ChartForm.large, rateValue: team.scores.map{Double($0.val())}.percentChange())
+                                        .transition(.asymmetric(insertion: .scale, removal: .opacity))
+                                }
+                            }
+                            .frame(height: genBool ? newHeight : 250)
+                            .format()
+                        }
+                        .frame(width: genBool ? maxWidth : cardWidth, height: genBool ? newHeight : 250)
+                    })
+                    .buttonStyle(MyButtonStyle())
+                    .animation(defaultAnimation)
+                }
+                Group{
+                    Text("Autonomous")
+                        .bold()
+                        .padding()
+                        .animation(defaultAnimation)
+                    Text("Stack Height")
+                        .font(.caption)
+                        .animation(defaultAnimation)
+                    Picker(selection: $dice, label: Text("")){
+                        Text("0").tag(Dice?.some(.one))
+                        Text("1").tag(Dice?.some(.two))
+                        Text("4").tag(Dice?.some(.three))
+                        Text("All Cases").tag(Dice?.none)
+                    }.pickerStyle(SegmentedPickerStyle())
+                    .padding(.horizontal, 25)
+                    .padding(.bottom, 5)
+                    .animation(defaultAnimation)
+                
+                    Button(action: {
+                        if team.scores.count > 1{
+                            autoBool.toggle()
+                        } else {
+                            alertBool.toggle()
+                        }
+                        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                    }, label: {
+                        CardView(){
+                            VStack{
+                                HStack{
+                                    BarGraph(name: "Average", val: team.avgAutoScore(dice: dice), max: event.maxAutoScore(dice: dice))
+                                        .frame(height: 100)
+                                        .animation(defaultAnimation)
+                                    Spacer()
+                                    BarGraph(name: "Best Score", val: team.bestAutoScore(dice: dice), max: event.maxAutoScore(dice: dice))
+                                        .frame(height: 100)
+                                        .animation(defaultAnimation)
+                                    Spacer()
+                                    BarGraph(name: "Consistency", val: event.lowestAutoMAD(dice: dice), max: team.autoMAD(dice: dice), flip: true)
+                                        .frame(height: 100)
+                                        .animation(defaultAnimation)
+                                }
+                                .padding()
+                                if autoBool && (dice == .none ?  team.scores.map{Double($0.auto.total())}.count : team.scores.filter{$0.scoringCase == dice}.count) >= 2{
+                                    LineChartView(data: dice == .none ?  team.scores.map{Double($0.auto.total())} : team.scores.filter{$0.scoringCase == dice}.map{Double($0.auto.total())}, title: "Timeline", style: chartStyle, form: ChartForm.large, rateValue: dice == .none ?  team.scores.map{Double($0.auto.total())}.percentChange() : team.scores.filter{$0.scoringCase == dice}.map{Double($0.auto.total())}.percentChange())
+                                        .transition(.asymmetric(insertion: .scale, removal: .opacity))
+                                }
+                            }
+                            .frame(height: autoBool ? newHeight : 250)
+                            .format()
+                        }
+                        .frame(width: autoBool ? maxWidth : cardWidth, height: autoBool ? newHeight : 250)
+                    })
+                    .buttonStyle(MyButtonStyle())
+                    .animation(defaultAnimation)
+                
+                }
                 Text("Tele-Op")
                     .bold()
                     .padding()
                     .animation(defaultAnimation)
                 Button(action: {
-                    teleBool.toggle()
+                    if team.scores.count > 1{
+                        teleBool.toggle()
+                    } else {
+                        alertBool.toggle()
+                    }
                     UIImpactFeedbackGenerator(style: .light).impactOccurred()
                 }, label: {
                     CardView(){
                         VStack{
                             HStack{
-                                BarGraph(name: "Average", val: team.avgTeleScore(), max: data.maxTeleScore())
+                                BarGraph(name: "Average", val: team.avgTeleScore(), max: event.maxTeleScore())
                                     .frame(height: 100)
                                     .animation(defaultAnimation)
                                 Spacer()
-                                BarGraph(name: "Best Score", val: team.bestTeleScore(), max: data.maxTeleScore())
+                                BarGraph(name: "Best Score", val: team.bestTeleScore(), max: event.maxTeleScore())
                                     .frame(height: 100)
                                     .animation(defaultAnimation)
                                 Spacer()
-                                BarGraph(name: "Consistency", val: data.lowestTeleMAD(), max: team.teleMAD(), flip: true)
+                                BarGraph(name: "Consistency", val: event.lowestTeleMAD(), max: team.teleMAD(), flip: true)
                                     .animation(defaultAnimation)
                             }
                             .padding()
                             if teleBool {
-                                LineChart(data: team.scores.map{CGFloat($0.tele.total())})
-                                    .padding()
+                                //LineChart(data: team.scores.map{CGFloat($0.tele.total())})
+                                LineChartView(data: team.scores.map{Double($0.tele.total())}, title: "Timeline", style: chartStyle, form: ChartForm.large, rateValue: team.scores.map{Double($0.tele.total())}.percentChange())
                                     .transition(.asymmetric(insertion: .scale, removal: .opacity))
                             }
                         }
@@ -155,27 +199,30 @@ struct TeamView: View {
                     .padding()
                     .animation(defaultAnimation)
                 Button(action: {
-                    endBool.toggle()
+                    if team.scores.count > 1{
+                        endBool.toggle()
+                    } else {
+                        alertBool.toggle()
+                    }
                     UIImpactFeedbackGenerator(style: .light).impactOccurred()
                 }, label: {
                     CardView(){
                         VStack{
                             HStack{
-                                BarGraph(name: "Average", val: team.avgEndScore(), max: data.maxEndScore())
+                                BarGraph(name: "Average", val: team.avgEndScore(), max: event.maxEndScore())
                                     .frame(height: 100)
                                     .animation(defaultAnimation)
                                 Spacer()
-                                BarGraph(name: "Best Score", val: team.bestEndScore(), max: data.maxEndScore())
+                                BarGraph(name: "Best Score", val: team.bestEndScore(), max: event.maxEndScore())
                                     .frame(height: 100)
                                     .animation(defaultAnimation)
                                 Spacer()
-                                BarGraph(name: "Consistency", val: data.lowestEndMAD(), max: team.endMAD(), flip: true)
+                                BarGraph(name: "Consistency", val: event.lowestEndMAD(), max: team.endMAD(), flip: true)
                                     .animation(defaultAnimation)
                             }
                             .padding()
                             if endBool {
-                                LineChart(data: team.scores.map{CGFloat($0.endgame.total())})
-                                    .padding()
+                                LineChartView(data: team.scores.map{Double($0.endgame.total())}, title: "Timeline", style: chartStyle, form: ChartForm.large, rateValue: team.scores.map{Double($0.endgame.total())}.percentChange())
                                     .transition(.asymmetric(insertion: .scale, removal: .opacity))
                             }
                         }
@@ -187,9 +234,8 @@ struct TeamView: View {
                 .animation(defaultAnimation)
                 .buttonStyle(MyButtonStyle())
                 Spacer()
-                    .frame(height: 400)
+                    .frame(height: 300)
             }
-            .frame(width: maxWidth)
         }.navigationBarTitle(team.name)
         .navigationBarItems(trailing: Button(action: {
             if isFullScreen(){
@@ -212,16 +258,19 @@ struct TeamView: View {
                 Text("Expand All")
             }
         }))
-        
-        
+        .alert(isPresented: $alertBool, content: {
+            Alert(title: Text("Not Enough Data"), message: Text("Enter more scores..."), dismissButton: .default(Text("Okay")))
+        })
     }
     func isFullScreen() -> Bool {
         genBool || autoBool || endBool || teleBool
     }
     func lineChart() -> some View{
-        switch team.scores.count{
-        case 0: return AnyView(Text(""))
-        default: return AnyView(LineChart(data: team.scores.map{CGFloat($0.val())}).frame(height: 360).padding())
+        if(team.scores.count < 2){
+            return AnyView(Text(""))
+        }
+        else{
+            return AnyView(LineView(data: team.scores.map{Double($0.val())}, legend: "Timeline", style: chartStyle).frame(height: 360).padding())
         }
     }
 }
@@ -233,8 +282,22 @@ extension Array where Element == CGFloat{
         return []
     }
 }
+extension Array where Element == Double{
+    func percentChange() -> Int {
+        if self.count < 2 {
+            return 0
+        } else if self.mean() != 0{
+            let oldMean = Array(self[0 ... self.endIndex - 2]).mean()
+            print(oldMean)
+            return Int((self.mean() - oldMean)/self.mean() * 100)
+        } else {
+            return 0
+        }
+    }
+}
 struct TeamView_Previews: PreviewProvider {
     static var previews: some View {
-        TeamView(team: Team("11", "A"), data: Event())
+        TeamView(team: Team("11", "A"), event: Event())
+            .environmentObject(DataModel())
     }
 }

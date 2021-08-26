@@ -61,8 +61,6 @@ struct BarGraph: View {
             ZStack(alignment: .bottom){
                 Capsule().frame(width: width, height: height)
                     .foregroundColor(Color("text"))
-                //Capsule().frame(width: width, height: height)
-                //  .foregroundColor(color())
             }
             Text("0")
                 .font(.caption)
@@ -77,6 +75,7 @@ struct BarGraph: View {
                     .foregroundColor(Color("text"))
                 Capsule().frame(width: width, height: height * CGFloat(val/max))
                     .foregroundColor(color())
+                    //.matchedGeometryEffect(id: /*@START_MENU_TOKEN@*/"ID"/*@END_MENU_TOKEN@*/, in: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Namespace@*/Namespace().wrappedValue/*@END_MENU_TOKEN@*/)
             }
             Text("\(Int(max))")
                 .font(.caption)

@@ -10,32 +10,38 @@ import SwiftUI
 import Combine
 
 struct TeamList: View {
-    @EnvironmentObject var data: Event
+    @EnvironmentObject var dataModel: DataModel
+    @ObservedObject var event: Event
     @State var sheet = false
+    init(_ e : Event){
+        event = e
+    }
     var body: some View {
-        NavigationView{
+        VStack{
             List{
-                ForEach(data.teams){ team in
-                    TeamNav(team, data)
+                ForEach(event.teams){ team in
+                    TeamNav(team, event)
                 }
                 .onDelete(perform: { indexSet in
-                    data.teams.remove(atOffsets: indexSet)
-                    data.saveTeams()
+                    event.teams.remove(atOffsets: indexSet)
+                    dataModel.saveEvents()
                 })
                 .onMove(perform: move)
             }
             .listStyle(GroupedListStyle())
+        }
             .navigationBarTitle("Teams")
-            .navigationBarItems(leading: EditButton().disabled(data.teams.count == 0), trailing: Button("Add"){
+            .navigationBarItems(trailing: Button("Add"){
                 self.sheet.toggle()
             }).sheet(isPresented: $sheet){
                 sht()
             }
-        }
+        .frame(width: UIScreen.main.bounds.width)
+        
     }
     func move(from source: IndexSet, to destination: Int){
-        data.teams.move(fromOffsets: source, toOffset: destination)
-        data.saveTeams()
+        event.teams.move(fromOffsets: source, toOffset: destination)
+        dataModel.saveEvents()
     }
     @State var name: (String, String) = ("", "")
     func sht() -> some View{
@@ -60,10 +66,11 @@ struct TeamList: View {
                 name.1 = ""
                 self.sheet = false
             },trailing: Button("Save"){
-                data.addTeam(Team(name.0, name.1))
-                data.addTeam(Team(name.0, name.1))
+                event.addTeam(Team(name.0, name.1))
+                event.addTeam(Team(name.0, name.1))
                 name.0 = ""
                 name.1 = ""
+                dataModel.saveEvents()
                 self.sheet = false
             }
             .disabled(name.0.trimmingCharacters(in: .whitespacesAndNewlines) == "" || name.1.trimmingCharacters(in: .whitespacesAndNewlines) == ""))
@@ -71,14 +78,14 @@ struct TeamList: View {
     }
     func check(val: (String, String)) -> Bool {
         let number = val.0.trimmingCharacters(in: .whitespacesAndNewlines)
-        return !data.teams.contains{$0.number == number}
+        return !event.teams.contains{$0.number == number}
     }
 }
 
 
 struct TeamList_Previews: PreviewProvider {
     static var previews: some View {
-        TeamList()
-            .environmentObject(Event())
+        TeamList(Event())
+            .environmentObject(DataModel())
     }
 }
